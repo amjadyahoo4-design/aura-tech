@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Tech | أورا تيك</title>
+    <!-- استدعاء تصميم Tailwind CSS السريع والعصري -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <!-- شريط التنقل العلوي -->
+    <header class="bg-black text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider text-amber-400">Aura Tech</h1>
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <button class="relative bg-gray-800 px-3 py-1.5 rounded-full text-sm flex items-center gap-1">
+                    🛒 السلة <span id="cart-count" class="bg-amber-500 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- القسم الرئيسي (Banner) -->
+    <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 px-4 text-center">
+        <h2 class="text-3xl font-extrabold mb-3">مرحباً بك في عالم التكنولوجيا المتقدمة</h2>
+        <p class="text-gray-300 text-sm max-w-md mx-auto mb-6">اطلب أحدث الأجهزة، بطاقات الشحن، واحجز خدمات الصيانة الفورية بلمسة زر واحدة.</p>
+    </section>
+
+    <!-- الأقسام الرئيسية -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <h3 class="text-xl font-bold mb-6 text-gray-900 border-r-4 border-amber-500 pr-2">أقسام المتجر</h3>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
+                <div class="text-3xl mb-2">📱</div>
+                <h4 class="font-semibold text-sm">الموبايلات</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
+                <div class="text-3xl mb-2">💻</div>
+                <h4 class="font-semibold text-sm">اللابتوبات</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
+                <div class="text-3xl mb-2">⚙️</div>
+                <h4 class="font-semibold text-sm">قطع الصيانة</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
+                <div class="text-3xl mb-2">🎧</div>
+                <h4 class="font-semibold text-sm">الإكسسوارات</h4>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer col-span-2 sm:col-span-1">
+                <div class="text-3xl mb-2">💳</div>
+                <h4 class="font-semibold text-sm">البطاقات الرقمية</h4>
+            </div>
+        </div>
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12 text-xs">
+        <p>جميع الحقوق محفوظة © 2026 - Aura Tech</p>
+    </footer>
+
+</body>
+</html>
