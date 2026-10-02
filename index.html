@@ -3,62 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Tech | أورا تيك</title>
-    <!-- استدعاء تصميم Tailwind CSS السريع والعصري -->
+    <title>Aura Tech | المنصة الشاملة</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans pb-20">
 
     <!-- شريط التنقل العلوي -->
     <header class="bg-black text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wider text-amber-400">Aura Tech</h1>
-            <div class="flex items-center space-x-4 space-x-reverse">
-                <button class="relative bg-gray-800 px-3 py-1.5 rounded-full text-sm flex items-center gap-1">
-                    🛒 السلة <span id="cart-count" class="bg-amber-500 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
+            <h1 class="text-xl font-bold tracking-wider text-amber-400">⚡ Aura Tech</h1>
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <button onclick="toggleSection('repair-section')" class="bg-gray-800 px-3 py-1.5 rounded-full text-xs hover:bg-gray-700 transition">🛠️ الصيانة</button>
+                <button onclick="toggleCart()" class="relative bg-gray-800 px-3 py-1.5 rounded-full text-xs flex items-center gap-1 hover:bg-gray-700 transition">
+                    🛒 السلة <span id="cart-count" class="bg-amber-500 text-black px-1.5 py-0.2 rounded-full text-xs font-bold">0</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- القسم الرئيسي (Banner) -->
-    <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12 px-4 text-center">
-        <h2 class="text-3xl font-extrabold mb-3">مرحباً بك في عالم التكنولوجيا المتقدمة</h2>
-        <p class="text-gray-300 text-sm max-w-md mx-auto mb-6">اطلب أحدث الأجهزة، بطاقات الشحن، واحجز خدمات الصيانة الفورية بلمسة زر واحدة.</p>
+    <!-- واجهة الترحيب -->
+    <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-10 px-4 text-center">
+        <h2 class="text-2xl font-extrabold mb-2">منصة أورا تيك الذكية</h2>
+        <p class="text-gray-300 text-sm max-w-md mx-auto">تسوق، قارن، اجمع نقاط الخصم، واطلب صيانة جهازك بكل سهولة.</p>
     </section>
 
     <!-- الأقسام الرئيسية -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <h3 class="text-xl font-bold mb-6 text-gray-900 border-r-4 border-amber-500 pr-2">أقسام المتجر</h3>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
-                <div class="text-3xl mb-2">📱</div>
-                <h4 class="font-semibold text-sm">الموبايلات</h4>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <h3 class="text-lg font-bold mb-4 text-gray-900 border-r-4 border-amber-500 pr-2">أقسام المتجر</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+            <div class="bg-white p-3 rounded-xl shadow-sm text-center cursor-pointer hover:bg-amber-50 transition"><div class="text-2xl mb-1">📱</div><span class="text-xs font-bold">الموبايلات</span></div>
+            <div class="bg-white p-3 rounded-xl shadow-sm text-center cursor-pointer hover:bg-amber-50 transition"><div class="text-2xl mb-1">💻</div><span class="text-xs font-bold">اللابتوبات</span></div>
+            <div class="bg-white p-3 rounded-xl shadow-sm text-center cursor-pointer hover:bg-amber-50 transition"><div class="text-2xl mb-1">⚙️</div><span class="text-xs font-bold">قطع الصيانة</span></div>
+            <div class="bg-white p-3 rounded-xl shadow-sm text-center cursor-pointer hover:bg-amber-50 transition"><div class="text-2xl mb-1">🎧</div><span class="text-xs font-bold">الإكسسوارات</span></div>
+            <div class="bg-white p-3 rounded-xl shadow-sm text-center cursor-pointer hover:bg-amber-50 transition col-span-2 sm:col-span-1"><div class="text-2xl mb-1">💳</div><span class="text-xs font-bold">البطاقات الرقمية</span></div>
+        </div>
+
+        <!-- المنتجات المعروضة -->
+        <h3 class="text-lg font-bold mb-4 text-gray-900 border-r-4 border-amber-500 pr-2">المنتجات والبطاقات</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div><div class="text-3xl text-center mb-2">📱</div><h4 class="font-bold">آيفون برو الذكي</h4><p class="text-gray-500 text-xs">أداء خارق وكاميرا احترافية.</p></div>
+                <div class="mt-4 flex items-center justify-between"><span class="text-amber-600 font-bold">$850</span><button onclick="addToCart('آيفون برو الذكي', 850)" class="bg-black text-white text-xs px-3 py-2 rounded-lg">إضافة للسلة</button></div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
-                <div class="text-3xl mb-2">💻</div>
-                <h4 class="font-semibold text-sm">اللابتوبات</h4>
+            <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div><div class="text-3xl text-center mb-2">💻</div><h4 class="font-bold">لابتوب أورا برو</h4><p class="text-gray-500 text-xs">سرعة فائقة للمهام الثقيلة.</p></div>
+                <div class="mt-4 flex items-center justify-between"><span class="text-amber-600 font-bold">$1200</span><button onclick="addToCart('لابتوب أورا برو', 1200)" class="bg-black text-white text-xs px-3 py-2 rounded-lg">إضافة للسلة</button></div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
-                <div class="text-3xl mb-2">⚙️</div>
-                <h4 class="font-semibold text-sm">قطع الصيانة</h4>
+            <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                <div><div class="text-3xl text-center mb-2">💳</div><span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded font-bold">شحن فوري</span><h4 class="font-bold mt-1">بطاقة أيتونز $50</h4></div>
+                <div class="mt-4 flex items-center justify-between"><span class="text-amber-600 font-bold">$50</span><button onclick="addToCart('بطاقة أيتونز $50', 50)" class="bg-black text-white text-xs px-3 py-2 rounded-lg">إضافة للسلة</button></div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer">
-                <div class="text-3xl mb-2">🎧</div>
-                <h4 class="font-semibold text-sm">الإكسسوارات</h4>
+        </div>
+
+        <!-- خدمة: أبحث عن القطعة التي لم تجدها -->
+        <div class="bg-white p-5 rounded-2xl shadow-sm mb-8 border border-amber-200">
+            <h4 class="font-bold text-base mb-2 text-amber-700">🔍 أبحث عن القطعة التي لم تجدها؟</h4>
+            <p class="text-xs text-gray-500 mb-3">اكتب اسم القطعة النادرة وسنقوم بتوفيرها لك قريباً.</p>
+            <div class="flex gap-2">
+                <input type="text" id="missing-item" placeholder="اكتب اسم القطعة هنا..." class="flex-1 border p-2 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+                <button onclick="requestMissingItem()" class="bg-black text-white text-xs px-4 py-2 rounded-xl">إرسال الطلب</button>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm text-center hover:shadow-md transition cursor-pointer col-span-2 sm:col-span-1">
-                <div class="text-3xl mb-2">💳</div>
-                <h4 class="font-semibold text-sm">البطاقات الرقمية</h4>
+        </div>
+
+        <!-- خدمة الصيانة الفورية -->
+        <div id="repair-section" class="bg-white p-5 rounded-2xl shadow-sm mb-8 hidden border border-gray-200">
+            <h4 class="font-bold text-base mb-2 text-gray-900">🛠️️ حجز موعد صيانة واستشارة مشرف</h4>
+            <p class="text-xs text-gray-500 mb-3">أدخل بياناتك ووصف العطل ليتواصل معك مشرف الصيانة مباشرة.</p>
+            <div class="space-y-3">
+                <input type="text" id="repair-name" placeholder="اسمك الكريم" class="w-full border p-2 rounded-xl text-xs">
+                <input type="tel" id="repair-phone" placeholder="رقم الهاتف للتواصل" class="w-full border p-2 rounded-xl text-xs">
+                <textarea id="repair-desc" placeholder="اكتب تفاصيل العطل أو المشكلة في الجهاز..." class="w-full border p-2 rounded-xl text-xs"></textarea>
+                <button onclick="submitRepair()" class="w-full bg-amber-500 text-black font-bold text-xs py-2.5 rounded-xl">إرسال طلب الصيانة</button>
             </div>
         </div>
     </main>
 
-    <!-- تذييل الصفحة -->
-    <footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12 text-xs">
-        <p>جميع الحقوق محفوظة © 2026 - Aura Tech</p>
-    </footer>
+    <!-- لوحة سلة المشتريات والخصومات -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-end">
+        <div class="bg-white w-full max-w-md h-full p-5 flex flex-col justify-between shadow-xl">
+            <div>
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="font-bold text-base">🛒 سلة المشتريات ونقاط الولاء</h3>
+                    <button onclick="toggleCart()" class="text-gray-500 font-bold text-lg">&times;</button>
+                </div>
+                <div id="cart-items" class="py-3 space-y-2 overflow-y-auto max-h-60 text-xs">
+                    <p class="text-gray-400 text-center">السلة فارغة حالياً</p>
+                </div>
+            </div>
+            <div>
+                <div id="discount-alert" class="text-[11px] text-green-600 font-semibold mb-2 text-center bg-green-50 p-1.5 rounded"></div>
+                <div id="loyalty-points" class="text-[11px] text-amber-700 font-bold mb-2 text-center">⭐ ستكسب نقاط خصم مع هذا الطلب!</div>
+                <div class="flex justify-between mb-3 font-bold text-sm">
+                    <span>المجموع الكلي:</span>
+                    <span id="cart-total">$0</span>
+                </div>
+                <button onclick="openCheckout()" class="w-full bg-amber-500 text-black font-bold py-2.5 rounded-xl text-xs hover:bg-amber-400">إتمام طلب الدليفري الفوري</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- نافذة إتمام الطلب (طلبك واصل) والفاتورة -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md p-5 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+            <h3 class="font-bold text-base mb-3 text-center border-b pb-2">🚚 طلبك واصل عندك - فاتورة Aura Tech</h3>
+            <div class="space-y-2 text-xs mb-4">
+                <input type="text" id="cust-name" placeholder="الاسم الكامل" class="w-full border p-2 rounded-xl">
+                <input type="tel" id="cust-phone" placeholder="رقم الهاتف" class="w-full border p-2 rounded-xl">
+                <input type="text" id="cust-address" placeholder="عنوان المنزل (الحي، الشارع، رقم المبنى)" class="w-full border p-2 rounded-xl">
+            </div>
+            <div id="invoice-details" class="bg-gray-50 p-3 rounded-xl text-xs mb-4 border"></div>
+            <div class="flex gap-2">
+                <button onclick="printInvoice()" class="flex-1 bg-black text-white text-xs py-2 rounded-xl font-bold">تأكيد وإرسال الطلب</button>
+                <button onclick="closeCheckout()" class="bg-gray-200 text-gray-700 text-xs px-4 py-2 rounded-xl">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- التبرمج والتفاعل البرمجي -->
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            alert("تمت إضافة '" + name + "' للسلة بنجاح!");
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        function toggleSection(id) {
+            const sec = document.getElementById(id);
+            sec.classList.toggle('hidden');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').textContent = cart.length;
+            const container = document.getElementById('cart-items');
+            const totalSpan = document.getElementById('cart-total');
+            const alertBox = document.getElementById('discount-alert');
+            const pointsBox = document.getElementById('loyalty-points');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center">السلة فارغة حالياً</p>';
+                totalSpan.textContent = '$0';
+                alertBox.textContent = '';
+                pointsBox.textContent = '⭐ اجمع نقاط الخصم مع كل عملية شراء!';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                html += `<div class="flex justify-between bg-gray-50 p-2 rounded-lg"><span>${item.name}</span><span class="font-bold text-amber-600">$${item.price}</span></div>`;
+            });
+            container.innerHTML = html;
+
+            // الخصم التلقائي عند شراء أكثر من قطعتين
+            if (cart.length > 1) {
+                let discounted = total * 0.9;
+                alertBox.textContent = "🎉 تم تطبيق خصم 10% على السلة لإضافتك أكثر من قطعتين!";
+                totalSpan.innerHTML = `<span class="line-through text-gray-400 text-xs">$${total}</span> <span class="text-green-600">$${discounted.toFixed(2)}</span>`;
+                pointsBox.textContent = `⭐ ستربح ${cart.length * 5} نقطة ولاء في بطاقتك الرقمية!`;
+            } else {
+                alertBox.textContent = "أضف قطعة أخرى لتحصل على خصم 10% فوري!";
+                totalSpan.textContent = '$' + total;
+                pointsBox.textContent = `⭐ ستربح ${cart.length * 5} نقطة ولاء مع هذا الطلب!`;
+            }
+        }
+
+        function requestMissingItem() {
+            const item = document.getElementById('missing-item').value;
+            if(item) {
+                alert("شكراً لك! تم إرسال طلب توفير قطعة (" + item + ") إلى إدارة Aura Tech وسنعمل على توفيرها قريباً.");
+                document.getElementById('missing-item').value = '';
+            } else {
+                alert("يرجى كتابة اسم القطعة أولاً.");
+            }
+        }
+
+        function submitRepair() {
+            const name = document.getElementById('repair-name').value;
+            const phone = document.getElementById('repair-phone').value;
+            if(name && phone) {
+                alert("مرحباً " + name + "! تم تسجيل طلب الصيانة بنجاح. سيتواصل معك مشرف الصيانة عبر الرقم " + phone + " فوراً.");
+                toggleSection('repair-section');
+            } else {
+                alert("يرجى إدخال الاسم ورقم الهاتف على الأقل.");
+            }
+        }
+
+        function openCheckout() {
+            if(cart.length === 0) {
+                alert("السلة فارغة!");
+                return;
+            }
+            toggleCart();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            
+            let summary = "<p class='font-bold mb-1'>تفاصيل الفاتورة:</p>";
+            let total = 0;
+            cart.forEach(i => {
+                summary += `• ${i.name} ($${i.price})<br>`;
+                total += i.price;
+            });
+            if(cart.length > 1) total = total * 0.9;
+            summary += `<p class='mt-2 font-bold text-amber-600'>المجموع النهائي بعد الخصم: $${total.toFixed(2)}</p>`;
+            document.getElementById('invoice-details').innerHTML = summary;
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function printInvoice() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+
+            if(name && phone && address) {
+                alert("✅ تم تأكيد الطلب بنجاح يا " + name + "! طلبك في طريقه إليك وعليها فاتورة Aura Tech الرسمية.");
+                cart = [];
+                updateCartUI();
+                closeCheckout();
+            } else {
+                alert("يرجى تعبئة كافة حقول التوصيل (الاسم، الهاتف، والعنوان).");
+            }
+        }
+    </script>
 </body>
 </html>
