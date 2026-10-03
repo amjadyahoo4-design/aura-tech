@@ -1,2 +1,6 @@
-GEMINI_API_KEY=AIzaSyYourActualApiKeyHere...
 PORT=3000
+NODE_ENV=production
+
+# اختياري: مفتاح Gemini للخادم (احتياطي فقط)
+# إذا لم تضعه، سيعمل Puter.js وحده وهذا كافٍ.
+GEMINI_API_KEY=AIza...
