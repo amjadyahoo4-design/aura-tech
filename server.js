@@ -30,8 +30,6 @@ app.post('/api/chat', async (req, res) => {
         `;
 
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        
-        // دمج التعليمات مع رسالة الزبون بوضوح تام ليفهمها الذكاء الاصطناعي
         const prompt = `${systemInstruction}\n\nسؤال الزبون: ${message}`;
         
         const result = await model.generateContent(prompt);
@@ -40,7 +38,7 @@ app.post('/api/chat', async (req, res) => {
 
         res.json({ reply: text });
 
-    }احصل على الخطأ(error) {
+    } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'حدث خطأ في السيرفر' });
     }
