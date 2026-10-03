@@ -12,7 +12,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen pb-24">
 
-    <!-- شريط التنقل العلوي العصري (على نمط أبل) -->
+    <!-- شريط التنقل العلوي -->
     <header class="bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -20,7 +20,6 @@
                 <h1 class="text-lg font-black tracking-wider bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">AURA TECH</h1>
             </div>
             <div class="flex items-center space-x-2 space-x-reverse text-xs">
-                <button onclick="toggleAuthModal()" id="auth-btn" class="bg-zinc-800 border border-zinc-700 px-3 py-1.5 rounded-full hover:bg-zinc-700 transition">👤 تسجيل الدخول</button>
                 <button onclick="toggleSection('repair-section')" class="bg-zinc-800 border border-zinc-700 px-3 py-1.5 rounded-full hover:bg-zinc-700 transition">🛠️ الصيانة</button>
                 <button onclick="toggleCart()" class="relative bg-amber-500 text-zinc-950 font-bold px-3 py-1.5 rounded-full flex items-center gap-1 hover:bg-amber-400 transition">
                     🛒 السلة <span id="cart-count" class="bg-zinc-950 text-amber-400 px-1.5 py-0.2 rounded-full text-xs">0</span>
@@ -29,381 +28,146 @@
         </div>
     </header>
 
-    <!-- الواجهة الترحيبية المميزة -->
+    <!-- الواجهة الترحيبية -->
     <section class="py-12 px-4 text-center bg-gradient-to-b from-zinc-900 to-zinc-950 border-b border-zinc-900">
-        <span class="bg-amber-500/10 text-amber-400 text-xs px-3 py-1 rounded-full font-semibold border border-amber-500/20">✨ تكنولوجيا المستقبل بين يديك</span>
-        <h2 class="text-3xl sm:text-5xl font-black mt-3 mb-2 tracking-tight">اكتشف أحدث الأجهزة والخدمات الذكية</h2>
-        <p class="text-zinc-400 text-xs sm:text-sm max-w-lg mx-auto">تسوق بأناقة، قارن المنتجات، اربح نقاط الولاء، واطلب صيانة جهازك بكل احترافية مع Aura Tech.</p>
-        
-        <!-- شريط البحث السريع والذكي -->
-        <div class="mt-6 max-w-md mx-auto flex gap-2">
-            <input type="text" id="search-input" placeholder="ابحث عن موبايل، لابتوب، أو بطاقة رقمية..." class="flex-1 bg-zinc-900 border border-zinc-800 px-4 py-2.5 rounded-2xl text-xs focus:outline-none focus:border-amber-500">
-            <button onclick="searchProduct()" class="bg-amber-500 text-zinc-950 px-5 py-2.5 rounded-2xl text-xs font-bold hover:bg-amber-400">بحث</button>
-        </div>
+        <span class="bg-amber-500/10 text-amber-400 text-xs px-3 py-1 rounded-full font-semibold border border-amber-500/20">✨ تكنولوجيا المستقبل مدعومة بالذكاء الاصطناعي</span>
+        <h2 class="text-3xl sm:text-5xl font-black mt-3 mb-2 tracking-tight">اكتشف أحدث الأجهزة واستشر خبيرنا الذكي</h2>
+        <p class="text-zinc-400 text-xs sm:text-sm max-w-lg mx-auto">اسأل المساعد التقني عن أي مواصفات أو استفسار وسيجيبك فوراً.</p>
     </section>
 
-    <!-- الأقسام الرئيسية للمتجر -->
+    <!-- الأقسام والمنتجات -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-        <h3 class="text-sm font-bold text-zinc-400 mb-4 uppercase tracking-wider">تصفح حسب الأقسام</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
-            <div onclick="filterCategory('all')" class="bg-zinc-900/60 border border-zinc-800/80 p-4 rounded-2xl text-center cursor-pointer hover:border-amber-500 transition group">
-                <div class="text-3xl mb-2 group-hover:scale-110 transition">🌟</div>
-                <span class="text-xs font-bold">الكل</span>
+        
+        <!-- قسم المساعد التقني الذكي الفعلي (Gemini AI) -->
+        <div class="bg-zinc-900/90 border border-amber-500/40 p-6 rounded-3xl mb-12 shadow-2xl">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="text-2xl">🤖</span>
+                <h3 class="font-bold text-base text-amber-400">المساعد التقني الآلي (مدعوم بـ Gemini AI)</h3>
             </div>
-            <div onclick="filterCategory('mobiles')" class="bg-zinc-900/60 border border-zinc-800/80 p-4 rounded-2xl text-center cursor-pointer hover:border-amber-500 transition group">
-                <div class="text-3xl mb-2 group-hover:scale-110 transition">📱</div>
-                <span class="text-xs font-bold">الموبايلات</span>
+            <p class="text-zinc-400 text-xs mb-4">اكتب أي سؤال تقني يتردد في ذهنك حول الأجهزة، المواصفات، أو المقارنات، وسيجيبك خبير Aura Tech الفوري:</p>
+            
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="ai-user-prompt" placeholder="مثال: ما هو الفرق بين آيفون وسامسونج من حيث الكاميرا؟" class="flex-1 bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-2xl text-xs focus:outline-none focus:border-amber-500 text-zinc-100">
+                <button onclick="askGeminiAI()" id="ai-btn" class="bg-amber-500 text-zinc-950 px-6 py-3 rounded-2xl text-xs font-bold hover:bg-amber-400 transition">اسأل الخبير</button>
             </div>
-            <div onclick="filterCategory('laptops')" class="bg-zinc-900/60 border border-zinc-800/80 p-4 rounded-2xl text-center cursor-pointer hover:border-amber-500 transition group">
-                <div class="text-3xl mb-2 group-hover:scale-110 transition">💻</div>
-                <span class="text-xs font-bold">اللابتوبات</span>
-            </div>
-            <div onclick="filterCategory('cards')" class="bg-zinc-900/60 border border-zinc-800/80 p-4 rounded-2xl text-center cursor-pointer hover:border-amber-500 transition group">
-                <div class="text-3xl mb-2 group-hover:scale-110 transition">💳</div>
-                <span class="text-xs font-bold">البطاقات الرقمية والشحن</span>
+
+            <!-- صندوق عرض رد الذكاء الاصطناعي -->
+            <div id="ai-response-box" class="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 text-xs text-zinc-300 min-h-[80px] hidden">
+                <span class="text-amber-400 font-bold block mb-1">رد المساعد الذكي:</span>
+                <p id="ai-answer-text" class="leading-relaxed"></p>
             </div>
         </div>
 
-        <!-- عرض المنتجات بالصور الحقيقية السريعة -->
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-base font-bold border-r-4 border-amber-500 pr-2">المنتجات والعروض المميزة</h3>
-            <span id="user-points-badge" class="text-xs bg-amber-500/10 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/20 hidden">⭐ رصيد نقاطك: <span id="points-val">0</span> نقطة</span>
-        </div>
-
+        <!-- عرض المنتجات -->
+        <h3 class="text-base font-bold border-r-4 border-amber-500 pr-2 mb-6">منتجات Aura Tech المميزة</h3>
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-            <!-- سيتم تعبئة المنتجات تلقائياً عبر الكود -->
+            <!-- المنتجات -->
         </div>
 
-        <!-- خدمات إضافية مميزة -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-            <!-- خدمة أبحث عن القطعة التي لم تجدها -->
-            <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-3xl">
-                <div class="text-2xl mb-2">🔍</div>
-                <h4 class="font-bold text-sm mb-1 text-amber-400">أبحث عن القطعة التي لم تجدها وسنوفرها لك لاحقاً</h4>
-                <p class="text-zinc-400 text-xs mb-4">اكتب اسم القطعة النادرة وسيقوم فريق Aura Tech بتأمينها لك بأسرع وقت.</p>
-                <div class="flex gap-2">
-                    <input type="text" id="missing-item-input" placeholder="اسم القطعة أو الموديل..." class="flex-1 bg-zinc-950 border border-zinc-800 px-3 py-2 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-                    <button onclick="requestMissingItem()" class="bg-amber-500 text-zinc-950 px-4 py-2 rounded-xl text-xs font-bold hover:bg-amber-400">إرسال الطلب</button>
-                </div>
-            </div>
-
-            <!-- المساعد التقني الآلي الذكي -->
-            <div class="bg-zinc-900/80 border border-zinc-800 p-6 rounded-3xl flex flex-col justify-between">
-                <div>
-                    <div class="text-2xl mb-2">🤖</div>
-                    <h4 class="font-bold text-sm mb-1 text-amber-400">المساعد التقني الآلي (اسألني)</h4>
-                    <p class="text-zinc-400 text-xs mb-3">اختر مواصفاتك وسيقترح عليك المساعد الجهاز أو القطعة الأنسب.</p>
-                </div>
-                <div>
-                    <select id="ai-query-type" class="w-full bg-zinc-950 border border-zinc-800 px-3 py-2 rounded-xl text-xs mb-2 text-zinc-300">
-                        <option value="mobiles">أبحث عن موبايل للألعاب والكاميرا القوية</option>
-                        <option value="laptops">أبحث عن لابتوب للمونتاج والبرمجة</option>
-                        <option value="cards">أريد بطاقة شحن رقمية فورية</option>
-                    </select>
-                    <button onclick="askAI()" class="w-full bg-zinc-800 border border-zinc-700 text-xs py-2 rounded-xl font-bold hover:bg-zinc-700">استشر المساعد الذكي</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- قسم خدمة الصيانة الفورية مع رفع صورة العطل -->
-        <div id="repair-section" class="bg-zinc-900/90 border border-amber-500/30 p-6 rounded-3xl mb-12 hidden">
-            <h4 class="font-bold text-base mb-2 text-amber-400">🛠️ قسم الصيانة المتقدمة والتواصل مع المشرفين</h4>
-            <p class="text-zinc-400 text-xs mb-4">هل جهازك معطل؟ سجل دخولك، ارفق صورة للمشكلة، ووصف العطل ليتواصل معك مشرف الصيانة التقني مباشرة.</p>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                <input type="text" id="repair-name" placeholder="اسمك الكريم" class="bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs">
-                <input type="tel" id="repair-phone" placeholder="رقم الهاتف للتواصل" class="bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs">
-            </div>
-            <textarea id="repair-desc" placeholder="اشرح تفاصيل العطل في الجهاز..." class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs mb-3"></textarea>
-            <div class="mb-3">
-                <label class="block text-xs text-zinc-400 mb-1">إرفاق صورة الجهاز أو العطل (اختياري):</label>
-                <input type="file" id="repair-img" class="text-xs text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-amber-400 hover:file:bg-zinc-700">
-            </div>
-            <button onclick="submitRepairRequest()" class="w-full bg-amber-500 text-zinc-950 font-bold text-xs py-3 rounded-xl hover:bg-amber-400">إرسال طلب الصيانة التقنية للمشرف</button>
+        <!-- قسم الصيانة -->
+        <div id="repair-section" class="bg-zinc-900/90 border border-zinc-800 p-6 rounded-3xl mb-12 hidden">
+            <h4 class="font-bold text-base mb-2 text-amber-400">🛠️ قسم الصيانة المتقدمة</h4>
+            <p class="text-zinc-400 text-xs mb-4">سجل عطل جهازك وسيتواصل معك مشرف الصيانة.</p>
+            <input type="text" id="repair-name" placeholder="اسمك الكريم" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs mb-3">
+            <textarea id="repair-desc" placeholder="وصف العطل..." class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs mb-3"></textarea>
+            <button onclick="alert('تم إرسال طلب الصيانة بنجاح!')" class="w-full bg-amber-500 text-zinc-950 font-bold text-xs py-3 rounded-xl">إرسال الطلب</button>
         </div>
     </main>
 
-    <!-- نافذة سلة المشتريات ونظام الخصومات التفاعلي -->
+    <!-- نافذة السلة -->
     <div id="cart-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex justify-end">
         <div class="bg-zinc-900 w-full max-w-md h-full p-6 flex flex-col justify-between border-l border-zinc-800">
             <div>
                 <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
-                    <h3 class="font-bold text-sm flex items-center gap-2">🛒 سلة المشتريات والخصومات التفاعلية</h3>
-                    <button onclick="toggleCart()" class="text-zinc-400 hover:text-white text-lg font-bold">&times;</button>
+                    <h3 class="font-bold text-sm">🛒 سلة المشتريات</h3>
+                    <button onclick="toggleCart()" class="text-zinc-400 font-bold text-lg">&times;</button>
                 </div>
-                <div id="cart-items-container" class="py-4 space-y-3 overflow-y-auto max-h-72 text-xs">
-                    <p class="text-zinc-500 text-center py-6">السلة فارغة حالياً</p>
-                </div>
+                <div id="cart-items" class="py-4 text-xs text-zinc-400">السلة فارغة</div>
             </div>
-            <div class="border-t border-zinc-800 pt-4">
-                <div id="discount-banner" class="text-[11px] text-amber-400 font-semibold mb-2 text-center bg-amber-500/10 p-2 rounded-xl border border-amber-500/20"></div>
-                <div class="flex justify-between mb-3 text-sm font-bold">
-                    <span>المجموع النهائي:</span>
-                    <span id="cart-total" class="text-amber-400">$0</span>
-                </div>
-                <button onclick="openCheckout()" class="w-full bg-amber-500 text-zinc-950 font-bold py-3 rounded-2xl text-xs hover:bg-amber-400 transition shadow-lg shadow-amber-500/10">إتمام طلب التوصيل (طلبك واصل)</button>
-            </div>
+            <button onclick="alert('تم إتمام الطلب!')" class="w-full bg-amber-500 text-zinc-950 font-bold py-3 rounded-2xl text-xs">إتمام الشراء</button>
         </div>
     </div>
 
-    <!-- نافذة طلبك واصل الفورية والفاتورة الرسمية -->
-    <div id="checkout-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-md p-6 rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 class="font-bold text-base mb-1 text-center text-amber-400">⚡ AURA TECH - فاتورة الدليفري</h3>
-            <p class="text-zinc-400 text-center text-[11px] mb-4">خدمة "طلبك واصل عندك وين ما كنت"</p>
-            
-            <div class="space-y-3 text-xs mb-4">
-                <input type="text" id="cust-name" placeholder="الاسم الكامل للزبون" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl">
-                <input type="tel" id="cust-phone" placeholder="رقم الهاتف للتواصل" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl">
-                <input type="text" id="cust-address" placeholder="عنوان المنزل أو الحي بالتفصيل" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl">
-            </div>
-
-            <div id="invoice-preview" class="bg-zinc-950 p-4 rounded-2xl text-xs mb-4 border border-zinc-800/80"></div>
-
-            <div class="flex gap-2">
-                <button onclick="confirmOrder()" class="flex-1 bg-amber-500 text-zinc-950 font-bold text-xs py-3 rounded-xl hover:bg-amber-400">تأكيد الطلب وإصدار الفاتورة</button>
-                <button onclick="closeCheckout()" class="bg-zinc-800 text-zinc-300 text-xs px-4 py-3 rounded-xl hover:bg-zinc-700">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة تسجيل الدخول وحفظ اسم المستخدم -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm p-6 rounded-3xl">
-            <h3 class="font-bold text-sm mb-2 text-center text-amber-400">👤 تسجيل الدخول في Aura Tech</h3>
-            <p class="text-zinc-400 text-xs text-center mb-4">احفظ اسمك ورقمك لتجميع نقاط الولاء والخصومات الفورية.</p>
-            <input type="text" id="login-name" placeholder="اسم المشتري الكريم" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs mb-3">
-            <input type="tel" id="login-phone" placeholder="رقم الهاتف" class="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-xs mb-4">
-            <button onclick="saveUserLogin()" class="w-full bg-amber-500 text-zinc-950 font-bold text-xs py-2.5 rounded-xl hover:bg-amber-400 mb-2">تسجيل ودخول</button>
-            <button onclick="toggleAuthModal()" class="w-full bg-zinc-800 text-zinc-400 text-xs py-2 rounded-xl">إغلاق</button>
-        </div>
-    </div>
-
-    <!-- نافذة مقارنة المنتجات -->
-    <div id="compare-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-lg p-6 rounded-3xl">
-            <h3 class="font-bold text-sm mb-3 text-amber-400">⚖️ خدمة المقارنة السريعة بين المنتجات</h3>
-            <div id="compare-content" class="text-xs space-y-3 mb-4"></div>
-            <button onclick="closeCompare()" class="w-full bg-zinc-800 text-zinc-300 text-xs py-2.5 rounded-xl">إغلاق المقارنة</button>
-        </div>
-    </div>
-
-    <!-- الأكواد البرمجية والتفاعلية المنظمة -->
     <script>
-        // قاعدة بيانات المنتجات مع صور حقيقية عالية الجودة من الإنترنت
+        // المنتجات الخاصة بـ AURA TECH
         const products = [
-            { id: 1, name: "iPhone 15 Pro Max", category: "mobiles", price: 1199, desc: "كاميرا احترافية، أداء خارق، شاشة تيتانيوم.", img: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop&q=60" },
-            { id: 2, name: "Samsung Galaxy S24 Ultra", category: "mobiles", price: 1100, desc: "قلم ذكي، ذكاء اصطناعي مدمج، وضوح مذهل.", img: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=60" },
-            { id: 3, name: "MacBook Pro M3", category: "laptops", price: 1799, desc: "سرعة استثنائية للمصممين والمطورين والمونتاج.", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=60" },
-            { id: 4, name: "Asus ROG Strix Gaming Laptop", category: "laptops", price: 1550, desc: "كرت شاشة قوي للألعاب الثقيلة وبرامج التصميم.", img: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&auto=format&fit=crop&q=60" },
-            { id: 5, name: "Apple iTunes Gift Card $50", category: "cards", price: 50, desc: "شحن فوري لرصيد أبل ستور والألعاب والتطبيقات.", img: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=500&auto=format&fit=crop&q=60" },
-            { id: 6, name: "Xbox Game Pass Ultimate", category: "cards", price: 45, desc: "مكتبة ألعاب ضخمة ومتنوعة لأجهزة إكس بوكس والكمبيوتر.", img: "https://images.unsplash.com/photo-1612287233202-b51a36616785?w=500&auto=format&fit=crop&q=60" }
+            { id: 1, name: "iPhone 15 Pro Max", price: 1199, desc: "كاميرا احترافية وأداء خارق.", img: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop&q=60" },
+            { id: 2, name: "Samsung Galaxy S24 Ultra", price: 1100, desc: "شاشة مذهلة وذكاء اصطناعي مدمج.", img: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500&auto=format&fit=crop&q=60" },
+            { id: 3, name: "MacBook Pro M3", price: 1799, desc: "قوة تكنولوجية للمحترفين.", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=60" }
         ];
 
         let cart = [];
-        let currentUser = null;
-        let userPoints = 0;
 
-        function renderProducts(list) {
+        function renderProducts() {
             const grid = document.getElementById('products-grid');
-            if (list.length === 0) {
-                grid.innerHTML = '<p class="text-zinc-500 text-center col-span-full py-8 text-xs">لا توجد منتجات مطابقة للبحث.</p>';
-                return;
-            }
             let html = '';
-            list.forEach(p => {
+            products.forEach(p => {
                 html += `
-                    <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-3xl overflow-hidden flex flex-col justify-between hover:border-zinc-700 transition">
-                        <div>
-                            <img src="${p.img}" alt="${p.name}" class="w-full h-44 object-cover">
-                            <div class="p-4">
-                                <h4 class="font-bold text-sm mb-1 text-zinc-100">${p.name}</h4>
-                                <p class="text-zinc-400 text-xs mb-3 line-clamp-2">${p.desc}</p>
-                            </div>
-                        </div>
-                        <div class="p-4 pt-0 flex flex-col gap-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-amber-400 font-bold text-sm">$${p.price}</span>
-                                <button onclick="compareProduct(${p.id})" class="bg-zinc-800 text-zinc-300 text-[11px] px-3 py-1.5 rounded-xl hover:bg-zinc-700">⚖️ مقارنة</button>
-                            </div>
-                            <button onclick="addToCart('${p.name}', ${p.price})" class="w-full bg-amber-500 text-zinc-950 font-bold text-xs py-2.5 rounded-xl hover:bg-amber-400 transition">إضافة للسلة</button>
+                    <div class="bg-zinc-900/60 border border-zinc-800 rounded-3xl overflow-hidden p-4 flex flex-col justify-between">
+                        <img src="${p.img}" class="w-full h-40 object-cover rounded-2xl mb-3">
+                        <h4 class="font-bold text-sm mb-1">${p.name}</h4>
+                        <p class="text-zinc-400 text-xs mb-3">${p.desc}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-amber-400 font-bold">$${p.price}</span>
+                            <button onclick="addToCart('${p.name}', ${p.price})" class="bg-amber-500 text-zinc-950 px-4 py-2 rounded-xl text-xs font-bold">إضافة للسلة</button>
                         </div>
                     </div>
                 `;
             });
             grid.innerHTML = html;
         }
+        renderProducts();
 
-        // تشغيل عرض المنتجات عند فتح الصفحة
-        renderProducts(products);
-
-        function filterCategory(cat) {
-            if(cat === 'all') {
-                renderProducts(products);
-            } else {
-                renderProducts(products.filter(p => p.category === cat));
-            }
-        }
-
-        function searchProduct() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query));
-            renderProducts(filtered);
-        }
-
+        function toggleCart() { document.getElementById('cart-modal').classList.toggle('hidden'); }
+        function toggleSection(id) { document.getElementById(id).classList.toggle('hidden'); }
         function addToCart(name, price) {
-            cart.push({ name, price });
-            updateCartUI();
-            alert("تمت إضافة '" + name + "' إلى السلة بنجاح!");
-        }
-
-        function toggleCart() {
-            document.getElementById('cart-modal').classList.toggle('hidden');
-        }
-
-        function toggleSection(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function toggleAuthModal() {
-            document.getElementById('auth-modal').classList.toggle('hidden');
-        }
-
-        function saveUserLogin() {
-            const name = document.getElementById('login-name').value;
-            const phone = document.getElementById('login-phone').value;
-            if(name && phone) {
-                currentUser = name;
-                userPoints = 50; // هدية ترحيبية نقاط ولاء
-                document.getElementById('auth-btn').textContent = "👤 " + currentUser;
-                document.getElementById('user-points-badge').classList.remove('hidden');
-                document.getElementById('points-val').textContent = userPoints;
-                toggleAuthModal();
-                alert("أهلاً بك يا " + currentUser + "! تم تسجيل دخولك بنجاح وحصلت على 50 نقطة ترحيبية.");
-            } else {
-                alert("يرجى إدخال الاسم ورقم الهاتف.");
-            }
-        }
-
-        function updateCartUI() {
+            cart.push({name, price});
             document.getElementById('cart-count').textContent = cart.length;
-            const container = document.getElementById('cart-items-container');
-            const totalSpan = document.getElementById('cart-total');
-            const banner = document.getElementById('discount-banner');
+            alert("تمت إضافة " + name + " إلى السلة!");
+        }
 
-            if(cart.length === 0) {
-                container.innerHTML = '<p class="text-zinc-500 text-center py-6">السلة فارغة حالياً</p>';
-                totalSpan.textContent = '$0';
-                banner.textContent = '';
+        // دمج ذكاء Gemini الاصطناعي الحقيقي للإجابة عن الأسئلة التقنية
+        async function askGeminiAI() {
+            const promptInput = document.getElementById('ai-user-prompt').value;
+            const responseBox = document.getElementById('ai-response-box');
+            const answerText = document.getElementById('ai-answer-text');
+            const btn = document.getElementById('ai-btn');
+
+            if (!promptInput) {
+                alert("يرجى كتابة سؤالك أولاً!");
                 return;
             }
 
-            let html = '';
-            let total = 0;
-            cart.forEach(item => {
-                total += item.price;
-                html += `<div class="flex justify-between bg-zinc-950 p-2.5 rounded-xl border border-zinc-800"><span>${item.name}</span><span class="font-bold text-amber-400">$${item.price}</span></div>`;
-            });
-            container.innerHTML = html;
+            // تم إدراج مفتاح الـ API الخاص بك هنا بنجاح
+            const apiKey = "AQ.Ab8RN6JcNTVOPFjLZoo2AhfRTQRUHTYx5C5-m54TbNbk9vqcGA"; 
 
-            // حسم تلقائي تفاعلي عند شراء أكثر من قطعة
-            if(cart.length > 1) {
-                let discounted = total * 0.9;
-                banner.textContent = "🎉 تم تفعيل خصم 10% تلقائياً على السلة لشرائك أكثر من قطعتين!";
-                totalSpan.innerHTML = `<span class="line-through text-zinc-500 text-xs">$${total}</span> <span class="text-amber-400">$${discounted.toFixed(2)}</span>`;
-                userPoints += cart.length * 10;
-            } else {
-                banner.textContent = "أضف قطعة إضافية للسلة لتحصل على خصم 10% ونقاط ولاء مضاعفة!";
-                totalSpan.textContent = '$' + total;
-            }
-            if(currentUser) {
-                document.getElementById('points-val').textContent = userPoints;
-            }
-        }
+            btn.textContent = "جاري التفكير...";
+            responseBox.classList.remove('hidden');
+            answerText.textContent = "يقوم خبير Aura Tech بتحليل سؤالك التقني...";
 
-        function compareProduct(id) {
-            const p1 = products.find(p => p.id === id);
-            const p2 = products[Math.floor(Math.random() * products.length)];
-            let html = `
-                <div class="grid grid-cols-2 gap-3 bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                    <div><b class="text-amber-400">${p1.name}</b><p class="text-zinc-400 mt-1">السعر: $${p1.price}</p><p class="text-zinc-500 mt-1 text-[10px]">${p1.desc}</p></div>
-                    <div><b class="text-amber-400">مقارنة مع: ${p2.name}</b><p class="text-zinc-400 mt-1">السعر: $${p2.price}</p><p class="text-zinc-500 mt-1 text-[10px]">${p2.desc}</p></div>
-                </div>
-                <p class="text-zinc-400 text-center text-[11px] mt-2">اختر المنتج الذي يناسب ميزانيتك واحتياجك بكل سهولة!</p>
-            `;
-            document.getElementById('compare-content').innerHTML = html;
-            document.getElementById('compare-modal').classList.remove('hidden');
-        }
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: "أنت مساعد تقني محترف لمتجر تكنولوجي اسمه Aura Tech. أجب عن هذا السؤال بدقة واحترافية باللغة العربية: " + promptInput }]
+                        }]
+                    })
+                });
 
-        function closeCompare() {
-            document.getElementById('compare-modal').classList.add('hidden');
-        }
-
-        function requestMissingItem() {
-            const item = document.getElementById('missing-item-input').value;
-            if(item) {
-                alert("شكراً لك! تم استلام طلب توفير القطعة (" + item + ") وسيقوم فريق Aura Tech بتوفيرها لك قريباً والتواصل معك.");
-                document.getElementById('missing-item-input').value = '';
-            } else {
-                alert("يرجى كتابة اسم القطعة المطلوبة.");
-            }
-        }
-
-        function askAI() {
-            const type = document.getElementById('ai-query-type').value;
-            let result = "";
-            if(type === 'mobiles') result = "نصيحة المساعد الذكي: ننصحك بجهاز iPhone 15 Pro Max لأداء الألعاب العالي والكاميرا الاحترافية.";
-            else if(type === 'laptops') result = "نصيحة المساعد الذكي: ننصحك بلابتوب MacBook Pro M3 الأقوى لبرامج المونتاج والبرمجة الثقيلة.";
-            else result = "نصيحة المساعد الذكي: بطاقة أيتونز 50$ متوفرة الآن مع شحن رقمي فوري ومضمون.";
-            alert("🤖 رد المساعد التقني:\n\n" + result);
-        }
-
-        function submitRepairRequest() {
-            const name = document.getElementById('repair-name').value;
-            const phone = document.getElementById('repair-phone').value;
-            const desc = document.getElementById('repair-desc').value;
-            if(name && phone && desc) {
-                alert("✅ أهلاً " + name + "! تم رفع طلب الصيانة الخاص بك مع وصف العطل بنجاح. سيتواصل معك مشرف الصيانة في Aura Tech عبر الهاتف فوراً.");
-                toggleSection('repair-section');
-            } else {
-                alert("يرجى تعبئة الحقول الأساسية ووصف العطل.");
-            }
-        }
-
-        function openCheckout() {
-            if(cart.length === 0) {
-                alert("السلة فارغة!");
-                return;
-            }
-            toggleCart();
-            document.getElementById('checkout-modal').classList.remove('hidden');
-
-            let summary = "<b class='text-amber-400 block mb-2'>تفاصيل الفاتورة الرسمية - Aura Tech:</b>";
-            let total = 0;
-            cart.forEach(i => {
-                summary += `• ${i.name} ($${i.price})<br>`;
-                total += i.price;
-            });
-            if(cart.length > 1) total = total * 0.9;
-            summary += `<b class='block mt-2 text-amber-400'>المجموع النهائي بعد الحسم: $${total.toFixed(2)}</b>`;
-            document.getElementById('invoice-preview').innerHTML = summary;
-        }
-
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        function confirmOrder() {
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const address = document.getElementById('cust-address').value;
-
-            if(name && phone && address) {
-                alert("🎉 تم إتمام الطلب بنجاح يا " + name + "! طلبك في طريقه إليك (طلبك واصل) مع فاتورة Aura Tech الرسمية المعتمدة.");
-                cart = [];
-                updateCartUI();
-                closeCheckout();
-            } else {
-                alert("يرجى إدخال الاسم ورقم الهاتف وعنوان التوصيل بدقة.");
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content) {
+                    const aiReply = data.candidates[0].content.parts[0].text;
+                    answerText.textContent = aiReply;
+                } else {
+                    answerText.textContent = "عذراً، لم يتم تلقي رد واضح من المساعد. تحقق من صحة صلاحية المفتاح.";
+                }
+            } catch (error) {
+                answerText.textContent = "عذراً، حدث خطأ في الاتصال بالمساعد الذكي. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.";
+            } finally {
+                btn.textContent = "اسأل الخبير";
             }
         }
     </script>
