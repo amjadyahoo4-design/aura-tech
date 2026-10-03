@@ -14,28 +14,35 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
-        if (!message) return res.status(400).json({ error: 'الرجاء إرسال رسالة' });
+        if (!message) {
+            return res.status(400).json({ error: 'الرجاء إرسال نص الرسالة' });
+        }
 
         const systemInstruction = `
             أنت موظف مبيعات وخبير تقني محترف وودود جداً في متجر "Aura Tech" الرقمي.
-            تحدث مع الزبائن وكأنك إنسان بشري حقيقي يقدم استشارات وننصائح تسويقية وتقنية صادقة.
-            المنتجات المتوفرة:
+            مهمتك هي التحدث مع الزبائن وكأنك إنسان بشري حقيقي يقدم استشارات ونصائح تسويقية وتقنية صادقة ومفيدة باللغة العربية.
+            المنتجات المتوفرة في المتجر:
             1. iPhone 15 Pro Max ($1199)
             2. Samsung Galaxy S24 Ultra ($1100)
             3. MacBook Pro M3 Max ($2499)
-            4. Sony WH-1000XM5 ($399)
-            تحدث بلغة عربية فصحى مبسطة وطبيعية ودافئة.
+            
+            أجب على سؤال الزبون التالي بشكل طبيعي ومباشر ودون تكرار لجمل ترحيبية محفوظة:
         `;
 
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-        const result = await model.generateContent(systemInstruction + "\n\nسؤال الزبون: " + message);
+        
+        // دمج التعليمات مع رسالة الزبون بوضوح تام ليفهمها الذكاء الاصطناعي
+        const prompt = `${systemInstruction}\n\nسؤال الزبون: ${message}`;
+        
+        const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
 
-        res.json({ reply: text || "أهلاً بك، تفضل بطرح استفسارك." });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'خطأ في السيرفر' });
+        res.json({ reply: text });
+
+    }احصل على الخطأ(error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'حدث خطأ في السيرفر' });
     }
 });
 
