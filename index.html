@@ -1,195 +1,1048 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura Tech | المتجر الرقمي الذكي</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/genai": "https://esm.run/@google/genai"
-        }
-      }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #050507; color: #f4f4f5; overflow-x: hidden; }
-        .glass { background: rgba(18, 18, 24, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glass-card { background: rgba(24, 24, 32, 0.5); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.06); }
-        #chat-messages::-webkit-scrollbar { width: 6px; }
-        #chat-messages::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 10px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LORD CELL | المتجر الرقمي الذكي</title>
+<meta name="description" content="LORD CELL - متجرك الرقمي الأول للهواتف واللابتوبات والإكسسوارات وقطع الصيانة وبطاقات الشحن مع مساعد ذكي وخدمات صيانة وتوصيل.">
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="importmap">
+{ "imports": { "@google/genai": "https://esm.run/@google/genai" } }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --gold:#f59e0b; --gold-2:#fbbf24; }
+  *{ -webkit-tap-highlight-color: transparent; }
+  body{ font-family:'Cairo',sans-serif; background:#050507; color:#f4f4f5; overflow-x:hidden; }
+  .glass{ background:rgba(18,18,24,.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.08); }
+  .glass-card{ background:rgba(24,24,32,.55); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.06); }
+  .gold-text{ background:linear-gradient(90deg,#fbbf24,#fde68a); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .gold-btn{ background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#09090b; }
+  .gold-btn:hover{ filter:brightness(1.1); }
+  .scrollbar::-webkit-scrollbar{ width:6px; height:6px; }
+  .scrollbar::-webkit-scrollbar-thumb{ background:rgba(245,158,11,.35); border-radius:10px; }
+  .scrollbar::-webkit-scrollbar-track{ background:transparent; }
+  .page{ display:none; animation:fade .35s ease; }
+  .page.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  .card-hover{ transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .card-hover:hover{ transform:translateY(-6px); border-color:rgba(245,158,11,.5); box-shadow:0 20px 40px -20px rgba(245,158,11,.35); }
+  .chip{ transition:.25s; }
+  .chip.active{ background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#09090b; font-weight:800; border-color:transparent; }
+  .drawer{ transform:translateX(-110%); transition:transform .35s cubic-bezier(.4,0,.2,1); }
+  html[dir="rtl"] .drawer{ transform:translateX(-110%); }
+  .drawer.open{ transform:translateX(0)!important; }
+  .modal{ opacity:0; pointer-events:none; transition:opacity .25s ease; }
+  .modal.open{ opacity:1; pointer-events:auto; }
+  .modal .box{ transform:scale(.94); transition:transform .25s ease; }
+  .modal.open .box{ transform:scale(1); }
+  .shimmer{ background:linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.12), rgba(255,255,255,.04)); background-size:200% 100%; animation:sh 1.4s infinite; }
+  @keyframes sh{ 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .toast{ animation:toastIn .3s ease; }
+  @keyframes toastIn{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:none;} }
+  input, textarea, select{ font-family:inherit; }
+  .price-tag{ font-variant-numeric:tabular-nums; }
+  ::selection{ background:#f59e0b; color:#09090b; }
+</style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen pb-32">
 
-    <!-- شريط التنقل العلوي -->
-    <header class="glass sticky top-0 z-40 border-b border-zinc-800/80">
-        <div class="max-w-6xl mx-auto px-4 py-3.5 flex justify-between items-center">
-            <h1 class="text-lg font-black bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">AURA TECH</h1>
-            <span class="bg-amber-500/10 text-amber-400 text-xs px-3 py-1.5 rounded-xl font-bold border border-amber-500/20">🤖 موظف المبيعات الذكي متصل</span>
-        </div>
-    </header>
+<!-- ===================== HEADER ===================== -->
+<header class="glass sticky top-0 z-40 border-b border-zinc-800/80">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+    <button onclick="go('home')" class="flex items-center gap-2 shrink-0">
+      <div class="w-9 h-9 rounded-xl gold-btn flex items-center justify-center font-black text-sm">LC</div>
+      <div class="text-right leading-none">
+        <div class="text-base font-black gold-text">LORD CELL</div>
+        <div class="text-[9px] text-zinc-500 font-bold tracking-widest">DIGITAL STORE</div>
+      </div>
+    </button>
 
-    <main class="max-w-6xl mx-auto px-4 pt-10">
-        
-        <!-- قسم الترحيب -->
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-5xl font-black mb-3 text-white">متجر Aura Tech الرقمي</h2>
-            <p class="text-zinc-400 text-xs md:text-sm max-w-xl mx-auto leading-relaxed">اكتشف أرقى الأجهزة الذكية وتحدث فوراً مع خبير المبيعات الافتراضي ليساعدك في اختيار الأنسب لميزانيتك.</p>
-        </div>
+    <nav class="hidden md:flex items-center gap-1 text-xs font-bold">
+      <button onclick="go('home')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الرئيسية</button>
+      <button onclick="go('shop')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">المتجر</button>
+      <button onclick="go('gift')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">بطاقات الشحن</button>
+      <button onclick="go('find')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">ابحث عن منتج</button>
+      <button onclick="go('support')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الصيانة</button>
+    </nav>
 
-        <!-- قسم عرض المنتجات -->
-        <div class="mb-16">
-            <h3 class="text-lg md:text-xl font-bold mb-6 text-amber-400 border-r-4 border-amber-500 pr-3">أبرز المنتجات والأجهزة المتوفرة</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                <div class="glass-card p-6 rounded-3xl border border-zinc-800/80 hover:border-amber-500/40 transition">
-                    <div class="text-3xl mb-3">📱</div>
-                    <h4 class="font-bold text-base text-zinc-100 mb-1">iPhone 15 Pro Max</h4>
-                    <p class="text-zinc-400 text-xs mb-4 leading-relaxed">أداء خارق، كاميرا سينمائية احترافية، وهيكل من التيتانيوم.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-amber-400 font-black text-sm">$1199</span>
-                        <button onclick="askAboutProduct('iPhone 15 Pro Max')" class="bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-zinc-200 text-xs px-3.5 py-2.5 rounded-xl transition font-bold">اسأل الموظف عنه 💬</button>
-                    </div>
-                </div>
+    <div class="flex items-center gap-2">
+      <button onclick="openCart()" class="relative p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition">
+        <span class="text-base">🛒</span>
+        <span id="cart-count" class="absolute -top-1.5 -left-1.5 bg-amber-500 text-zinc-950 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+      </button>
+      <button id="userBtn" onclick="handleUserClick()" class="px-3 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition text-xs font-bold flex items-center gap-1.5">
+        <span>👤</span><span id="userLabel" class="hidden sm:inline">دخول</span>
+      </button>
+    </div>
+  </div>
 
-                <div class="glass-card p-6 rounded-3xl border border-zinc-800/80 hover:border-amber-500/40 transition">
-                    <div class="text-3xl mb-3">📱</div>
-                    <h4 class="font-bold text-base text-zinc-100 mb-1">Samsung Galaxy S24 Ultra</h4>
-                    <p class="text-zinc-400 text-xs mb-4 leading-relaxed">مدعوم بالذكاء الاصطناعي بالكامل، قلم S-Pen، وشاشة مذهلة.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-amber-400 font-black text-sm">$1100</span>
-                        <button onclick="askAboutProduct('Samsung Galaxy S24 Ultra')" class="bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-zinc-200 text-xs px-3.5 py-2.5 rounded-xl transition font-bold">اسأل الموظف عنه 💬</button>
-                    </div>
-                </div>
+  <!-- Mobile nav -->
+  <div class="md:hidden overflow-x-auto scrollbar border-t border-zinc-800/60">
+    <div class="flex gap-1 px-3 py-2 text-xs font-bold w-max">
+      <button onclick="go('home')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الرئيسية</button>
+      <button onclick="go('shop')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">المتجر</button>
+      <button onclick="go('gift')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">البطاقات</button>
+      <button onclick="go('find')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">ابحث عن منتج</button>
+      <button onclick="go('support')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الصيانة</button>
+    </div>
+  </div>
+</header>
 
-                <div class="glass-card p-6 rounded-3xl border border-zinc-800/80 hover:border-amber-500/40 transition">
-                    <div class="text-3xl mb-3">💻</div>
-                    <h4 class="font-bold text-base text-zinc-100 mb-1">MacBook Pro M3 Max</h4>
-                    <p class="text-zinc-400 text-xs mb-4 leading-relaxed">الخيار المطلق للمحترفين، المبرمجين، ومصممي المونتاج الثقيل.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-amber-400 font-black text-sm">$2499</span>
-                        <button onclick="askAboutProduct('MacBook Pro M3 Max')" class="bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-zinc-200 text-xs px-3.5 py-2.5 rounded-xl transition font-bold">اسأل الموظف عنه 💬</button>
-                    </div>
-                </div>
+<main class="max-w-6xl mx-auto px-4 pt-8">
 
+  <!-- ===================== HOME ===================== -->
+  <section id="page-home" class="page active">
+    <div class="text-center mb-10 relative">
+      <div class="absolute inset-0 -z-10 blur-3xl opacity-30 bg-gradient-to-r from-amber-500/40 via-transparent to-amber-500/40 rounded-full"></div>
+      <span class="inline-block bg-amber-500/10 text-amber-400 text-[10px] px-3 py-1.5 rounded-full font-bold border border-amber-500/20 mb-4">🤖 موظف المبيعات الذكي متصل</span>
+      <h2 class="text-4xl md:text-6xl font-black mb-4 text-white leading-tight">متجر <span class="gold-text">LORD CELL</span> الرقمي</h2>
+      <p class="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">اكتشف أرقى الأجهزة الذكية، قارن بينها، وتحدث فوراً مع خبير المبيعات الافتراضي ليختار لك الأنسب لميزانيتك — مع خدمة توصيل "طلبك واصل عندك وين ما كنت".</p>
+      <div class="flex flex-wrap justify-center gap-3 mt-7">
+        <button onclick="go('shop')" class="gold-btn px-7 py-3.5 rounded-2xl text-sm font-black shadow-lg shadow-amber-500/20">تصفح المتجر الآن</button>
+        <button onclick="openAI()" class="glass px-7 py-3.5 rounded-2xl text-sm font-black hover:border-amber-500/50 border">تحدث مع الموظف الذكي 💬</button>
+      </div>
+    </div>
+
+    <!-- شريط الثقة -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-14">
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🚚</div><div class="text-xs font-bold text-zinc-200">توصيل سريع</div><div class="text-[10px] text-zinc-500 mt-0.5">لجميع المناطق</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🛡️</div><div class="text-xs font-bold text-zinc-200">ضمان أصلي</div><div class="text-[10px] text-zinc-500 mt-0.5">100% أجهزة أصلية</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">💳</div><div class="text-xs font-bold text-zinc-200">دفع مرن</div><div class="text-[10px] text-zinc-500 mt-0.5">عند الاستلام</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🎁</div><div class="text-xs font-bold text-zinc-200">نقاط وخصومات</div><div class="text-[10px] text-zinc-500 mt-0.5">مع كل عملية شراء</div></div>
+    </div>
+
+    <!-- الأكثر مبيعاً -->
+    <div class="mb-14">
+      <div class="flex items-end justify-between mb-5">
+        <h3 class="text-lg md:text-xl font-bold text-amber-400 border-r-4 border-amber-500 pr-3">الأكثر مبيعاً هذا الأسبوع</h3>
+        <button onclick="go('shop')" class="text-xs text-zinc-400 hover:text-amber-400 font-bold">عرض الكل ←</button>
+      </div>
+      <div id="featured-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+    </div>
+
+    <!-- خدماتنا -->
+    <div class="mb-14">
+      <h3 class="text-lg md:text-xl font-bold mb-5 text-amber-400 border-r-4 border-amber-500 pr-3">خدمات LORD CELL</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <button onclick="go('shop')" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">🛍️</div><div class="font-bold text-sm mb-1">تسوّق ذكي</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">تصفح الأقسام وأضف للسلة بضغطة واحدة.</div>
+        </button>
+        <button onclick="go('find')" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">🔎</div><div class="font-bold text-sm mb-1">أبحث عن المنتج</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">لم تجد ما تبحث عنه؟ نوفرّه لك خلال أيام.</div>
+        </button>
+        <button onclick="go('support')" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">🛠️</div><div class="font-bold text-sm mb-1">تواصل مع الصيانة</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">أرسل صورة العطل وتحدث مع مشرف الصيانة.</div>
+        </button>
+        <button onclick="go('gift')" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">🎫</div><div class="font-bold text-sm mb-1">بطاقات الشحن</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">iTunes، Xbox، PlayStation، Google Play وغيرها.</div>
+        </button>
+        <button onclick="openCompare()" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">⚖️</div><div class="font-bold text-sm mb-1">قارن المنتجات</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">اختر حتى 3 منتجات وقارن بينها بالتفصيل.</div>
+        </button>
+        <button onclick="openAI()" class="glass-card rounded-3xl p-6 text-right card-hover">
+          <div class="text-3xl mb-3">🤖</div><div class="font-bold text-sm mb-1">المساعد التقني</div>
+          <div class="text-[11px] text-zinc-400 leading-relaxed">اسأله عن أي مواصفات وسيرشدك للأنسب.</div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SHOP ===================== -->
+  <section id="page-shop" class="page">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">المتجر</h2>
+      <p class="text-zinc-400 text-xs">اختر القسم، أضف للسلة، واستمتع بخصومات الكمية التلقائية.</p>
+    </div>
+
+    <div class="glass rounded-2xl p-3 mb-5 flex flex-col md:flex-row gap-3 md:items-center">
+      <input id="searchInput" oninput="renderShop()" type="text" placeholder="🔍 ابحث عن منتج، ماركة، أو مواصفة..." class="flex-1 bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <select id="sortSelect" onchange="renderShop()" class="bg-zinc-950 border border-zinc-800 px-3 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+        <option value="pop">الأكثر رواجاً</option>
+        <option value="low">السعر: الأقل أولاً</option>
+        <option value="high">السعر: الأعلى أولاً</option>
+      </select>
+    </div>
+
+    <div class="flex gap-2 overflow-x-auto scrollbar pb-2 mb-6">
+      <button data-cat="all" onclick="setCat('all')" class="chip active shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">الكل</button>
+      <button data-cat="phones" onclick="setCat('phones')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">📱 موبايلات</button>
+      <button data-cat="laptops" onclick="setCat('laptops')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">💻 لابتوب</button>
+      <button data-cat="parts" onclick="setCat('parts')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🧩 قطع صيانة</button>
+      <button data-cat="accessories" onclick="setCat('accessories')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🎧 إكسسوارات</button>
+      <button data-cat="gift" onclick="setCat('gift')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🎫 بطاقات</button>
+    </div>
+
+    <div id="shop-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    <div id="shop-empty" class="hidden text-center py-20 text-zinc-500 text-sm">لا توجد نتائج مطابقة 🔍</div>
+
+    <!-- شريط المقارنة -->
+    <div id="compareBar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 hidden">
+      <div class="glass rounded-2xl px-4 py-3 flex items-center gap-3 border border-amber-500/40 shadow-2xl">
+        <span class="text-xs font-bold text-zinc-300">مقارنة (<span id="compareCount">0</span>/3)</span>
+        <button onclick="openCompare()" class="gold-btn px-4 py-2 rounded-xl text-xs font-black">قارن الآن ⚖️</button>
+        <button onclick="clearCompare()" class="text-zinc-400 hover:text-red-400 text-xs">مسح</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GIFT CARDS ===================== -->
+  <section id="page-gift" class="page">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🎫 بطاقات الشحن الرقمية</h2>
+      <p class="text-zinc-400 text-xs">اشترِ بطاقات الشحن والاشتراكات الرقمية بتسليم فوري.</p>
+    </div>
+    <div id="gift-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+  </section>
+
+  <!-- ===================== FIND PRODUCT ===================== -->
+  <section id="page-find" class="page">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🔎 خدمة "أبحث عن المنتج"</h2>
+        <p class="text-zinc-400 text-xs leading-relaxed">لم تجد القطعة التي تبحث عنها؟ أخبرنا بالمواصفات وسنوفرها لك بأفضل سعر خلال 24-72 ساعة.</p>
+      </div>
+      <div class="glass rounded-3xl p-6 border border-amber-500/20">
+        <div class="space-y-3">
+          <div>
+            <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">اسم المنتج المطلوب *</label>
+            <input id="fp-name" type="text" placeholder="مثال: iPhone 15 Pro Max 512GB أزرق" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">الميزانية (USD) *</label>
+              <input id="fp-budget" type="number" placeholder="500" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
             </div>
-        </div>
-
-        <!-- قسم الدردشة -->
-        <div id="chat-section" class="max-w-3xl mx-auto">
-            <div class="text-center mb-6">
-                <h3 class="text-2xl font-black mb-1 text-white">تحدث مع خبير المبيعات الافتراضي</h3>
-                <p class="text-zinc-400 text-xs">اسأله عن أي تفاصيل أو استشارة تقنية وسيجيبك كإنسان بشري تماماً.</p>
+            <div>
+              <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">رقم الهاتف *</label>
+              <input id="fp-phone" type="tel" placeholder="+961 ..." class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
             </div>
-
-            <div class="glass rounded-3xl shadow-2xl border border-amber-500/30 overflow-hidden mb-12">
-                <div id="chat-messages" class="p-6 h-[420px] overflow-y-auto space-y-4 flex flex-col">
-                    <div class="flex items-start gap-3 max-w-[85%]">
-                        <div class="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 flex items-center justify-center font-bold text-xs shrink-0">🤖</div>
-                        <div class="glass-card p-4 rounded-2xl rounded-tr-none text-xs leading-relaxed text-zinc-200">
-                            أهلاً بك في Aura Tech! أنا معك لمساعدتك واختيار الجهاز الأنسب لك. كيف يمكنني خدمتك اليوم؟
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4 bg-zinc-900/60 border-t border-zinc-800 flex gap-2.5 items-center">
-                    <input type="text" id="chat-input" placeholder="اكتب استفسارك هنا (مثلاً: أريد جهازاً للتصوير بحدود 1100$)..." onkeypress="handleKeyPress(event)" class="flex-1 bg-zinc-950 border border-zinc-800 px-4 py-3.5 rounded-2xl text-xs focus:outline-none focus:border-amber-500 text-zinc-100 placeholder-zinc-500">
-                    <button onclick="sendChatMessage()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 px-6 py-3.5 rounded-2xl text-xs font-black transition">إرسال 💬</button>
-                </div>
-            </div>
+          </div>
+          <div>
+            <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">مواصفات إضافية</label>
+            <textarea id="fp-notes" rows="3" placeholder="مثال: مستعمل بحالة ممتازة، أو جديد بضمان..." class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
+          </div>
+          <button onclick="submitFindRequest()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إرسال الطلب ✈️</button>
+          <p class="text-[10px] text-zinc-500 text-center">سيتم التواصل معك خلال 24 ساعة عبر رقم الهاتف المرفق.</p>
         </div>
+      </div>
+    </div>
+  </section>
 
-    </main>
+  <!-- ===================== SUPPORT ===================== -->
+  <section id="page-support" class="page">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🛠️ الدعم الفني والصيانة</h2>
+        <p class="text-zinc-400 text-xs leading-relaxed">أرسل صورة الجهاز والعطل وتواصل مع مشرف الصيانة مباشرة بعد تسجيل الدخول.</p>
+      </div>
 
-    <!-- البرمجة والذكاء الاصطناعي -->
-    <script type="module">
-        import { GoogleGenAI } from "@google/genai";
+      <div id="supportLoginNote" class="glass-card rounded-2xl p-4 mb-4 text-xs text-amber-300 border border-amber-500/20 hidden">
+        ⚠️ يرجى تسجيل الدخول أولاً لتتمكن من إرسال طلب الصيانة.
+      </div>
 
-        // تم إدراج المفتاح الخاص بك هنا
-        const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6I0jQCXrmV6D5C4t2w0oxRx4EhHabnB7hj-z--dQPqeFw" });
+      <div class="glass rounded-3xl p-6 border border-amber-500/20">
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">الاسم الكامل *</label>
+              <input id="sp-name" type="text" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+              <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">رقم الهاتف *</label>
+              <input id="sp-phone" type="tel" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+            </div>
+          </div>
+          <div>
+            <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">نوع الجهاز *</label>
+            <input id="sp-device" type="text" placeholder="مثال: Samsung S22 Ultra" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">وصف العطل *</label>
+            <textarea id="sp-issue" rows="3" placeholder="اشرح المشكلة بالتفصيل..." class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
+          </div>
+          <div>
+            <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">صورة للجهاز / العطل</label>
+            <label class="flex items-center justify-center gap-2 w-full bg-zinc-950 border border-dashed border-zinc-700 hover:border-amber-500 px-4 py-6 rounded-xl text-xs text-zinc-400 cursor-pointer transition">
+              <span>📎 اضغط لرفع صورة</span>
+              <input id="sp-image" type="file" accept="image/*" class="hidden" onchange="previewSupportImage(event)">
+            </label>
+            <img id="sp-preview" class="hidden mt-3 rounded-xl max-h-52 w-full object-cover border border-zinc-800">
+          </div>
+          <button onclick="submitSupport()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إرسال طلب الصيانة 🔧</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        window.handleKeyPress = function(event) {
-            if (event.key === 'Enter') sendChatMessage();
-        };
+</main>
 
-        window.askAboutProduct = function(productName) {
-            const inputField = document.getElementById('chat-input');
-            inputField.value = `أريد معرفة تفاصيل أكثر عن جهاز ${productName}، هل تنصحني بشراؤه؟`;
-            sendChatMessage();
-            document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth' });
-        };
+<!-- ===================== FOOTER ===================== -->
+<footer class="mt-20 border-t border-zinc-800/80 bg-zinc-950/60">
+  <div class="max-w-6xl mx-auto px-4 py-8 text-center">
+    <div class="text-base font-black gold-text mb-2">LORD CELL</div>
+    <p class="text-[11px] text-zinc-500 leading-relaxed max-w-lg mx-auto">وجهتك الرقمية للأجهزة الذكية، الإكسسوارات، قطع الصيانة وبطاقات الشحن — مع خدمات توصيل وصيانة ودعم ذكي على مدار الساعة.</p>
+    <div class="text-[10px] text-zinc-600 mt-4">© <span id="year"></span> LORD CELL — جميع الحقوق محفوظة.</div>
+  </div>
+</footer>
 
-        window.sendChatMessage = async function() {
-            const inputField = document.getElementById('chat-input');
-            const messageContainer = document.getElementById('chat-messages');
-            const userText = inputField.value.trim();
-            if (!userText) return;
+<!-- ===================== CART DRAWER ===================== -->
+<div id="cartOverlay" onclick="closeCart()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden"></div>
+<aside id="cartDrawer" class="drawer fixed top-0 right-0 h-full w-full max-w-md bg-zinc-950 border-l border-zinc-800 z-50 flex flex-col" style="right:0; left:auto; transform:translateX(110%);">
+  <div class="p-5 border-b border-zinc-800 flex items-center justify-between">
+    <h3 class="font-black text-base">سلة التسوق 🛒</h3>
+    <button onclick="closeCart()" class="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-red-500/50 flex items-center justify-center">✕</button>
+  </div>
+  <div id="cartItems" class="flex-1 overflow-y-auto scrollbar p-4 space-y-3"></div>
+  <div class="p-5 border-t border-zinc-800 bg-zinc-900/50">
+    <div id="cartDiscountNote" class="text-[11px] text-amber-400 font-bold mb-3 hidden"></div>
+    <div class="space-y-1.5 mb-4 text-xs">
+      <div class="flex justify-between text-zinc-400"><span>المجموع الفرعي</span><span id="cartSubtotal" class="price-tag">$0</span></div>
+      <div id="cartDiscountRow" class="flex justify-between text-emerald-400 hidden"><span>خصم الكمية</span><span id="cartDiscount" class="price-tag">-$0</span></div>
+      <div id="cartPointsRow" class="flex justify-between text-amber-400 hidden"><span>نقاط الولاء</span><span id="cartPoints" class="price-tag">-$0</span></div>
+      <div class="flex justify-between font-black text-sm pt-2 border-t border-zinc-800"><span>الإجمالي</span><span id="cartTotal" class="gold-text price-tag">$0</span></div>
+    </div>
+    <button onclick="openCheckout()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إتمام الطلب ←</button>
+  </div>
+</aside>
 
-            messageContainer.innerHTML += `
-                <div class="flex items-start gap-3 max-w-[85%] self-end flex-row-reverse">
-                    <div class="w-8 h-8 rounded-xl bg-zinc-800 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0">👤</div>
-                    <div class="bg-amber-500 text-zinc-950 font-medium p-4 rounded-2xl rounded-tl-none text-xs leading-relaxed">${escapeHTML(userText)}</div>
-                </div>
-            `;
-            inputField.value = '';
-            messageContainer.scrollTop = messageContainer.scrollHeight;
+<!-- ===================== LOGIN MODAL ===================== -->
+<div id="loginModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+  <div class="box glass rounded-3xl w-full max-w-sm p-6 border border-amber-500/20">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="font-black text-base">تسجيل الدخول 👤</h3>
+      <button onclick="closeModal('loginModal')" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">✕</button>
+    </div>
+    <div class="space-y-3">
+      <input id="loginName" type="text" placeholder="الاسم الكامل" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="loginPhone" type="tel" placeholder="رقم الهاتف" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <button onclick="doLogin()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">دخول / إنشاء حساب</button>
+      <p class="text-[10px] text-zinc-500 text-center">يتم حفظ حسابك على جهازك فقط لتسهيل الطلبات المستقبلية.</p>
+    </div>
+  </div>
+</div>
 
-            const loadingId = 'loading-' + Date.now();
-            messageContainer.innerHTML += `
-                <div id="${loadingId}" class="flex items-start gap-3 max-w-[85%]">
-                    <div class="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 flex items-center justify-center font-bold text-xs shrink-0">🤖</div>
-                    <div class="glass-card p-4 rounded-2xl rounded-tr-none text-xs text-zinc-400">الموظف يفكر ويكتب الرد...</div>
-                </div>
-            `;
-            messageContainer.scrollTop = messageContainer.scrollHeight;
+<!-- ===================== CHECKOUT MODAL ===================== -->
+<div id="checkoutModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+  <div class="box glass rounded-3xl w-full max-w-lg p-6 border border-amber-500/20 max-h-[92vh] overflow-y-auto scrollbar">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="font-black text-base">🚚 طلبك واصل عندك وين ما كنت</h3>
+      <button onclick="closeModal('checkoutModal')" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">✕</button>
+    </div>
+    <div class="space-y-3">
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">الاسم *</label><input id="co-name" type="text" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500"></div>
+        <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">الهاتف *</label><input id="co-phone" type="tel" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">المدينة *</label><input id="co-city" type="text" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500"></div>
+        <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">الحي / المنطقة *</label><input id="co-area" type="text" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500"></div>
+      </div>
+      <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">العنوان التفصيلي *</label><input id="co-address" type="text" placeholder="الشارع، رقم المبنى، علامة مميزة..." class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500"></div>
+      <div>
+        <label class="text-[11px] text-zinc-400 font-bold block mb-1.5">طريقة الدفع</label>
+        <select id="co-pay" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          <option>الدفع عند الاستلام 💵</option>
+          <option>تحويل بنكي 🏦</option>
+          <option>بطاقة ائتمانية 💳</option>
+        </select>
+      </div>
+      <div><label class="text-[11px] text-zinc-400 font-bold block mb-1.5">ملاحظات للتوصيل</label><textarea id="co-notes" rows="2" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea></div>
+      <div id="co-summary" class="glass-card rounded-2xl p-4 text-xs space-y-1"></div>
+      <button onclick="confirmOrder()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">تأكيد الطلب وإصدار الفاتورة ✅</button>
+    </div>
+  </div>
+</div>
 
-            try {
-                const systemInstruction = `
-                    أنت موظف مبيعات وخبير تقني محترف وودود جداً في متجر "Aura Tech" الرقمي.
-                    مهمتك هي التحدث مع الزبائن وكأنك إنسان بشري حقيقي يقدم استشارات ونصائح تسويقية وتقنية صادقة ومفيدة باللغة العربية.
-                    المنتجات المتوفرة في المتجر:
-                    1. iPhone 15 Pro Max ($1199)
-                    2. Samsung Galaxy S24 Ultra ($1100)
-                    3. MacBook Pro M3 Max ($2499)
-                    أجب على سؤال الزبون التالي بشكل طبيعي ومباشر ودون تكرار لجمل ترحيبية محفوظة:
-                `;
+<!-- ===================== INVOICE MODAL ===================== -->
+<div id="invoiceModal" class="modal fixed inset-0 bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
+  <div class="box bg-white text-zinc-900 rounded-3xl w-full max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto scrollbar">
+    <div id="invoiceBody"></div>
+    <div class="p-4 bg-zinc-100 flex gap-2">
+      <button onclick="window.print()" class="flex-1 bg-zinc-900 text-white py-3 rounded-xl text-xs font-black">🖨️ طباعة / حفظ PDF</button>
+      <button onclick="closeModal('invoiceModal');clearCart()" class="flex-1 gold-btn py-3 rounded-xl text-xs font-black">تم ✅</button>
+    </div>
+  </div>
+</div>
 
-                const response = await ai.models.generateContent({
-                    model: 'gemini-2.5-flash',
-                    contents: `${systemInstruction}\n\nسؤال الزبون: ${userText}`
-                });
+<!-- ===================== COMPARE MODAL ===================== -->
+<div id="compareModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+  <div class="box glass rounded-3xl w-full max-w-3xl p-6 border border-amber-500/20 max-h-[92vh] overflow-y-auto scrollbar">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="font-black text-base">⚖️ مقارنة المنتجات</h3>
+      <button onclick="closeModal('compareModal')" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">✕</button>
+    </div>
+    <div id="compareContent"></div>
+  </div>
+</div>
 
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
+<!-- ===================== AI CHAT WIDGET ===================== -->
+<button id="aiFab" onclick="openAI()" class="fixed bottom-5 left-5 z-40 w-14 h-14 rounded-full gold-btn shadow-2xl shadow-amber-500/40 flex items-center justify-center text-2xl hover:scale-110 transition">🤖</button>
+<div id="aiPanel" class="fixed bottom-24 left-4 right-4 md:left-5 md:right-auto md:w-[400px] z-50 hidden">
+  <div class="glass rounded-3xl shadow-2xl border border-amber-500/30 overflow-hidden">
+    <div class="p-4 bg-zinc-900/70 border-b border-zinc-800 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl gold-btn flex items-center justify-center text-sm">🤖</div>
+        <div>
+          <div class="text-xs font-black">خبير المبيعات الذكي</div>
+          <div class="text-[9px] text-emerald-400">● متصل الآن</div>
+        </div>
+      </div>
+      <button onclick="closeAI()" class="w-7 h-7 rounded-lg bg-zinc-800 text-xs">✕</button>
+    </div>
+    <div id="chat-messages" class="p-4 h-[360px] overflow-y-auto scrollbar space-y-3 flex flex-col bg-zinc-950/60">
+      <div class="flex items-start gap-2 max-w-[88%]">
+        <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
+        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">أهلاً بك في LORD CELL! أنا معك لمساعدتك واختيار الجهاز الأنسب لك. كيف يمكنني خدمتك اليوم؟</div>
+      </div>
+    </div>
+    <div class="p-3 bg-zinc-900/60 border-t border-zinc-800 flex gap-2">
+      <input type="text" id="chat-input" placeholder="اكتب استفسارك..." onkeypress="handleKeyPress(event)" class="flex-1 bg-zinc-950 border border-zinc-800 px-3 py-2.5 rounded-xl text-[11px] focus:outline-none focus:border-amber-500">
+      <button onclick="sendChatMessage()" class="gold-btn px-4 rounded-xl text-[11px] font-black">إرسال</button>
+    </div>
+  </div>
+</div>
 
-                const aiResponse = response.text || "أهلاً بك، تفضل بطرح استفسارك وسأساعدك فوراً.";
+<!-- ===================== TOAST ===================== -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[90] hidden"></div>
 
-                messageContainer.innerHTML += `
-                    <div class="flex items-start gap-3 max-w-[85%]">
-                        <div class="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 flex items-center justify-center font-bold text-xs shrink-0">🤖</div>
-                        <div class="glass-card p-4 rounded-2xl rounded-tr-none text-xs leading-relaxed text-zinc-200 whitespace-pre-line border border-amber-500/20">${escapeHTML(aiResponse)}</div>
-                    </div>
-                `;
-                messageContainer.scrollTop = messageContainer.scrollHeight;
+<script type="module">
+import { GoogleGenAI } from "@google/genai";
 
-            } catch (error) {
-                const loadingElement = document.getElementById(loadingId);
-                if (loadingElement) loadingElement.remove();
+/* ============================================================
+   ⚠️  تحذير أمني مهم:
+   مفتاح الـ API مكشوف في كود الواجهة الأمامية، وأي شخص يفتح
+   "عرض المصدر" يمكنه سرقته. للحماية: أنشئ وسيطًا (Backend)
+   مثل Cloudflare Worker أو Vercel Function يستقبل الطلبات
+   ويتصل بـ Gemini، ثم مرّر المفتاح داخل الوسيط فقط.
+   ============================================================ */
+const GEMINI_KEY = "AQ.Ab8RN6I0jQCXrmV6D5C4t2w0oxRx4EhHabnB7hj-z--dQPqeFw";
+const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
 
-                messageContainer.innerHTML += `
-                    <div class="flex items-start gap-3 max-w-[85%]">
-                        <div class="w-8 h-8 rounded-xl bg-red-500 text-white flex items-center justify-center font-bold text-xs shrink-0">⚠️</div>
-                        <div class="glass-card p-4 rounded-2xl rounded-tr-none text-xs text-red-300">عذراً، حدث خطأ في الاتصال بالذكاء الاصطناعي. تأكد من صحة مفتاح الـ API.</div>
-                    </div>
-                `;
-            }
-        };
+/* ================== PRODUCTS DATA ================== */
+const PRODUCTS = [
+  // PHONES
+  { id:'ph1', cat:'phones', name:'iPhone 15 Pro Max', price:1199, old:1299, badge:'الأكثر مبيعاً', emoji:'📱',
+    img:'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80',
+    desc:'أداء خارق بمعالج A17 Pro، كاميرا سينمائية احترافية، وهيكل من التيتانيوم.',
+    specs:{'الشاشة':'6.7" Super Retina XDR','المعالج':'A17 Pro','الكاميرا':'48MP + 12MP + 12MP','البطارية':'4441 mAh','التخزين':'256GB / 512GB / 1TB','الشبكة':'5G'} },
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
-        }
-    </script>
+  { id:'ph2', cat:'phones', name:'Samsung Galaxy S24 Ultra', price:1100, old:1249, badge:'ذكاء اصطناعي', emoji:'📱',
+    img:'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&q=80',
+    desc:'مدعوم بالذكاء الاصطناعي الكامل، قلم S-Pen، وشاشة Dynamic AMOLED مذهلة.',
+    specs:{'الشاشة':'6.8" QHD+ AMOLED 120Hz','المعالج':'Snapdragon 8 Gen 3','الكاميرا':'200MP + 50MP + 12MP + 10MP','البطارية':'5000 mAh','التخزين':'256GB / 512GB / 1TB','مميز':'قلم S-Pen مدمج'} },
+
+  { id:'ph3', cat:'phones', name:'Google Pixel 8 Pro', price:899, old:999, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'أفضل كاميرا حوسبية، و7 سنوات من تحديثات أندرويد المضمونة.',
+    specs:{'الشاشة':'6.7" LTPO OLED','المعالج':'Google Tensor G3','الكاميرا':'50MP + 48MP + 48MP','البطارية':'5050 mAh','التخزين':'128GB / 256GB','مميز':'7 سنوات تحديثات'} },
+
+  { id:'ph4', cat:'phones', name:'Xiaomi 14 Ultra', price:849, old:949, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?w=600&q=80',
+    desc:'كاميرا Leica احترافية بأربع عدسات، وأداء خارق بسعر تنافسي.',
+    specs:{'الشاشة':'6.73" AMOLED 120Hz','المعالج':'Snapdragon 8 Gen 3','الكاميرا':'50MP Leica ×4','البطارية':'5300 mAh','الشحن':'90W سلكي','مميز':'عدسات Leica'} },
+
+  // LAPTOPS
+  { id:'lp1', cat:'laptops', name:'MacBook Pro M3 Max', price:2499, old:2799, badge:'للمحترفين', emoji:'💻',
+    img:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80',
+    desc:'الخيار المطلق للمبرمجين والمونتاج الثقيل والتصميم الاحترافي.',
+    specs:{'الشاشة':'14.2" Liquid Retina XDR','المعالج':'Apple M3 Max','الذاكرة':'36GB Unified','التخزين':'1TB SSD','البطارية':'حتى 22 ساعة','مميز':'منفذ HDMI + SD'} },
+
+  { id:'lp2', cat:'laptops', name:'Dell XPS 15', price:1699, old:1899, emoji:'💻',
+    img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
+    desc:'شاشة OLED مذهلة وأداء عالٍ بتصميم أنيق من الألومنيوم.',
+    specs:{'الشاشة':'15.6" OLED 3.5K','المعالج':'Intel Core i9-13900H','الذاكرة':'32GB DDR5','التخزين':'1TB SSD','كرت الشاشة':'RTX 4070','مميز':'معدن كامل'} },
+
+  { id:'lp3', cat:'laptops', name:'ASUS ROG Zephyrus G14', price:1449, old:1599, emoji:'💻',
+    img:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&q=80',
+    desc:'لابتوب ألعاب خفيف الوزن بأداء عنيف وبطارية ممتازة.',
+    specs:{'الشاشة':'14" QHD 165Hz','المعالج':'Ryzen 9 8945HS','الذاكرة':'16GB DDR5','التخزين':'1TB SSD','كرت الشاشة':'RTX 4070','الوزن':'1.5 كجم'} },
+
+  { id:'lp4', cat:'laptops', name:'Lenovo IdeaPad Slim 5', price:649, old:749, emoji:'💻',
+    img:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80',
+    desc:'لابتوب اقتصادي مثالي للطلاب والعمل اليومي.',
+    specs:{'الشاشة':'15.6" FHD IPS','المعالج':'Ryzen 7 7730U','الذاكرة':'16GB','التخزين':'512GB SSD','البطارية':'حتى 12 ساعة','مميز':'الأفضل للطلاب'} },
+
+  // PARTS
+  { id:'pt1', cat:'parts', name:'شاشة iPhone 14 Pro أصلية', price:189, emoji:'🧩',
+    img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&q=80',
+    desc:'شاشة OLED أصلية بضمان تركيب مجاني داخل المتجر.',
+    specs:{'التوافق':'iPhone 14 Pro','النوع':'OLED أصلية','الضمان':'6 أشهر','التركيب':'مجاني في المتجر','الجودة':'A+ Grade'} },
+
+  { id:'pt2', cat:'parts', name:'بطارية Samsung S22 Ultra', price:59, emoji:'🔋',
+    img:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&q=80',
+    desc:'بطارية بسعة أصلية وعمر استخدام طويل.',
+    specs:{'التوافق':'Galaxy S22 Ultra','السعة':'5000 mAh','الضمان':'6 أشهر','النوع':'Li-Ion أصلية'} },
+
+  { id:'pt3', cat:'parts', name:'منفذ شحن Type-C أصلي', price:29, emoji:'🔌',
+    img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
+    desc:'منفذ شحن أصلي متوافق مع معظم هواتف أندرويد الحديثة.',
+    specs:{'التوافق':'أندرويد / أيفون 15','النوع':'USB-C أصلي','الضمان':'3 أشهر'} },
+
+  // ACCESSORIES
+  { id:'ac1', cat:'accessories', name:'AirPods Pro الجيل الثاني', price:249, old:299, badge:'عرض خاص', emoji:'🎧',
+    img:'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=600&q=80',
+    desc:'عزل ضجيج نشط متكيف وصوت مكاني مذهل.',
+    specs:{'النوع':'لاسلكية ANC','البطارية':'حتى 30 ساعة مع العلبة','المقاومة':'IP54','الشحن':'MagSafe + USB-C','مميز':'صوت مكاني'} },
+
+  { id:'ac2', cat:'accessories', name:'Apple Watch Ultra 2', price:799, old:849, emoji:'⌚',
+    img:'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&q=80',
+    desc:'ساعة رياضية احترافية بشاشة فائقة السطوع وبطارية تدوم طويلاً.',
+    specs:{'الشاشة':'49mm Retina دائمة','المقاومة':'100m غوص','البطارية':'حتى 72 ساعة','المواد':'تيتانيوم','مميز':'GPS مزدوج'} },
+
+  { id:'ac3', cat:'accessories', name:'شاحن Anker 65W GaN', price:45, emoji:'⚡',
+    img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
+    desc:'شاحن سريع متعدد المنافذ بحجم صغير وقوة عالية.',
+    specs:{'القوة':'65 واط','المنافذ':'2×USB-C + USB-A','التقنية':'GaN II','التوافق':'جميع الأجهزة'} },
+
+  { id:'ac4', cat:'accessories', name:'حافظة iPhone 15 شفافة', price:19, emoji:'🛡️',
+    img:'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80',
+    desc:'حماية شفافة مضادة للصدمات بدون تغيير شكل الجهاز.',
+    specs:{'التوافق':'iPhone 15','المادة':'TPU مرن','مميز':'مقاوم للاصفرار'} },
+
+  // GIFT CARDS
+  { id:'gc1', cat:'gift', name:'بطاقة Apple iTunes', price:25, emoji:'🎫',
+    img:'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&q=80',
+    desc:'بطاقة Apple الرقمية لشحن رصيدك على App Store و iCloud و iTunes.',
+    specs:{'القيمة':'25$','التسليم':'فوري عبر البريد','المنطقة':'US / Global','الصلاحية':'دائمة'} },
+
+  { id:'gc2', cat:'gift', name:'بطاقة Xbox Game Pass', price:19, emoji:'🎮',
+    img:'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=600&q=80',
+    desc:'اشتراك شهري للوصول لأكثر من 100 لعبة على Xbox و PC.',
+    specs:{'المدة':'شهر واحد','الألعاب':'+100 لعبة','التسليم':'فوري','المنطقة':'Global'} },
+
+  { id:'gc3', cat:'gift', name:'بطاقة PlayStation Plus', price:29, emoji:'🕹️',
+    img:'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=600&q=80',
+    desc:'اشتراك PS Plus Essential للعب الجماعي والألعاب الشهرية المجانية.',
+    specs:{'المدة':'3 أشهر','المستوى':'Essential','التسليم':'فوري','المنطقة':'US'} },
+
+  { id:'gc4', cat:'gift', name:'بطاقة Google Play', price:20, emoji:'🎫',
+    img:'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=600&q=80',
+    desc:'رصيد Google Play لشراء التطبيقات والألعاب والاشتراكات.',
+    specs:{'القيمة':'20$','التسليم':'فوري','المنطقة':'US','الصلاحية':'دائمة'} },
+];
+
+/* ================== STATE ================== */
+let state = {
+  user: JSON.parse(localStorage.getItem('lc_user') || 'null'),
+  cart: JSON.parse(localStorage.getItem('lc_cart') || '[]'),
+  points: parseInt(localStorage.getItem('lc_points') || '0'),
+  compare: [],
+  orders: JSON.parse(localStorage.getItem('lc_orders') || '[]')
+};
+let currentCat = 'all';
+
+function saveState(){
+  localStorage.setItem('lc_user', JSON.stringify(state.user));
+  localStorage.setItem('lc_cart', JSON.stringify(state.cart));
+  localStorage.setItem('lc_points', String(state.points));
+  localStorage.setItem('lc_orders', JSON.stringify(state.orders));
+}
+
+/* ================== UTILS ================== */
+function escapeHTML(str){
+  return String(str).replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]||t));
+}
+function toast(msg, type='success'){
+  const el = document.getElementById('toast');
+  const colors = { success:'border-emerald-500/50 text-emerald-300', error:'border-red-500/50 text-red-300', info:'border-amber-500/50 text-amber-300' };
+  const icons = { success:'✅', error:'⚠️', info:'ℹ️' };
+  el.innerHTML = `<div class="toast glass rounded-2xl px-5 py-3 border ${colors[type]} text-xs font-bold shadow-2xl">${icons[type]} ${escapeHTML(msg)}</div>`;
+  el.classList.remove('hidden');
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.add('hidden'), 2800);
+}
+function imgTag(p, cls=''){
+  return `<img src="${p.img}" alt="${escapeHTML(p.name)}" loading="lazy" class="${cls}"
+    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="hidden w-full h-full items-center justify-center text-5xl bg-zinc-900/60">${p.emoji}</div>`;
+}
+
+/* ================== NAV ================== */
+window.go = function(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(page==='shop') renderShop();
+  if(page==='gift') renderGift();
+};
+window.setCat = function(cat){
+  currentCat = cat;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.dataset.cat===cat));
+  renderShop();
+};
+
+/* ================== RENDER PRODUCTS ================== */
+function productCard(p){
+  const inCompare = state.compare.includes(p.id);
+  return `
+  <div class="glass-card rounded-3xl overflow-hidden card-hover flex flex-col">
+    <div class="relative aspect-square bg-zinc-900/50 overflow-hidden">
+      ${imgTag(p, 'w-full h-full object-cover')}
+      ${p.badge ? `<span class="absolute top-3 right-3 gold-btn text-[9px] font-black px-2.5 py-1 rounded-lg">${escapeHTML(p.badge)}</span>` : ''}
+      ${p.old ? `<span class="absolute top-3 left-3 bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded-lg">-${Math.round((1-p.price/p.old)*100)}%</span>` : ''}
+      <button onclick="toggleCompare('${p.id}')" title="أضف للمقارنة" class="absolute bottom-3 left-3 w-8 h-8 rounded-lg ${inCompare?'gold-btn':'bg-zinc-950/80 border border-zinc-700'} flex items-center justify-center text-xs">⚖️</button>
+    </div>
+    <div class="p-4 flex flex-col flex-1">
+      <h4 class="font-bold text-xs text-zinc-100 mb-1 line-clamp-2">${escapeHTML(p.name)}</h4>
+      <p class="text-zinc-500 text-[10px] leading-relaxed mb-3 line-clamp-2 flex-1">${escapeHTML(p.desc)}</p>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="gold-text font-black text-sm price-tag">$${p.price}</span>
+        ${p.old ? `<span class="text-zinc-600 text-[10px] line-through price-tag">$${p.old}</span>` : ''}
+      </div>
+      <div class="flex gap-1.5">
+        <button onclick="addToCart('${p.id}')" class="flex-1 gold-btn py-2.5 rounded-xl text-[11px] font-black">أضف للسلة 🛒</button>
+        <button onclick="openProductDetails('${p.id}')" class="w-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-[11px]">ℹ️</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderHome(){
+  const featured = PRODUCTS.filter(p=>p.badge || p.old).slice(0,4);
+  document.getElementById('featured-grid').innerHTML = featured.map(productCard).join('');
+}
+
+function renderShop(){
+  const grid = document.getElementById('shop-grid');
+  const empty = document.getElementById('shop-empty');
+  const q = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+  const sort = document.getElementById('sortSelect')?.value || 'pop';
+  let list = PRODUCTS.filter(p => currentCat==='all' ? true : p.cat===currentCat);
+  if(q) list = list.filter(p => (p.name+p.desc).toLowerCase().includes(q));
+  if(sort==='low') list.sort((a,b)=>a.price-b.price);
+  else if(sort==='high') list.sort((a,b)=>b.price-a.price);
+  grid.innerHTML = list.map(productCard).join('');
+  empty.classList.toggle('hidden', list.length>0);
+}
+
+function renderGift(){
+  const list = PRODUCTS.filter(p=>p.cat==='gift');
+  document.getElementById('gift-grid').innerHTML = list.map(productCard).join('');
+}
+
+/* ================== CART ================== */
+window.addToCart = function(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p) return;
+  const item = state.cart.find(i=>i.id===id);
+  if(item) item.qty++;
+  else state.cart.push({ id, qty:1 });
+  saveState();
+  updateCartUI();
+  toast(`تمت إضافة ${p.name} إلى السلة`, 'success');
+};
+
+window.changeQty = function(id, delta){
+  const item = state.cart.find(i=>i.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0) state.cart = state.cart.filter(i=>i.id!==id);
+  saveState();
+  updateCartUI();
+};
+
+window.removeItem = function(id){
+  state.cart = state.cart.filter(i=>i.id!==id);
+  saveState();
+  updateCartUI();
+};
+
+function cartTotals(){
+  let subtotal = 0, itemCount = 0;
+  state.cart.forEach(i=>{
+    const p = PRODUCTS.find(x=>x.id===i.id);
+    if(p){ subtotal += p.price*i.qty; itemCount += i.qty; }
+  });
+  let rate = 0;
+  if(itemCount===2) rate = 0.05;
+  else if(itemCount===3) rate = 0.10;
+  else if(itemCount>=4) rate = 0.15;
+  const discount = subtotal * rate;
+
+  // Loyalty points: 100 points = $1
+  const maxPointsValue = state.points / 100;
+  const pointsValue = Math.min(maxPointsValue, (subtotal - discount) * 0.5);
+
+  const total = subtotal - discount - pointsValue;
+  return { subtotal, itemCount, rate, discount, pointsUsed: Math.round(pointsValue*100), pointsValue, total: Math.max(0, total) };
+}
+
+function updateCartUI(){
+  const countEl = document.getElementById('cart-count');
+  const totalQty = state.cart.reduce((s,i)=>s+i.qty,0);
+  if(totalQty>0){ countEl.textContent = totalQty; countEl.classList.remove('hidden'); }
+  else countEl.classList.add('hidden');
+
+  const itemsEl = document.getElementById('cartItems');
+  if(state.cart.length===0){
+    itemsEl.innerHTML = `<div class="text-center py-20 text-zinc-500 text-xs">سلتك فارغة 🛒<br><span class="text-[10px] mt-2 block">ابدأ التصفح وأضف منتجاتك المفضلة.</span></div>`;
+  } else {
+    itemsEl.innerHTML = state.cart.map(i=>{
+      const p = PRODUCTS.find(x=>x.id===i.id);
+      if(!p) return '';
+      return `
+      <div class="glass-card rounded-2xl p-3 flex gap-3 items-center">
+        <div class="w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 shrink-0">${imgTag(p,'w-full h-full object-cover')}</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[11px] font-bold text-zinc-100 truncate">${escapeHTML(p.name)}</div>
+          <div class="text-[10px] gold-text font-black price-tag mt-0.5">$${p.price}</div>
+          <div class="flex items-center gap-2 mt-2">
+            <button onclick="changeQty('${p.id}',-1)" class="w-6 h-6 rounded-md bg-zinc-800 hover:bg-zinc-700 text-xs">−</button>
+            <span class="text-xs font-bold w-6 text-center">${i.qty}</span>
+            <button onclick="changeQty('${p.id}',1)" class="w-6 h-6 rounded-md bg-zinc-800 hover:bg-zinc-700 text-xs">+</button>
+            <button onclick="removeItem('${p.id}')" class="mr-auto text-red-400 hover:text-red-300 text-[10px]">حذف</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const t = cartTotals();
+  document.getElementById('cartSubtotal').textContent = `$${t.subtotal.toFixed(2)}`;
+
+  const dRow = document.getElementById('cartDiscountRow');
+  if(t.discount>0){ dRow.classList.remove('hidden'); document.getElementById('cartDiscount').textContent = `-$${t.discount.toFixed(2)}`; }
+  else dRow.classList.add('hidden');
+
+  const pRow = document.getElementById('cartPointsRow');
+  if(t.pointsValue>0.01){ pRow.classList.remove('hidden'); document.getElementById('cartPoints').textContent = `-$${t.pointsValue.toFixed(2)}`; }
+  else pRow.classList.add('hidden');
+
+  document.getElementById('cartTotal').textContent = `$${t.total.toFixed(2)}`;
+
+  const note = document.getElementById('cartDiscountNote');
+  if(t.itemCount===1){
+    note.classList.remove('hidden');
+    note.textContent = '💡 أضف قطعة ثانية للحصول على خصم 5% فوري!';
+  } else if(t.itemCount===2){
+    note.classList.remove('hidden');
+    note.textContent = '💡 أضف قطعة ثالثة للحصول على خصم 10%!';
+  } else if(t.itemCount===3){
+    note.classList.remove('hidden');
+    note.textContent = '💡 أضف قطعة رابعة للحصول على خصم 15%!';
+  } else if(t.itemCount>=4){
+    note.classList.remove('hidden');
+    note.textContent = `🎉 مبروك! حصلت على خصم 15% على طلبك.`;
+  } else note.classList.add('hidden');
+}
+
+window.openCart = function(){
+  document.getElementById('cartOverlay').classList.remove('hidden');
+  document.getElementById('cartDrawer').classList.add('open');
+};
+window.closeCart = function(){
+  document.getElementById('cartOverlay').classList.add('hidden');
+  document.getElementById('cartDrawer').classList.remove('open');
+};
+window.clearCart = function(){
+  state.cart = [];
+  saveState();
+  updateCartUI();
+};
+
+/* ================== MODALS ================== */
+window.openModal = id => document.getElementById(id).classList.add('open');
+window.closeModal = id => document.getElementById(id).classList.remove('open');
+window.openProductDetails = function(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p) return;
+  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<div class="flex justify-between border-b border-zinc-800 py-2 text-[11px]"><span class="text-zinc-400">${escapeHTML(k)}</span><span class="text-zinc-100 font-bold">${escapeHTML(v)}</span></div>`).join('');
+  alert(`${p.name}\n\n${p.desc}\n\nالمواصفات:\n` + Object.entries(p.specs||{}).map(([k,v])=>`• ${k}: ${v}`).join('\n') + `\n\nالسعر: $${p.price}`);
+};
+
+/* ================== LOGIN ================== */
+window.handleUserClick = function(){
+  if(state.user){
+    if(confirm(`مرحباً ${state.user.name}!\nنقاطك: ${state.points}\n\nهل تريد تسجيل الخروج؟`)){
+      state.user = null; saveState(); updateUserUI(); toast('تم تسجيل الخروج','info');
+    }
+  } else {
+    openModal('loginModal');
+  }
+};
+window.doLogin = function(){
+  const name = document.getElementById('loginName').value.trim();
+  const phone = document.getElementById('loginPhone').value.trim();
+  if(!name || phone.length<6) return toast('يرجى إدخال اسم ورقم هاتف صحيح','error');
+  state.user = { name, phone };
+  saveState();
+  updateUserUI();
+  closeModal('loginModal');
+  toast(`مرحباً ${name}! تم تسجيل الدخول`, 'success');
+};
+function updateUserUI(){
+  const lbl = document.getElementById('userLabel');
+  if(state.user){ lbl.textContent = state.user.name.split(' ')[0]; }
+  else lbl.textContent = 'دخول';
+}
+
+/* ================== CHECKOUT ================== */
+window.openCheckout = function(){
+  if(state.cart.length===0) return toast('سلتك فارغة','error');
+  if(!state.user) { closeCart(); openModal('loginModal'); return toast('يرجى تسجيل الدخول أولاً','info'); }
+  document.getElementById('co-name').value = state.user.name;
+  document.getElementById('co-phone').value = state.user.phone;
+  const t = cartTotals();
+  document.getElementById('co-summary').innerHTML = `
+    <div class="text-amber-400 font-black mb-2">📦 ملخص الطلب</div>
+    <div class="flex justify-between"><span class="text-zinc-400">عدد القطع</span><span>${t.itemCount}</span></div>
+    <div class="flex justify-between"><span class="text-zinc-400">المجموع الفرعي</span><span>$${t.subtotal.toFixed(2)}</span></div>
+    ${t.discount>0?`<div class="flex justify-between text-emerald-400"><span>خصم الكمية (${Math.round(t.rate*100)}%)</span><span>-$${t.discount.toFixed(2)}</span></div>`:''}
+    ${t.pointsValue>0.01?`<div class="flex justify-between text-amber-400"><span>نقاط الولاء (${t.pointsUsed} نقطة)</span><span>-$${t.pointsValue.toFixed(2)}</span></div>`:''}
+    <div class="flex justify-between font-black pt-2 mt-2 border-t border-zinc-800"><span>الإجمالي</span><span class="gold-text">$${t.total.toFixed(2)}</span></div>
+  `;
+  closeCart();
+  openModal('checkoutModal');
+};
+
+window.confirmOrder = function(){
+  const name = document.getElementById('co-name').value.trim();
+  const phone = document.getElementById('co-phone').value.trim();
+  const city = document.getElementById('co-city').value.trim();
+  const area = document.getElementById('co-area').value.trim();
+  const address = document.getElementById('co-address').value.trim();
+  const pay = document.getElementById('co-pay').value;
+  const notes = document.getElementById('co-notes').value.trim();
+
+  if(!name||!phone||!city||!area||!address) return toast('يرجى تعبئة جميع الحقول المطلوبة','error');
+
+  const t = cartTotals();
+  const orderNum = 'LC-' + Date.now().toString().slice(-6);
+  const date = new Date().toLocaleString('ar-EG');
+
+  const order = {
+    num: orderNum, date, name, phone, city, area, address, pay, notes,
+    items: state.cart.map(i=>({ ...PRODUCTS.find(x=>x.id===i.id), qty:i.qty })),
+    totals: t
+  };
+
+  // Points: earned = total / 1 = 1 point per $1 spent → total * 1
+  const earned = Math.floor(t.total);
+  state.points = state.points - t.pointsUsed + earned;
+  state.orders.push(order);
+  saveState();
+  updateUserUI();
+
+  showInvoice(order, earned);
+  closeModal('checkoutModal');
+};
+
+function showInvoice(order, earned){
+  const rows = order.items.map(i=>`
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;">${escapeHTML(i.name)}</td>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:12px;">${i.qty}</td>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${i.price}</td>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${(i.price*i.qty).toFixed(2)}</td>
+    </tr>`).join('');
+
+  const t = order.totals;
+
+  document.getElementById('invoiceBody').innerHTML = `
+    <div style="background:linear-gradient(135deg,#09090b,#1f1f24);color:#fff;padding:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:22px;font-weight:900;color:#fbbf24;">LORD CELL</div>
+          <div style="font-size:10px;color:#a1a1aa;letter-spacing:2px;margin-top:2px;">DIGITAL STORE</div>
+        </div>
+        <div style="text-align:left;font-size:11px;color:#d4d4d8;">
+          <div>رقم الفاتورة: <strong style="color:#fbbf24;">${order.num}</strong></div>
+          <div>التاريخ: ${order.date}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="background:#f9fafb;padding:12px;border-radius:12px;">
+          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">بيانات العميل</div>
+          <div style="font-size:12px;font-weight:700;">${escapeHTML(order.name)}</div>
+          <div style="font-size:11px;color:#52525b;">${escapeHTML(order.phone)}</div>
+        </div>
+        <div style="background:#f9fafb;padding:12px;border-radius:12px;">
+          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">عنوان التوصيل</div>
+          <div style="font-size:11px;font-weight:700;">${escapeHTML(order.city)} - ${escapeHTML(order.area)}</div>
+          <div style="font-size:10px;color:#52525b;margin-top:2px;">${escapeHTML(order.address)}</div>
+        </div>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#09090b;color:#fbbf24;">
+            <th style="padding:10px;font-size:11px;text-align:right;">المنتج</th>
+            <th style="padding:10px;font-size:11px;text-align:center;">الكمية</th>
+            <th style="padding:10px;font-size:11px;text-align:left;">السعر</th>
+            <th style="padding:10px;font-size:11px;text-align:left;">الإجمالي</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <div style="margin-top:16px;padding:12px;background:#f9fafb;border-radius:12px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#52525b;">المجموع الفرعي</span><span>$${t.subtotal.toFixed(2)}</span></div>
+        ${t.discount>0?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#059669;"><span>خصم الكمية (${Math.round(t.rate*100)}%)</span><span>-$${t.discount.toFixed(2)}</span></div>`:''}
+        ${t.pointsValue>0.01?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#d97706;"><span>نقاط الولاء</span><span>-$${t.pointsValue.toFixed(2)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:6px;border-top:2px solid #09090b;font-weight:900;font-size:15px;"><span>الإجمالي</span><span style="color:#d97706;">$${t.total.toFixed(2)}</span></div>
+      </div>
+
+      <div style="margin-top:14px;padding:12px;background:#fffbeb;border:1px dashed #f59e0b;border-radius:12px;font-size:11px;color:#78350f;">
+        <strong>💳 طريقة الدفع:</strong> ${escapeHTML(order.pay)}<br>
+        <strong>🎁 نقاط مكتسبة:</strong> +${earned} نقطة — رصيدك الحالي: ${state.points} نقطة<br>
+        <strong>🚚 التوصيل:</strong> خلال 24-72 ساعة إلى العنوان المذكور أعلاه.
+        ${order.notes ? `<br><strong>📝 ملاحظات:</strong> ${escapeHTML(order.notes)}` : ''}
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:10px;color:#71717a;">
+        شكراً لثقتك بـ LORD CELL — طلبك واصل عندك وين ما كنت 💛
+      </div>
+    </div>
+  `;
+  openModal('invoiceModal');
+}
+
+/* ================== COMPARE ================== */
+window.toggleCompare = function(id){
+  const idx = state.compare.indexOf(id);
+  if(idx>-1) state.compare.splice(idx,1);
+  else {
+    if(state.compare.length>=3) return toast('يمكنك مقارنة 3 منتجات كحد أقصى','error');
+    state.compare.push(id);
+  }
+  updateCompareBar();
+  renderShop();
+  if(document.getElementById('page-gift').classList.contains('active')) renderGift();
+};
+function updateCompareBar(){
+  const bar = document.getElementById('compareBar');
+  document.getElementById('compareCount').textContent = state.compare.length;
+  bar.classList.toggle('hidden', state.compare.length===0);
+}
+window.clearCompare = function(){ state.compare = []; updateCompareBar(); renderShop(); renderGift(); };
+window.openCompare = function(){
+  if(state.compare.length<2) return toast('اختر منتجين على الأقل للمقارنة','error');
+  const items = state.compare.map(id=>PRODUCTS.find(p=>p.id===id)).filter(Boolean);
+  const allKeys = [...new Set(items.flatMap(p=>Object.keys(p.specs||{})))];
+  const header = `<tr><th class="p-2 text-right text-[11px] text-zinc-400">المواصفة</th>${items.map(p=>`<th class="p-2 text-center"><div class="w-16 h-16 mx-auto rounded-xl overflow-hidden bg-zinc-900">${imgTag(p,'w-full h-full object-cover')}</div><div class="text-[10px] font-bold mt-1">${escapeHTML(p.name)}</div></th>`).join('')}</tr>`;
+  const priceRow = `<tr><td class="p-2 text-[11px] text-zinc-400">السعر</td>${items.map(p=>`<td class="p-2 text-center gold-text font-black text-sm">$${p.price}</td>`).join('')}</tr>`;
+  const specRows = allKeys.map(k=>`<tr><td class="p-2 text-[11px] text-zinc-400">${escapeHTML(k)}</td>${items.map(p=>`<td class="p-2 text-center text-[11px] text-zinc-200">${escapeHTML(p.specs?.[k]||'—')}</td>`).join('')}</tr>`).join('');
+  document.getElementById('compareContent').innerHTML = `<div class="overflow-x-auto"><table class="w-full border-collapse">${header}${priceRow}${specRows}</table></div>`;
+  openModal('compareModal');
+};
+
+/* ================== FIND PRODUCT ================== */
+window.submitFindRequest = function(){
+  const name = document.getElementById('fp-name').value.trim();
+  const budget = document.getElementById('fp-budget').value.trim();
+  const phone = document.getElementById('fp-phone').value.trim();
+  const notes = document.getElementById('fp-notes').value.trim();
+  if(!name||!budget||!phone) return toast('يرجى تعبئة الحقول المطلوبة','error');
+  const ticket = 'FIND-' + Date.now().toString().slice(-5);
+  toast(`تم استلام طلبك رقم ${ticket} — سنوافيك بالعرض خلال 24 ساعة`, 'success');
+  ['fp-name','fp-budget','fp-phone','fp-notes'].forEach(i=>document.getElementById(i).value='');
+};
+
+/* ================== SUPPORT ================== */
+window.previewSupportImage = function(e){
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    const img = document.getElementById('sp-preview');
+    img.src = ev.target.result;
+    img.classList.remove('hidden');
+  };
+  r.readAsDataURL(f);
+};
+window.submitSupport = function(){
+  if(!state.user){ document.getElementById('supportLoginNote').classList.remove('hidden'); return toast('يرجى تسجيل الدخول أولاً','error'); }
+  const name = document.getElementById('sp-name').value.trim();
+  const phone = document.getElementById('sp-phone').value.trim();
+  const device = document.getElementById('sp-device').value.trim();
+  const issue = document.getElementById('sp-issue').value.trim();
+  if(!name||!phone||!device||!issue) return toast('يرجى تعبئة جميع الحقول','error');
+  const ticket = 'SR-' + Date.now().toString().slice(-5);
+  toast(`تم إنشاء تذكرة صيانة رقم ${ticket} — سيتواصل معك المشرف قريباً`, 'success');
+  ['sp-name','sp-phone','sp-device','sp-issue'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('sp-image').value = '';
+  document.getElementById('sp-preview').classList.add('hidden');
+};
+
+/* ================== AI CHAT ================== */
+window.openAI = function(){ document.getElementById('aiPanel').classList.remove('hidden'); };
+window.closeAI = function(){ document.getElementById('aiPanel').classList.add('hidden'); };
+window.handleKeyPress = e => { if(e.key==='Enter') sendChatMessage(); };
+
+window.sendChatMessage = async function(){
+  const input = document.getElementById('chat-input');
+  const box = document.getElementById('chat-messages');
+  const text = input.value.trim();
+  if(!text) return;
+
+  box.innerHTML += `
+    <div class="flex items-start gap-2 max-w-[88%] self-end flex-row-reverse">
+      <div class="w-7 h-7 rounded-lg bg-zinc-800 text-amber-400 flex items-center justify-center text-[11px] shrink-0">👤</div>
+      <div class="bg-amber-500 text-zinc-950 font-medium p-3 rounded-2xl rounded-tl-none text-[11px] leading-relaxed">${escapeHTML(text)}</div>
+    </div>`;
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+
+  const lid = 'ld-'+Date.now();
+  box.innerHTML += `
+    <div id="${lid}" class="flex items-start gap-2 max-w-[88%]">
+      <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
+      <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] text-zinc-400">يكتب...</div>
+    </div>`;
+  box.scrollTop = box.scrollHeight;
+
+  try{
+    const catalog = PRODUCTS.map(p => `- ${p.name} (${p.cat}) — $${p.price}${p.old?` (كان $${p.old})`:''} — ${p.desc}`).join('\n');
+    const sys = `أنت موظف مبيعات وخبير تقني محترف وودود جداً في متجر "LORD CELL".
+مهمتك التحدث مع الزبائن كإنسان بشري حقيقي وتقديم استشارات تقنية وتسويقية صادقة بالعربية.
+لدينا الخدمات التالية: توصيل، صيانة مع مشرفين، بحث عن منتجات غير متوفرة، بطاقات شحن رقمية، ومقارنة منتجات.
+كاتالوج المنتجات:
+${catalog}
+قواعد: أجب بإيجاز ووضوح، اقترح منتجات محددة بالاسم والسعر، لا تكرر ترحيبات محفوظة.`;
+
+    const res = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: `${sys}\n\nسؤال الزبون: ${text}`
+    });
+
+    document.getElementById(lid)?.remove();
+    const reply = res.text || 'عذراً، لم أفهم سؤالك. هل يمكنك التوضيح؟';
+    box.innerHTML += `
+      <div class="flex items-start gap-2 max-w-[88%]">
+        <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
+        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200 whitespace-pre-line border border-amber-500/20">${escapeHTML(reply)}</div>
+      </div>`;
+    box.scrollTop = box.scrollHeight;
+  } catch(err){
+    console.error(err);
+    document.getElementById(lid)?.remove();
+    box.innerHTML += `
+      <div class="flex items-start gap-2 max-w-[88%]">
+        <div class="w-7 h-7 rounded-lg bg-red-500 text-white flex items-center justify-center text-[11px] shrink-0">⚠️</div>
+        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] text-red-300">تعذر الاتصال بالمساعد الذكي. تحقق من اتصالك بالإنترنت أو مفتاح الـ API.</div>
+      </div>`;
+    box.scrollTop = box.scrollHeight;
+  }
+};
+
+/* ================== INIT ================== */
+document.getElementById('year').textContent = new Date().getFullYear();
+renderHome();
+renderShop();
+renderGift();
+updateCartUI();
+updateUserUI();
+</script>
 </body>
 </html>
