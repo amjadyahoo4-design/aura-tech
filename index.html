@@ -6,9 +6,7 @@
 <title>LORD CELL | المتجر الرقمي الذكي</title>
 <meta name="description" content="LORD CELL - متجرك الرقمي الأول للهواتف واللابتوبات والإكسسوارات وقطع الصيانة وبطاقات الشحن مع مساعد ذكي وخدمات صيانة وتوصيل.">
 <script src="https://cdn.tailwindcss.com"></script>
-<script type="importmap">
-{ "imports": { "@google/genai": "https://esm.run/@google/genai" } }
-</script>
+<script src="https://js.puter.com/v2/"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -413,18 +411,10 @@
 <!-- ===================== TOAST ===================== -->
 <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[90] hidden"></div>
 
-<script type="module">
-import { GoogleGenAI } from "@google/genai";
-
+<script>
 /* ============================================================
-   ⚠️  تحذير أمني مهم:
-   مفتاح الـ API مكشوف في كود الواجهة الأمامية، وأي شخص يفتح
-   "عرض المصدر" يمكنه سرقته. للحماية: أنشئ وسيطًا (Backend)
-   مثل Cloudflare Worker أو Vercel Function يستقبل الطلبات
-   ويتصل بـ Gemini، ثم مرّر المفتاح داخل الوسيط فقط.
+   🤖 المساعد الذكي: يستخدم Puter.js (مجاني، بدون مفتاح API)
    ============================================================ */
-const GEMINI_KEY = "AQ.Ab8RN6I0jQCXrmV6D5C4t2w0oxRx4EhHabnB7hj-z--dQPqeFw";
-const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
 
 /* ================== PRODUCTS DATA ================== */
 const PRODUCTS = [
@@ -667,7 +657,6 @@ function cartTotals(){
   else if(itemCount>=4) rate = 0.15;
   const discount = subtotal * rate;
 
-  // Loyalty points: 100 points = $1
   const maxPointsValue = state.points / 100;
   const pointsValue = Math.min(maxPointsValue, (subtotal - discount) * 0.5);
 
@@ -754,7 +743,6 @@ window.closeModal = id => document.getElementById(id).classList.remove('open');
 window.openProductDetails = function(id){
   const p = PRODUCTS.find(x=>x.id===id);
   if(!p) return;
-  const specs = Object.entries(p.specs||{}).map(([k,v])=>`<div class="flex justify-between border-b border-zinc-800 py-2 text-[11px]"><span class="text-zinc-400">${escapeHTML(k)}</span><span class="text-zinc-100 font-bold">${escapeHTML(v)}</span></div>`).join('');
   alert(`${p.name}\n\n${p.desc}\n\nالمواصفات:\n` + Object.entries(p.specs||{}).map(([k,v])=>`• ${k}: ${v}`).join('\n') + `\n\nالسعر: $${p.price}`);
 };
 
@@ -824,7 +812,6 @@ window.confirmOrder = function(){
     totals: t
   };
 
-  // Points: earned = total / 1 = 1 point per $1 spent → total * 1
   const earned = Math.floor(t.total);
   state.points = state.points - t.pointsUsed + earned;
   state.orders.push(order);
@@ -975,7 +962,7 @@ window.submitSupport = function(){
   document.getElementById('sp-preview').classList.add('hidden');
 };
 
-/* ================== AI CHAT ================== */
+/* ================== AI CHAT (Puter.js — بدون مفتاح API) ================== */
 window.openAI = function(){ document.getElementById('aiPanel').classList.remove('hidden'); };
 window.closeAI = function(){ document.getElementById('aiPanel').classList.add('hidden'); };
 window.handleKeyPress = e => { if(e.key==='Enter') sendChatMessage(); };
@@ -986,6 +973,7 @@ window.sendChatMessage = async function(){
   const text = input.value.trim();
   if(!text) return;
 
+  // 1) رسالة المستخدم
   box.innerHTML += `
     <div class="flex items-start gap-2 max-w-[88%] self-end flex-row-reverse">
       <div class="w-7 h-7 rounded-lg bg-zinc-800 text-amber-400 flex items-center justify-center text-[11px] shrink-0">👤</div>
@@ -994,6 +982,7 @@ window.sendChatMessage = async function(){
   input.value = '';
   box.scrollTop = box.scrollHeight;
 
+  // 2) مؤشر الكتابة
   const lid = 'ld-'+Date.now();
   box.innerHTML += `
     <div id="${lid}" class="flex items-start gap-2 max-w-[88%]">
@@ -1002,35 +991,57 @@ window.sendChatMessage = async function(){
     </div>`;
   box.scrollTop = box.scrollHeight;
 
-  try{
-    const catalog = PRODUCTS.map(p => `- ${p.name} (${p.cat}) — $${p.price}${p.old?` (كان $${p.old})`:''} — ${p.desc}`).join('\n');
-    const sys = `أنت موظف مبيعات وخبير تقني محترف وودود جداً في متجر "LORD CELL".
-مهمتك التحدث مع الزبائن كإنسان بشري حقيقي وتقديم استشارات تقنية وتسويقية صادقة بالعربية.
-لدينا الخدمات التالية: توصيل، صيانة مع مشرفين، بحث عن منتجات غير متوفرة، بطاقات شحن رقمية، ومقارنة منتجات.
-كاتالوج المنتجات:
-${catalog}
-قواعد: أجب بإيجاز ووضوح، اقترح منتجات محددة بالاسم والسعر، لا تكرر ترحيبات محفوظة.`;
+  try {
+    // 3) بناء كتالوج المنتجات المتوفرة فقط
+    const catalog = PRODUCTS.map(p =>
+      `- ${p.name} | القسم: ${p.cat} | السعر: $${p.price}${p.old?` (قبل الخصم $${p.old})`:''} | ${p.desc}`
+    ).join('\n');
 
-    const res = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: `${sys}\n\nسؤال الزبون: ${text}`
-    });
+    const systemPrompt = `أنت "خبير المبيعات الذكي" في متجر LORD CELL. تتحدث العربية فقط.
+مهمتك مساعدة الزبون في اختيار المنتج الأنسب حسب ميزانيته ومتطلباته.
+
+الخدمات المتوفرة في المتجر: توصيل سريع، صيانة، خدمة "ابحث عن منتج"، بطاقات شحن، ومقارنة منتجات.
+
+📦 كتالوج المنتجات الحالي (هذا هو المتوفر فقط):
+${catalog}
+
+🚨 قواعد صارمة:
+1. اقترح فقط المنتجات المذكورة في الكاتالوج أعلاه. لا تخترع منتجات أو أسعاراً.
+2. إذا لم يوجد شيء بميزانية الزبون، اقترح الأقرب له واذكر أن السعر أعلى قليلاً.
+3. اذكر اسم المنتج + السعر بالدولار في كل اقتراح.
+4. كن مختصراً، ودوداً، ومهنياً. لا تكرر ترحيبات.
+5. إذا سألك عن الصيانة أو التوصيل، أخبره بالخدمة المتوفرة.
+6. إذا سألك عن منتج غير موجود، اقترح عليه خدمة "ابحث عن منتج" من الموقع.`;
+
+    // 4) استدعاء Puter AI (مجاني بدون مفتاح API)
+    const reply = await puter.ai.chat(
+      `${systemPrompt}\n\n👤 سؤال الزبون: ${text}`,
+      { model: 'gpt-5-nano' }
+    );
+
+    // 5) استخراج النص من الرد (يختلف حسب النموذج)
+    const replyText =
+      typeof reply === 'string' ? reply :
+      reply?.message?.content ||
+      reply?.text ||
+      (reply?.toString && reply.toString()) ||
+      'عذراً، لم أفهم سؤالك.';
 
     document.getElementById(lid)?.remove();
-    const reply = res.text || 'عذراً، لم أفهم سؤالك. هل يمكنك التوضيح؟';
     box.innerHTML += `
       <div class="flex items-start gap-2 max-w-[88%]">
         <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
-        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200 whitespace-pre-line border border-amber-500/20">${escapeHTML(reply)}</div>
+        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200 whitespace-pre-line border border-amber-500/20">${escapeHTML(replyText)}</div>
       </div>`;
     box.scrollTop = box.scrollHeight;
-  } catch(err){
-    console.error(err);
+
+  } catch(err) {
+    console.error('AI Error:', err);
     document.getElementById(lid)?.remove();
     box.innerHTML += `
       <div class="flex items-start gap-2 max-w-[88%]">
         <div class="w-7 h-7 rounded-lg bg-red-500 text-white flex items-center justify-center text-[11px] shrink-0">⚠️</div>
-        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] text-red-300">تعذر الاتصال بالمساعد الذكي. تحقق من اتصالك بالإنترنت أو مفتاح الـ API.</div>
+        <div class="glass-card p-3 rounded-2xl rounded-tr-none text-[11px] text-red-300">تعذر الاتصال بالمساعد. حاول مرة أخرى بعد لحظات.</div>
       </div>`;
     box.scrollTop = box.scrollHeight;
   }
