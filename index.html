@@ -8,16 +8,18 @@
 <script src="https://js.puter.com/v2/"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  :root{ --gold:#f59e0b; --gold-2:#fbbf24; --wa:#25D366; }
+  :root{ --gold:#f59e0b; --gold-2:#fbbf24; --wa:#25D366; --whish:#7c3aed; }
   *{ -webkit-tap-highlight-color: transparent; }
   body{ font-family:'Cairo',sans-serif; background:#050507; color:#f4f4f5; overflow-x:hidden; }
-  .glass{ background:rgba(18,18,24,.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.08); }
+  .glass{ background:rgba(18,18,24,.75); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,.08); }
   .glass-card{ background:rgba(24,24,32,.55); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.06); }
   .gold-text{ background:linear-gradient(90deg,#fbbf24,#fde68a); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .gold-btn{ background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#09090b; }
   .gold-btn:hover{ filter:brightness(1.1); }
   .wa-btn{ background:linear-gradient(135deg,#25D366,#128C7E); color:#fff; }
   .wa-btn:hover{ filter:brightness(1.1); }
+  .whish-btn{ background:linear-gradient(135deg,#7c3aed,#a855f7); color:#fff; }
+  .whish-btn:hover{ filter:brightness(1.1); }
   .scrollbar::-webkit-scrollbar{ width:6px; height:6px; }
   .scrollbar::-webkit-scrollbar-thumb{ background:rgba(245,158,11,.35); border-radius:10px; }
   .page{ display:none; animation:fade .35s ease; }
@@ -35,7 +37,6 @@
   .modal.open .box{ transform:scale(1); }
   .toast{ animation:toastIn .3s ease; }
   @keyframes toastIn{ from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:none;} }
-  .price-tag{ font-variant-numeric:tabular-nums; }
   .msg-user{ background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#09090b; }
   .msg-bot{ background:rgba(30,30,40,.9); border:1px solid rgba(245,158,11,.15); }
   .typing-dot{ width:6px; height:6px; border-radius:50%; background:#f59e0b; display:inline-block; margin:0 1px; animation:bounce 1.2s infinite; }
@@ -43,14 +44,29 @@
   .typing-dot:nth-child(3){ animation-delay:.4s; }
   @keyframes bounce{ 0%,60%,100%{ transform:translateY(0); opacity:.4; } 30%{ transform:translateY(-5px); opacity:1; } }
   .chat-product-card{ background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(245,158,11,.04)); border:1px solid rgba(245,158,11,.3); }
+  @keyframes scrollAds{ 0%{ transform:translateX(0);} 100%{ transform:translateX(-50%);} }
+  .ads-track{ display:flex; gap:12px; padding:8px 12px; width:max-content; animation:scrollAds 60s linear infinite; }
+  .ad-card{ display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,rgba(24,24,32,.85),rgba(18,18,24,.7)); backdrop-filter:blur(20px); border:1px solid rgba(245,158,11,.3); border-radius:14px; padding:6px 10px; box-shadow:0 8px 24px -12px rgba(245,158,11,.35), inset 0 1px 0 rgba(255,255,255,.06); flex-shrink:0; }
+  .ad-card img{ width:42px; height:42px; border-radius:10px; object-fit:cover; border:1px solid rgba(255,255,255,.1); background:#111; }
+  .ad-name{ font-size:10px; font-weight:800; color:#fbbf24; white-space:nowrap; }
+  .ad-price{ font-size:9px; color:#a1a1aa; white-space:nowrap; }
+  .ad-badge{ font-size:8px; font-weight:900; background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#09090b; padding:2px 6px; border-radius:6px; }
+  @keyframes scrollReviews{ 0%{ transform:translateX(0);} 100%{ transform:translateX(-50%);} }
+  .reviews-track{ display:flex; gap:12px; padding:14px 12px; width:max-content; animation:scrollReviews 45s linear infinite; }
+  .review-card{ min-width:260px; max-width:280px; background:linear-gradient(135deg,rgba(30,30,40,.7),rgba(18,18,24,.5)); backdrop-filter:blur(14px); border:1px solid rgba(245,158,11,.18); border-radius:16px; padding:12px 14px; flex-shrink:0; }
+  .review-stars{ color:#fbbf24; font-size:12px; letter-spacing:1px; }
+  .review-name{ font-size:11px; font-weight:800; color:#e5e5e5; margin-top:6px; }
+  .review-text{ font-size:10px; color:#a1a1aa; margin-top:4px; line-height:1.6; }
+  .review-avatar{ width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; color:#09090b; }
   ::selection{ background:#f59e0b; color:#09090b; }
+  .fade-in{ animation:fade .4s ease; }
 </style>
 </head>
 <body class="min-h-screen pb-32">
 
 <!-- HEADER -->
 <header class="glass sticky top-0 z-40 border-b border-zinc-800/80">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
     <button id="logoBtn" class="flex items-center gap-2 shrink-0">
       <div class="w-9 h-9 rounded-xl gold-btn flex items-center justify-center font-black text-sm">LC</div>
       <div class="text-right leading-none">
@@ -59,99 +75,110 @@
       </div>
     </button>
     <nav class="hidden md:flex items-center gap-1 text-xs font-bold">
-      <button onclick="go('home')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الرئيسية</button>
-      <button onclick="go('shop')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">المتجر</button>
-      <button onclick="go('gift')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">البطاقات</button>
-      <button onclick="go('find')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">ابحث عن منتج</button>
-      <button onclick="go('support')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الصيانة</button>
-      <button onclick="go('complaint')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">شكوى</button>
+      <button data-i18n="nav_home" onclick="go('home')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الرئيسية</button>
+      <button data-i18n="nav_shop" onclick="go('shop')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">المتجر</button>
+      <button data-i18n="nav_gift" onclick="go('gift')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">البطاقات</button>
+      <button data-i18n="nav_find" onclick="go('find')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">ابحث عن منتج</button>
+      <button data-i18n="nav_support" onclick="go('support')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">الصيانة</button>
+      <button data-i18n="nav_complaint" onclick="go('complaint')" class="px-3 py-2 rounded-lg hover:bg-zinc-800/70 transition">شكوى</button>
     </nav>
-    <div class="flex items-center gap-2">
-      <a href="https://wa.me/96181157961" target="_blank" class="p-2.5 rounded-xl bg-green-600 hover:bg-green-500 transition" title="واتساب">
+    <div class="flex items-center gap-1.5">
+      <button onclick="toggleLang()" class="px-2.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition text-xs font-bold">
+        🌐 <span id="langLabel">EN</span>
+      </button>
+      <a href="https://wa.me/96181157961" target="_blank" class="p-2.5 rounded-xl bg-green-600 hover:bg-green-500 transition">
         <span class="text-base">💬</span>
       </a>
       <button onclick="openCart()" class="relative p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition">
         <span class="text-base">🛒</span>
         <span id="cart-count" class="absolute -top-1.5 -left-1.5 bg-amber-500 text-zinc-950 text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
       </button>
-      <button id="userBtn" onclick="handleUserClick()" class="px-3 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition text-xs font-bold flex items-center gap-1.5">
+      <button id="userBtn" onclick="handleUserClick()" class="px-2.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/50 transition text-xs font-bold flex items-center gap-1.5">
         <span>👤</span><span id="userLabel" class="hidden sm:inline">دخول</span>
       </button>
-      <button id="adminBtn" onclick="openAdminPanel()" class="hidden px-3 py-2.5 rounded-xl bg-red-900/50 border border-red-500/40 hover:border-red-500 transition text-xs font-bold">
-        <span>⚙️</span>
-      </button>
+      <button id="adminBtn" onclick="openAdminPanel()" class="hidden p-2.5 rounded-xl bg-red-900/50 border border-red-500/40 text-xs">⚙️</button>
     </div>
+  </div>
+  <div class="border-y border-amber-500/20 bg-gradient-to-l from-amber-500/5 via-zinc-900/50 to-amber-500/5 overflow-hidden">
+    <div class="ads-track" id="adsTrack"></div>
   </div>
   <div class="md:hidden overflow-x-auto scrollbar border-t border-zinc-800/60">
     <div class="flex gap-1 px-3 py-2 text-xs font-bold w-max">
-      <button onclick="go('home')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الرئيسية</button>
-      <button onclick="go('shop')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">المتجر</button>
-      <button onclick="go('gift')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">البطاقات</button>
-      <button onclick="go('find')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">ابحث عن منتج</button>
-      <button onclick="go('support')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الصيانة</button>
-      <button onclick="go('complaint')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">شكوى</button>
+      <button data-i18n="nav_home" onclick="go('home')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الرئيسية</button>
+      <button data-i18n="nav_shop" onclick="go('shop')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">المتجر</button>
+      <button data-i18n="nav_gift" onclick="go('gift')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">البطاقات</button>
+      <button data-i18n="nav_find" onclick="go('find')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">ابحث عن منتج</button>
+      <button data-i18n="nav_support" onclick="go('support')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">الصيانة</button>
+      <button data-i18n="nav_complaint" onclick="go('complaint')" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800">شكوى</button>
     </div>
   </div>
 </header>
 
 <main class="max-w-6xl mx-auto px-4 pt-8">
-
   <!-- HOME -->
   <section id="page-home" class="page active">
     <div class="text-center mb-10 relative">
       <div class="absolute inset-0 -z-10 blur-3xl opacity-30 bg-gradient-to-r from-amber-500/40 via-transparent to-amber-500/40 rounded-full"></div>
-      <span class="inline-block bg-amber-500/10 text-amber-400 text-[10px] px-3 py-1.5 rounded-full font-bold border border-amber-500/20 mb-4">🤖 موظف المبيعات الذكي متصل</span>
-      <h2 class="text-4xl md:text-6xl font-black mb-4 text-white leading-tight">متجر <span class="gold-text">LORD CELL</span> الرقمي</h2>
-      <p class="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">اكتشف أرقى الأجهزة، قارن بينها، وتحدث فوراً مع خبير المبيعات الافتراضي ليختار لك الأنسب لميزانيتك.</p>
+      <span class="inline-block bg-amber-500/10 text-amber-400 text-[10px] px-3 py-1.5 rounded-full font-bold border border-amber-500/20 mb-4" data-i18n="home_badge">🤖 موظف المبيعات الذكي متصل</span>
+      <h2 class="text-4xl md:text-6xl font-black mb-4 text-white leading-tight">
+        <span data-i18n="home_title1">متجر</span> <span class="gold-text">LORD CELL</span> <span data-i18n="home_title2">الرقمي</span>
+      </h2>
+      <p class="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed" data-i18n="home_subtitle">اكتشف أرقى الأجهزة، قارن بينها، وتحدث فوراً مع خبير المبيعات الافتراضي ليختار لك الأنسب لميزانيتك.</p>
       <div class="flex flex-wrap justify-center gap-3 mt-7">
-        <button onclick="go('shop')" class="gold-btn px-7 py-3.5 rounded-2xl text-sm font-black">تصفح المتجر الآن</button>
-        <button onclick="openAI()" class="glass px-7 py-3.5 rounded-2xl text-sm font-black border">تحدث مع الموظف الذكي 💬</button>
+        <button onclick="go('shop')" class="gold-btn px-7 py-3.5 rounded-2xl text-sm font-black" data-i18n="home_shop_btn">تصفح المتجر الآن</button>
+        <button onclick="openAI()" class="glass px-7 py-3.5 rounded-2xl text-sm font-black border" data-i18n="home_chat_btn">تحدث مع الموظف الذكي 💬</button>
       </div>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-14">
-      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🚚</div><div class="text-xs font-bold">توصيل سريع</div><div class="text-[10px] text-zinc-500 mt-0.5">لجميع المناطق</div></div>
-      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🛡️</div><div class="text-xs font-bold">ضمان أصلي</div><div class="text-[10px] text-zinc-500 mt-0.5">100% أصلي</div></div>
-      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">💳</div><div class="text-xs font-bold">دفع مرن</div><div class="text-[10px] text-zinc-500 mt-0.5">عند الاستلام</div></div>
-      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🎁</div><div class="text-xs font-bold">نقاط وخصومات</div><div class="text-[10px] text-zinc-500 mt-0.5">مع كل شراء</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🚚</div><div class="text-xs font-bold" data-i18n="trust_delivery">توصيل سريع</div><div class="text-[10px] text-zinc-500 mt-0.5" data-i18n="trust_delivery_sub">لجميع المناطق</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🛡️</div><div class="text-xs font-bold" data-i18n="trust_warranty">ضمان أصلي</div><div class="text-[10px] text-zinc-500 mt-0.5">100%</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">💳</div><div class="text-xs font-bold" data-i18n="trust_payment">دفع مرن</div><div class="text-[10px] text-zinc-500 mt-0.5">Whish / COD</div></div>
+      <div class="glass-card rounded-2xl p-4 text-center"><div class="text-2xl mb-1">🎁</div><div class="text-xs font-bold" data-i18n="trust_points">نقاط وخصومات</div><div class="text-[10px] text-zinc-500 mt-0.5">$20 = 1</div></div>
     </div>
     <div class="mb-14">
       <div class="flex items-end justify-between mb-5">
-        <h3 class="text-lg md:text-xl font-bold text-amber-400 border-r-4 border-amber-500 pr-3">الأكثر مبيعاً</h3>
-        <button onclick="go('shop')" class="text-xs text-zinc-400 hover:text-amber-400 font-bold">عرض الكل ←</button>
+        <h3 class="text-lg md:text-xl font-bold text-amber-400 border-r-4 border-amber-500 pr-3" data-i18n="featured_title">الأكثر مبيعاً</h3>
+        <button onclick="go('shop')" class="text-xs text-zinc-400 hover:text-amber-400 font-bold" data-i18n="view_all">عرض الكل ←</button>
       </div>
       <div id="featured-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
     </div>
+    <section class="mb-14">
+      <h3 class="text-lg font-bold text-amber-400 border-r-4 border-amber-500 pr-3 mb-4" data-i18n="reviews_title">⭐ ماذا يقول زبائننا</h3>
+      <div class="overflow-hidden glass rounded-2xl border border-amber-500/20">
+        <div class="reviews-track" id="reviewsTrack"></div>
+      </div>
+    </section>
   </section>
 
   <!-- SHOP -->
   <section id="page-shop" class="page">
     <div class="text-center mb-8">
-      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">المتجر</h2>
-      <p class="text-zinc-400 text-xs">اختر القسم واستمتع بخصومات الكمية.</p>
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2" data-i18n="shop_title">المتجر</h2>
+      <p class="text-zinc-400 text-xs" data-i18n="shop_subtitle">اختر القسم واستمتع بأفضل الأسعار.</p>
     </div>
     <div class="glass rounded-2xl p-3 mb-5 flex flex-col md:flex-row gap-3 md:items-center">
-      <input id="searchInput" oninput="renderShop()" type="text" placeholder="🔍 ابحث عن منتج..." class="flex-1 bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="searchInput" oninput="renderShop()" type="text" data-i18n-ph="search_placeholder" placeholder="🔍 ابحث عن منتج..." class="flex-1 bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
       <select id="sortSelect" onchange="renderShop()" class="bg-zinc-950 border border-zinc-800 px-3 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-        <option value="pop">الأكثر رواجاً</option>
-        <option value="low">الأقل سعراً</option>
-        <option value="high">الأعلى سعراً</option>
+        <option value="pop" data-i18n="sort_pop">الأكثر رواجاً</option>
+        <option value="low" data-i18n="sort_low">الأقل سعراً</option>
+        <option value="high" data-i18n="sort_high">الأعلى سعراً</option>
       </select>
     </div>
     <div class="flex gap-2 overflow-x-auto scrollbar pb-2 mb-6">
-      <button data-cat="all" onclick="setCat('all')" class="chip active shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">الكل</button>
-      <button data-cat="phones" onclick="setCat('phones')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">📱 موبايلات</button>
-      <button data-cat="laptops" onclick="setCat('laptops')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">💻 لابتوب</button>
-      <button data-cat="parts" onclick="setCat('parts')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🧩 قطع</button>
-      <button data-cat="accessories" onclick="setCat('accessories')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🎧 إكسسوارات</button>
-      <button data-cat="gift" onclick="setCat('gift')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold">🎫 بطاقات</button>
+      <button data-cat="all" onclick="setCat('all')" class="chip active shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_all">الكل</button>
+      <button data-cat="phones" onclick="setCat('phones')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_phones">📱 موبايلات</button>
+      <button data-cat="laptops" onclick="setCat('laptops')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_laptops">💻 لابتوب</button>
+      <button data-cat="parts" onclick="setCat('parts')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_parts">🧩 قطع</button>
+      <button data-cat="accessories" onclick="setCat('accessories')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_acc">🎧 إكسسوارات</button>
+      <button data-cat="gift" onclick="setCat('gift')" class="chip shrink-0 bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-xs font-bold" data-i18n="cat_gift">🎫 بطاقات</button>
     </div>
     <div id="shop-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-    <div id="shop-empty" class="hidden text-center py-20 text-zinc-500 text-sm">لا توجد نتائج 🔍</div>
+    <div id="shop-empty" class="hidden text-center py-20 text-zinc-500 text-sm" data-i18n="no_results">لا توجد نتائج 🔍</div>
     <div id="compareBar" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-30 hidden">
       <div class="glass rounded-2xl px-4 py-3 flex items-center gap-3 border border-amber-500/40 shadow-2xl">
-        <span class="text-xs font-bold text-zinc-300">مقارنة (<span id="compareCount">0</span>/3)</span>
-        <button onclick="openCompare()" class="gold-btn px-4 py-2 rounded-xl text-xs font-black">قارن ⚖️</button>
-        <button onclick="clearCompare()" class="text-zinc-400 text-xs">مسح</button>
+        <span class="text-xs font-bold">مقارنة (<span id="compareCount">0</span>/3)</span>
+        <button onclick="openCompare()" class="gold-btn px-4 py-2 rounded-xl text-xs font-black" data-i18n="compare_now">قارن ⚖️</button>
+        <button onclick="clearCompare()" class="text-zinc-400 text-xs" data-i18n="clear">مسح</button>
       </div>
     </div>
   </section>
@@ -159,7 +186,7 @@
   <!-- GIFT -->
   <section id="page-gift" class="page">
     <div class="text-center mb-8">
-      <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🎫 بطاقات الشحن</h2>
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-2" data-i18n="gift_title">🎫 بطاقات الشحن</h2>
     </div>
     <div id="gift-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
   </section>
@@ -168,17 +195,16 @@
   <section id="page-find" class="page">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-8">
-        <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🔎 ابحث عن منتج</h2>
-        <p class="text-zinc-400 text-xs">لم تجد ما تبحث عنه؟ أخبرنا وسنوفره.</p>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-2" data-i18n="find_title">🔎 ابحث عن منتج</h2>
       </div>
       <div class="glass rounded-3xl p-6 border border-amber-500/20 space-y-3">
-        <input id="fp-name" type="text" placeholder="اسم المنتج *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+        <input id="fp-name" type="text" data-i18n-ph="find_name" placeholder="اسم المنتج *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
         <div class="grid grid-cols-2 gap-3">
-          <input id="fp-budget" type="number" placeholder="الميزانية (USD) *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-          <input id="fp-phone" type="tel" placeholder="رقم الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          <input id="fp-budget" type="number" data-i18n-ph="find_budget" placeholder="الميزانية (USD) *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          <input id="fp-phone" type="tel" data-i18n-ph="find_phone" placeholder="رقم الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
         </div>
-        <textarea id="fp-notes" rows="3" placeholder="مواصفات إضافية" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
-        <button onclick="submitFindRequest()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إرسال الطلب ✈️</button>
+        <textarea id="fp-notes" rows="3" data-i18n-ph="find_notes" placeholder="مواصفات إضافية" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
+        <button onclick="submitFindRequest()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black" data-i18n="find_send">إرسال الطلب ✈️</button>
       </div>
     </div>
   </section>
@@ -187,16 +213,16 @@
   <section id="page-support" class="page">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-8">
-        <h2 class="text-3xl md:text-4xl font-black text-white mb-2">🛠️ الصيانة</h2>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-2" data-i18n="support_title">🛠️ الصيانة</h2>
       </div>
       <div class="glass rounded-3xl p-6 border border-amber-500/20 space-y-3">
         <div class="grid grid-cols-2 gap-3">
-          <input id="sp-name" type="text" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-          <input id="sp-phone" type="tel" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          <input id="sp-name" type="text" data-i18n-ph="support_name" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+          <input id="sp-phone" type="tel" data-i18n-ph="support_phone" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
         </div>
-        <input id="sp-device" type="text" placeholder="نوع الجهاز *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-        <textarea id="sp-issue" rows="3" placeholder="وصف العطل *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
-        <button onclick="submitSupport()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إرسال 🔧</button>
+        <input id="sp-device" type="text" data-i18n-ph="support_device" placeholder="نوع الجهاز *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+        <textarea id="sp-issue" rows="3" data-i18n-ph="support_issue" placeholder="وصف العطل *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
+        <button onclick="submitSupport()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black" data-i18n="support_send">إرسال 🔧</button>
       </div>
     </div>
   </section>
@@ -205,13 +231,12 @@
   <section id="page-complaint" class="page">
     <div class="max-w-2xl mx-auto">
       <div class="text-center mb-8">
-        <h2 class="text-3xl md:text-4xl font-black text-white mb-2">📩 صندوق الشكاوي</h2>
-        <p class="text-zinc-400 text-xs">رأيك يهمنا. أرسل شكواك أو اقتراحك مباشرة إلى إدارة المتجر.</p>
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-2" data-i18n="complaint_title">📩 صندوق الشكاوي</h2>
       </div>
       <div class="glass rounded-3xl p-6 border border-red-500/20 space-y-3">
         <div class="grid grid-cols-2 gap-3">
-          <input id="cp-name" type="text" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
-          <input id="cp-phone" type="tel" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
+          <input id="cp-name" type="text" data-i18n-ph="support_name" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
+          <input id="cp-phone" type="tel" data-i18n-ph="support_phone" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
         </div>
         <select id="cp-type" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
           <option value="شكوى">شكوى</option>
@@ -219,27 +244,23 @@
           <option value="استفسار">استفسار</option>
           <option value="مشكلة تقنية">مشكلة تقنية</option>
         </select>
-        <textarea id="cp-message" rows="5" placeholder="اكتب رسالتك بالتفصيل *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500 resize-none"></textarea>
-        <button onclick="submitComplaint()" class="w-full bg-gradient-to-l from-red-600 to-red-500 text-white py-3.5 rounded-2xl text-sm font-black">إرسال الشكوى 📩</button>
-        <p class="text-[10px] text-zinc-500 text-center">سيتم إرسال رسالتك مباشرة إلى واتساب إدارة المتجر: 81157961</p>
+        <textarea id="cp-message" rows="5" data-i18n-ph="complaint_message" placeholder="اكتب رسالتك بالتفصيل *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500 resize-none"></textarea>
+        <button onclick="submitComplaint()" class="w-full bg-gradient-to-l from-red-600 to-red-500 text-white py-3.5 rounded-2xl text-sm font-black" data-i18n="complaint_send">إرسال الشكوى 📩</button>
       </div>
     </div>
   </section>
-
 </main>
 
 <!-- FOOTER -->
 <footer class="mt-20 border-t border-zinc-800/80 bg-zinc-950/60">
   <div class="max-w-6xl mx-auto px-4 py-8 text-center">
     <div class="text-base font-black gold-text mb-2">LORD CELL</div>
-    <p class="text-[11px] text-zinc-500 leading-relaxed max-w-lg mx-auto">وجهتك الرقمية للأجهزة الذكية مع توصيل وصيانة ودعم ذكي.</p>
-    <div class="flex justify-center gap-3 mt-4">
-      <a href="https://wa.me/96181157961" target="_blank" class="wa-btn px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2">
-        💬 واتساب الإدارة
-      </a>
-      <button onclick="go('complaint')" class="glass px-4 py-2 rounded-xl text-xs font-black border">📩 شكوى</button>
+    <p class="text-[11px] text-zinc-500 leading-relaxed max-w-lg mx-auto" data-i18n="footer_about">وجهتك الرقمية للأجهزة الذكية مع توصيل وصيانة ودعم ذكي.</p>
+    <div class="flex justify-center gap-3 mt-4 flex-wrap">
+      <a href="https://wa.me/96181157961" target="_blank" class="wa-btn px-4 py-2 rounded-xl text-xs font-black inline-flex items-center gap-2">💬 <span data-i18n="footer_wa">واتساب الإدارة</span></a>
+      <button onclick="go('complaint')" class="glass px-4 py-2 rounded-xl text-xs font-black border">📩 <span data-i18n="footer_complaint">شكوى</span></button>
     </div>
-    <div class="text-[10px] text-zinc-600 mt-4">© <span id="year"></span> LORD CELL — جميع الحقوق محفوظة.</div>
+    <div class="text-[10px] text-zinc-600 mt-4">© <span id="year"></span> LORD CELL — <span data-i18n="footer_rights">جميع الحقوق محفوظة.</span></div>
   </div>
 </footer>
 
@@ -247,19 +268,18 @@
 <div id="cartOverlay" onclick="closeCart()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden"></div>
 <aside id="cartDrawer" class="drawer fixed top-0 right-0 h-full w-full max-w-md bg-zinc-950 border-l border-zinc-800 z-50 flex flex-col" style="right:0; left:auto;">
   <div class="p-5 border-b border-zinc-800 flex items-center justify-between">
-    <h3 class="font-black text-base">سلة التسوق 🛒</h3>
+    <h3 class="font-black text-base" data-i18n="cart_title">سلة التسوق 🛒</h3>
     <button onclick="closeCart()" class="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800">✕</button>
   </div>
   <div id="cartItems" class="flex-1 overflow-y-auto scrollbar p-4 space-y-3"></div>
   <div class="p-5 border-t border-zinc-800 bg-zinc-900/50">
     <div id="cartDiscountNote" class="text-[11px] text-amber-400 font-bold mb-3 hidden"></div>
     <div class="space-y-1.5 mb-4 text-xs">
-      <div class="flex justify-between text-zinc-400"><span>المجموع الفرعي</span><span id="cartSubtotal" class="price-tag">$0</span></div>
-      <div id="cartDiscountRow" class="flex justify-between text-emerald-400 hidden"><span>خصم الكمية</span><span id="cartDiscount" class="price-tag">-$0</span></div>
-      <div id="cartPointsRow" class="flex justify-between text-amber-400 hidden"><span>نقاط</span><span id="cartPoints" class="price-tag">-$0</span></div>
-      <div class="flex justify-between font-black text-sm pt-2 border-t border-zinc-800"><span>الإجمالي</span><span id="cartTotal" class="gold-text price-tag">$0</span></div>
+      <div class="flex justify-between text-zinc-400"><span data-i18n="cart_subtotal">المجموع الفرعي</span><span id="cartSubtotal" class="price-tag">$0</span></div>
+      <div id="cartPointsRow" class="flex justify-between text-amber-400 hidden"><span data-i18n="cart_points">نقاط</span><span id="cartPoints" class="price-tag">-$0</span></div>
+      <div class="flex justify-between font-black text-sm pt-2 border-t border-zinc-800"><span data-i18n="cart_total">الإجمالي</span><span id="cartTotal" class="gold-text price-tag">$0</span></div>
     </div>
-    <button onclick="openCheckout()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">إتمام الطلب ←</button>
+    <button onclick="openCheckout()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black" data-i18n="cart_checkout">إتمام الطلب ←</button>
   </div>
 </aside>
 
@@ -267,14 +287,27 @@
 <div id="loginModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
   <div class="box glass rounded-3xl w-full max-w-sm p-6 border border-amber-500/20">
     <div class="flex justify-between items-center mb-5">
-      <h3 class="font-black text-base">تسجيل الدخول 👤</h3>
+      <h3 class="font-black text-base" data-i18n="login_title">تسجيل الدخول 👤</h3>
       <button onclick="closeModal('loginModal')" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">✕</button>
     </div>
     <div class="space-y-3">
-      <input id="loginName" type="text" placeholder="الاسم الكامل" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <input id="loginPhone" type="tel" placeholder="رقم الهاتف" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <input id="loginEmail" type="email" placeholder="البريد الإلكتروني (اختياري)" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <button onclick="doLogin()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black">دخول / إنشاء حساب</button>
+      <input id="loginName" type="text" data-i18n-ph="login_name" placeholder="الاسم الكامل" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="loginPhone" type="tel" data-i18n-ph="login_phone" placeholder="رقم الهاتف" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="loginEmail" type="email" data-i18n-ph="login_email" placeholder="البريد الإلكتروني (اختياري)" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <div>
+        <label class="text-[11px] text-zinc-400 font-bold block mb-2" data-i18n="login_role">نوع الحساب:</label>
+        <div class="grid grid-cols-2 gap-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="userRole" value="customer" checked class="peer hidden">
+            <div class="peer-checked:border-amber-500 peer-checked:bg-amber-500/10 border border-zinc-800 rounded-xl p-3 text-center text-xs font-bold transition" data-i18n="role_customer">👤 زبون</div>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="userRole" value="merchant" class="peer hidden">
+            <div class="peer-checked:border-emerald-500 peer-checked:bg-emerald-500/10 border border-zinc-800 rounded-xl p-3 text-center text-xs font-bold transition" data-i18n="role_merchant">🏪 تاجر</div>
+          </label>
+        </div>
+      </div>
+      <button onclick="doLogin()" class="w-full gold-btn py-3.5 rounded-2xl text-sm font-black" data-i18n="login_btn">دخول / إنشاء حساب</button>
     </div>
   </div>
 </div>
@@ -289,7 +322,6 @@
     <div class="space-y-3">
       <input id="adminPass" type="password" placeholder="كلمة المرور" onkeypress="if(event.key==='Enter')doAdminLogin()" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-red-500">
       <button onclick="doAdminLogin()" class="w-full bg-gradient-to-l from-red-600 to-red-500 text-white py-3.5 rounded-2xl text-sm font-black">دخول</button>
-      <p class="text-[10px] text-zinc-500 text-center">الوصول مقتصر على إدارة المتجر.</p>
     </div>
   </div>
 </div>
@@ -315,28 +347,28 @@
 <div id="checkoutModal" class="modal fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
   <div class="box glass rounded-3xl w-full max-w-lg p-6 border border-amber-500/20 max-h-[92vh] overflow-y-auto scrollbar space-y-3">
     <div class="flex justify-between items-center mb-2">
-      <h3 class="font-black text-base">🚚 بيانات التوصيل</h3>
+      <h3 class="font-black text-base" data-i18n="checkout_title">🚚 بيانات التوصيل</h3>
       <button onclick="closeModal('checkoutModal')" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800">✕</button>
     </div>
     <div class="grid grid-cols-2 gap-3">
-      <input id="co-name" type="text" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <input id="co-phone" type="tel" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="co-name" type="text" data-i18n-ph="checkout_name" placeholder="الاسم *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="co-phone" type="tel" data-i18n-ph="checkout_phone" placeholder="الهاتف *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
     </div>
-    <input id="co-email" type="email" placeholder="البريد الإلكتروني" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+    <input id="co-email" type="email" data-i18n-ph="checkout_email" placeholder="البريد الإلكتروني" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
     <div class="grid grid-cols-2 gap-3">
-      <input id="co-city" type="text" placeholder="المدينة *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <input id="co-area" type="text" placeholder="الحي *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="co-city" type="text" data-i18n-ph="checkout_city" placeholder="المدينة *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+      <input id="co-area" type="text" data-i18n-ph="checkout_area" placeholder="الحي *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
     </div>
-    <input id="co-address" type="text" placeholder="العنوان التفصيلي *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
+    <input id="co-address" type="text" data-i18n-ph="checkout_address" placeholder="العنوان التفصيلي *" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
     <select id="co-pay" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500">
-      <option>الدفع عند الاستلام 💵</option>
-      <option>تحويل بنكي 🏦</option>
-      <option>بطاقة ائتمانية 💳</option>
+      <option value="cod" data-i18n="pay_cod">الدفع عند الاستلام 💵</option>
+      <option value="whish" data-i18n="pay_whish">Whish Money 💜</option>
+      <option value="bank" data-i18n="pay_bank">تحويل بنكي 🏦</option>
     </select>
-    <textarea id="co-notes" rows="2" placeholder="ملاحظات" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
+    <textarea id="co-notes" rows="2" data-i18n-ph="checkout_notes" placeholder="ملاحظات" class="w-full bg-zinc-950 border border-zinc-800 px-4 py-3 rounded-xl text-xs focus:outline-none focus:border-amber-500 resize-none"></textarea>
     <div id="co-summary" class="glass-card rounded-2xl p-4 text-xs space-y-1"></div>
-    <button onclick="confirmOrder()" class="w-full wa-btn py-3.5 rounded-2xl text-sm font-black">📱 إرسال الطلب عبر واتساب</button>
-    <p class="text-[10px] text-zinc-500 text-center">سيتم إرسال فاتورة كاملة إلى واتساب الإدارة تلقائياً.</p>
+    <button onclick="confirmOrder()" class="w-full wa-btn py-3.5 rounded-2xl text-sm font-black" data-i18n="checkout_send">📱 إرسال الطلب عبر واتساب</button>
+    <p class="text-[10px] text-zinc-500 text-center" data-i18n="checkout_note">سيتم إرسال الفاتورة الكاملة إلى واتساب الإدارة.</p>
   </div>
 </div>
 
@@ -344,8 +376,9 @@
 <div id="invoiceModal" class="modal fixed inset-0 bg-black/80 backdrop-blur-sm z-[75] flex items-center justify-center p-4">
   <div class="box bg-white text-zinc-900 rounded-3xl w-full max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto scrollbar">
     <div id="invoiceBody"></div>
-    <div class="p-4 bg-zinc-100 flex gap-2">
+    <div class="p-4 bg-zinc-100 flex gap-2 flex-wrap">
       <button onclick="window.print()" class="flex-1 bg-zinc-900 text-white py-3 rounded-xl text-xs font-black">🖨️ طباعة</button>
+      <button onclick="payViaWhish()" class="flex-1 whish-btn py-3 rounded-xl text-xs font-black">💜 Whish</button>
       <button onclick="closeModal('invoiceModal');clearCart()" class="flex-1 gold-btn py-3 rounded-xl text-xs font-black">تم ✅</button>
     </div>
   </div>
@@ -370,30 +403,29 @@
       <div class="flex items-center gap-2">
         <div class="w-8 h-8 rounded-xl gold-btn flex items-center justify-center text-sm">🤖</div>
         <div>
-          <div class="text-xs font-black">خبير المبيعات الذكي</div>
-          <div class="text-[9px] text-emerald-400">● متصل</div>
+          <div class="text-xs font-black" data-i18n="chat_title">خبير المبيعات الذكي</div>
+          <div class="text-[9px] text-emerald-400">● <span data-i18n="chat_online">متصل</span></div>
         </div>
       </div>
       <div class="flex gap-1">
-        <button onclick="clearChat()" title="محادثة جديدة" class="w-7 h-7 rounded-lg bg-zinc-800 text-xs hover:bg-red-900">🗑️</button>
+        <button onclick="clearChat()" class="w-7 h-7 rounded-lg bg-zinc-800 text-xs hover:bg-red-900">🗑️</button>
         <button onclick="closeAI()" class="w-7 h-7 rounded-lg bg-zinc-800 text-xs">✕</button>
       </div>
     </div>
     <div id="chat-messages" class="p-4 h-[380px] overflow-y-auto scrollbar space-y-3 flex flex-col bg-zinc-950/60"></div>
     <div class="p-2 bg-zinc-900/40 border-t border-zinc-800 flex gap-1.5 overflow-x-auto scrollbar">
-      <button onclick="quickAsk('أرني الأرخص')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💰 الأرخص</button>
-      <button onclick="quickAsk('قارن لي بين أفضل موبايلين')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">⚖️ قارن</button>
-      <button onclick="quickAsk('ما أفضل لابتوب للطلاب؟')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💻 للطلاب</button>
-      <button onclick="quickAsk('ما طرق الدفع المتوفرة؟')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💳 الدفع</button>
+      <button onclick="quickAsk('أرني الأرخص')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💰 <span data-i18n="qa_cheap">الأرخص</span></button>
+      <button onclick="quickAsk('قارن لي بين أفضل موبايلين')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">⚖️ <span data-i18n="qa_compare">قارن</span></button>
+      <button onclick="quickAsk('ما أفضل لابتوب للطلاب؟')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💻 <span data-i18n="qa_students">للطلاب</span></button>
+      <button onclick="quickAsk('ما طرق الدفع المتوفرة؟')" class="shrink-0 text-[10px] bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 px-3 py-1.5 rounded-lg font-bold">💳 <span data-i18n="qa_pay">الدفع</span></button>
     </div>
     <div class="p-3 bg-zinc-900/60 border-t border-zinc-800 flex gap-2">
-      <input type="text" id="chat-input" placeholder="اكتب استفسارك..." onkeypress="handleKeyPress(event)" class="flex-1 bg-zinc-950 border border-zinc-800 px-3 py-2.5 rounded-xl text-[11px] focus:outline-none focus:border-amber-500">
-      <button onclick="sendChatMessage()" class="gold-btn px-4 rounded-xl text-[11px] font-black">إرسال</button>
+      <input type="text" id="chat-input" data-i18n-ph="chat_placeholder" placeholder="اكتب استفسارك..." onkeypress="handleKeyPress(event)" class="flex-1 bg-zinc-950 border border-zinc-800 px-3 py-2.5 rounded-xl text-[11px] focus:outline-none focus:border-amber-500">
+      <button onclick="sendChatMessage()" class="gold-btn px-4 rounded-xl text-[11px] font-black" data-i18n="chat_send">إرسال</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[90] hidden"></div>
 
 <script>
@@ -401,112 +433,304 @@
    ⚙️ الإعدادات
    ============================================================ */
 const WHATSAPP_NUMBER = "96181157961";
-const ADMIN_PASSWORD = "lord2025"; // ⚠️ غيّرها من هنا
+const WHISH_NUMBER = "96181157961";
+const ADMIN_PASSWORD = "lord2025";
 const STORAGE_PRODUCTS = 'lc_products';
 const STORAGE_CHAT = 'lc_chat';
 const STORAGE_ORDERS = 'lc_orders';
 const STORAGE_COMPLAINTS = 'lc_complaints';
+const STORAGE_LANG = 'lc_lang';
+const POINT_VALUE = 0.60;
 
 /* ============================================================
-   📦 المنتجات الافتراضية
+   🌐 الترجمات
+   ============================================================ */
+const I18N = {
+  ar: {
+    nav_home:'الرئيسية', nav_shop:'المتجر', nav_gift:'البطاقات', nav_find:'ابحث عن منتج', nav_support:'الصيانة', nav_complaint:'شكوى',
+    home_badge:'🤖 موظف المبيعات الذكي متصل', home_title1:'متجر', home_title2:'الرقمي',
+    home_subtitle:'اكتشف أرقى الأجهزة، قارن بينها، وتحدث فوراً مع خبير المبيعات الافتراضي ليختار لك الأنسب لميزانيتك.',
+    home_shop_btn:'تصفح المتجر الآن', home_chat_btn:'تحدث مع الموظف الذكي 💬',
+    trust_delivery:'توصيل سريع', trust_delivery_sub:'لجميع المناطق', trust_warranty:'ضمان أصلي', trust_payment:'دفع مرن', trust_points:'نقاط وخصومات',
+    featured_title:'الأكثر مبيعاً', view_all:'عرض الكل ←', reviews_title:'⭐ ماذا يقول زبائننا',
+    shop_title:'المتجر', shop_subtitle:'اختر القسم واستمتع بأفضل الأسعار.',
+    search_placeholder:'🔍 ابحث عن منتج...', sort_pop:'الأكثر رواجاً', sort_low:'الأقل سعراً', sort_high:'الأعلى سعراً',
+    cat_all:'الكل', cat_phones:'📱 موبايلات', cat_laptops:'💻 لابتوب', cat_parts:'🧩 قطع', cat_acc:'🎧 إكسسوارات', cat_gift:'🎫 بطاقات',
+    no_results:'لا توجد نتائج 🔍', compare_now:'قارن ⚖️', clear:'مسح',
+    gift_title:'🎫 بطاقات الشحن', find_title:'🔎 ابحث عن منتج', find_name:'اسم المنتج *', find_budget:'الميزانية (USD) *', find_phone:'رقم الهاتف *', find_notes:'مواصفات إضافية', find_send:'إرسال الطلب ✈️',
+    support_title:'🛠️ الصيانة', support_name:'الاسم *', support_phone:'الهاتف *', support_device:'نوع الجهاز *', support_issue:'وصف العطل *', support_send:'إرسال 🔧',
+    complaint_title:'📩 صندوق الشكاوي', complaint_message:'اكتب رسالتك بالتفصيل *', complaint_send:'إرسال الشكوى 📩',
+    footer_about:'وجهتك الرقمية للأجهزة الذكية مع توصيل وصيانة ودعم ذكي.', footer_wa:'واتساب الإدارة', footer_complaint:'شكوى', footer_rights:'جميع الحقوق محفوظة.',
+    cart_title:'سلة التسوق 🛒', cart_subtotal:'المجموع الفرعي', cart_points:'نقاط', cart_total:'الإجمالي', cart_checkout:'إتمام الطلب ←',
+    login_title:'تسجيل الدخول 👤', login_name:'الاسم الكامل', login_phone:'رقم الهاتف', login_email:'البريد الإلكتروني (اختياري)',
+    login_role:'نوع الحساب:', role_customer:'👤 زبون', role_merchant:'🏪 تاجر', login_btn:'دخول / إنشاء حساب',
+    checkout_title:'🚚 بيانات التوصيل', checkout_name:'الاسم *', checkout_phone:'الهاتف *', checkout_email:'البريد الإلكتروني',
+    checkout_city:'المدينة *', checkout_area:'الحي *', checkout_address:'العنوان التفصيلي *', checkout_notes:'ملاحظات',
+    pay_cod:'الدفع عند الاستلام 💵', pay_whish:'Whish Money 💜', pay_bank:'تحويل بنكي 🏦',
+    checkout_send:'📱 إرسال الطلب عبر واتساب', checkout_note:'سيتم إرسال الفاتورة الكاملة إلى واتساب الإدارة.',
+    chat_title:'خبير المبيعات الذكي', chat_online:'متصل', chat_placeholder:'اكتب استفسارك...', chat_send:'إرسال',
+    qa_cheap:'الأرخص', qa_compare:'قارن', qa_students:'للطلاب', qa_pay:'الدفع',
+    added_to_cart:'تمت الإضافة', empty_cart:'سلتك فارغة 🛒', login_first:'سجل دخولك أولاً',
+    merchant_price:'تاجر', add_to_cart:'أضف للسلة 🛒', price_saved:'توفير التاجر',
+    sent_ok:'تم الإرسال بنجاح ✅', error_fields:'يرجى تعبئة الحقول المطلوبة',
+    new_chat:'بدء محادثة جديدة؟', logout:'تسجيل الخروج؟', welcome:'مرحباً',
+    guest:'دخول', chat_welcome:'أهلاً بك في LORD CELL! أنا هنا لمساعدتك في اختيار الأجهزة المناسبة لميزانيتك. كيف يمكنني خدمتك؟',
+    chat_error:'تعذر الاتصال. حاول مرة أخرى بعد لحظات.', typing:'يكتب...',
+    points_earn:'ستحصل على', points_value:'نقاط قيمتها', order_sent:'سيتم إرسال الفاتورة عبر واتساب'
+  },
+  en: {
+    nav_home:'Home', nav_shop:'Shop', nav_gift:'Gift Cards', nav_find:'Find Product', nav_support:'Repair', nav_complaint:'Complaint',
+    home_badge:'🤖 AI Sales Agent Online', home_title1:'LORD CELL', home_title2:'Digital Store',
+    home_subtitle:'Discover premium devices, compare them, and chat with our AI assistant to find the perfect fit for your budget.',
+    home_shop_btn:'Browse Shop Now', home_chat_btn:'Chat with AI 💬',
+    trust_delivery:'Fast Delivery', trust_delivery_sub:'All areas', trust_warranty:'Authentic Warranty', trust_payment:'Flexible Payment', trust_points:'Points & Discounts',
+    featured_title:'Best Sellers', view_all:'View All →', reviews_title:'⭐ What Our Customers Say',
+    shop_title:'Shop', shop_subtitle:'Choose a category and enjoy the best prices.',
+    search_placeholder:'🔍 Search products...', sort_pop:'Most Popular', sort_low:'Price: Low to High', sort_high:'Price: High to Low',
+    cat_all:'All', cat_phones:'📱 Phones', cat_laptops:'💻 Laptops', cat_parts:'🧩 Parts', cat_acc:'🎧 Accessories', cat_gift:'🎫 Gift Cards',
+    no_results:'No results found 🔍', compare_now:'Compare ⚖️', clear:'Clear',
+    gift_title:'🎫 Gift Cards', find_title:'🔎 Find Product', find_name:'Product Name *', find_budget:'Budget (USD) *', find_phone:'Phone *', find_notes:'Additional specs', find_send:'Send Request ✈️',
+    support_title:'🛠️ Repair Service', support_name:'Name *', support_phone:'Phone *', support_device:'Device *', support_issue:'Issue Description *', support_send:'Send 🔧',
+    complaint_title:'📩 Complaints Box', complaint_message:'Write your message *', complaint_send:'Send Complaint 📩',
+    footer_about:'Your digital destination for smart devices with delivery, repair and AI support.', footer_wa:'Admin WhatsApp', footer_complaint:'Complaint', footer_rights:'All rights reserved.',
+    cart_title:'Shopping Cart 🛒', cart_subtotal:'Subtotal', cart_points:'Points', cart_total:'Total', cart_checkout:'Checkout ←',
+    login_title:'Login 👤', login_name:'Full Name', login_phone:'Phone Number', login_email:'Email (Optional)',
+    login_role:'Account Type:', role_customer:'👤 Customer', role_merchant:'🏪 Merchant', login_btn:'Login / Sign Up',
+    checkout_title:'🚚 Delivery Info', checkout_name:'Name *', checkout_phone:'Phone *', checkout_email:'Email',
+    checkout_city:'City *', checkout_area:'Area *', checkout_address:'Detailed Address *', checkout_notes:'Notes',
+    pay_cod:'Cash on Delivery 💵', pay_whish:'Whish Money 💜', pay_bank:'Bank Transfer 🏦',
+    checkout_send:'📱 Send Order via WhatsApp', checkout_note:'Full invoice will be sent to admin WhatsApp.',
+    chat_title:'AI Sales Expert', chat_online:'Online', chat_placeholder:'Type your question...', chat_send:'Send',
+    qa_cheap:'Cheapest', qa_compare:'Compare', qa_students:'For Students', qa_pay:'Payment',
+    added_to_cart:'Added to cart', empty_cart:'Cart is empty 🛒', login_first:'Please login first',
+    merchant_price:'Merchant', add_to_cart:'Add to Cart 🛒', price_saved:'Merchant savings',
+    sent_ok:'Sent successfully ✅', error_fields:'Please fill required fields',
+    new_chat:'Start new chat?', logout:'Logout?', welcome:'Hello',
+    guest:'Login', chat_welcome:'Welcome to LORD CELL! I am here to help you choose the right device for your budget. How can I help you today?',
+    chat_error:'Connection failed. Please try again.', typing:'Typing...',
+    points_earn:'You will earn', points_value:'points worth', order_sent:'Invoice will be sent via WhatsApp'
+  }
+};
+
+/* ============================================================
+   📦 المنتجات
    ============================================================ */
 const DEFAULT_PRODUCTS = [
-  { id:'ph1', cat:'phones', name:'iPhone 15 Pro Max', price:1199, old:1299, badge:'الأكثر مبيعاً', emoji:'📱',
+  // PHONES - Apple
+  { id:'ph1', cat:'phones', name:'iPhone 17 Pro Max', name_en:'iPhone 17 Pro Max', price:1499, old:1699, badge:'جديد', badge_en:'NEW', emoji:'📱',
+    img:'https://images.unsplash.com/photo-1696429175928-793a1c1c7c1e?w=600&q=80',
+    desc:'أحدث إصدار من آبل بأداء خارق وكاميرا احترافية.', desc_en:'Latest Apple flagship with incredible performance.',
+    specs:{'الشاشة':'6.9" ProMotion','المعالج':'A19 Pro','الكاميرا':'48MP ×3','البطارية':'5000 mAh','التخزين':'256GB/512GB/1TB'} },
+  { id:'ph2', cat:'phones', name:'iPhone 17', name_en:'iPhone 17', price:999, old:1099, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1592286927505-1def25115558?w=600&q=80',
+    desc:'جودة آبل بسعر مثالي.', desc_en:'Apple quality at an ideal price.',
+    specs:{'الشاشة':'6.3" OLED','المعالج':'A19','الكاميرا':'48MP ×2','البطارية':'4200 mAh','التخزين':'128GB/256GB/512GB'} },
+  { id:'ph3', cat:'phones', name:'iPhone 16 Pro Max', name_en:'iPhone 16 Pro Max', price:1199, old:1399, badge:'الأكثر مبيعاً', badge_en:'BEST SELLER', emoji:'📱',
     img:'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80',
-    desc:'أداء خارق بمعالج A17 Pro، كاميرا سينمائية، هيكل تيتانيوم.',
-    specs:{'الشاشة':'6.7" Super Retina XDR','المعالج':'A17 Pro','الكاميرا':'48MP+12MP+12MP','البطارية':'4441 mAh','التخزين':'256GB/512GB/1TB'} },
-  { id:'ph2', cat:'phones', name:'Samsung Galaxy S24 Ultra', price:1100, old:1249, badge:'ذكاء اصطناعي', emoji:'📱',
+    desc:'قوة استثنائية مع كاميرا سينمائية.', desc_en:'Exceptional power with cinematic camera.',
+    specs:{'الشاشة':'6.9" Super Retina XDR','المعالج':'A18 Pro','الكاميرا':'48MP ×3','التخزين':'256GB/512GB/1TB'} },
+  { id:'ph4', cat:'phones', name:'iPhone 16', name_en:'iPhone 16', price:799, old:899, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=600&q=80',
+    desc:'التوازن المثالي بين السعر والأداء.', desc_en:'The perfect balance of price and performance.',
+    specs:{'الشاشة':'6.1" Super Retina XDR','المعالج':'A18','الكاميرا':'48MP ×2','التخزين':'128GB/256GB/512GB'} },
+  { id:'ph5', cat:'phones', name:'iPhone 15 Pro Max', name_en:'iPhone 15 Pro Max', price:1099, old:1249, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&q=80',
+    desc:'هيكل تيتانيوم وكاميرا احترافية.', desc_en:'Titanium body and professional camera.',
+    specs:{'الشاشة':'6.7" Super Retina XDR','المعالج':'A17 Pro','الكاميرا':'48MP+12MP+12MP','التخزين':'256GB/512GB/1TB'} },
+  // Samsung
+  { id:'ph6', cat:'phones', name:'Samsung Galaxy S25 Ultra', name_en:'Samsung Galaxy S25 Ultra', price:1299, old:1449, badge:'ذكاء اصطناعي', badge_en:'AI POWERED', emoji:'📱',
     img:'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&q=80',
-    desc:'مدعوم بالذكاء الاصطناعي، قلم S-Pen، شاشة AMOLED مذهلة.',
-    specs:{'الشاشة':'6.8" QHD+ AMOLED 120Hz','المعالج':'Snapdragon 8 Gen 3','الكاميرا':'200MP+50MP+12MP+10MP','البطارية':'5000 mAh'} },
-  { id:'ph3', cat:'phones', name:'Google Pixel 8 Pro', price:899, old:999, emoji:'📱',
-    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
-    desc:'أفضل كاميرا حوسبية، 7 سنوات تحديثات.',
-    specs:{'الشاشة':'6.7" LTPO OLED','المعالج':'Tensor G3','الكاميرا':'50MP+48MP+48MP','البطارية':'5050 mAh'} },
-  { id:'ph4', cat:'phones', name:'Xiaomi 14 Ultra', price:849, old:949, emoji:'📱',
+    desc:'مدعوم بالذكاء الاصطناعي الكامل مع قلم S-Pen.', desc_en:'Fully AI-powered with S-Pen.',
+    specs:{'الشاشة':'6.9" QHD+ AMOLED 120Hz','المعالج':'Snapdragon 8 Elite','الكاميرا':'200MP+50MP+12MP+10MP','التخزين':'256GB/512GB/1TB'} },
+  { id:'ph7', cat:'phones', name:'Samsung Galaxy S25', name_en:'Samsung Galaxy S25', price:899, old:999, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600&q=80',
+    desc:'قوة الذكاء الاصطناعي بحجم أنيق.', desc_en:'AI power in a sleek size.',
+    specs:{'الشاشة':'6.2" AMOLED 120Hz','المعالج':'Snapdragon 8 Elite','الكاميرا':'50MP+12MP+10MP','التخزين':'128GB/256GB'} },
+  { id:'ph8', cat:'phones', name:'Samsung Galaxy A56', name_en:'Samsung Galaxy A56', price:449, old:499, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=600&q=80',
+    desc:'متوسط رائد بأداء ممتاز.', desc_en:'Leading mid-range with great performance.',
+    specs:{'الشاشة':'6.7" AMOLED 120Hz','المعالج':'Exynos 1580','الكاميرا':'50MP ×3','التخزين':'128GB/256GB'} },
+  { id:'ph9', cat:'phones', name:'Samsung Galaxy A36', name_en:'Samsung Galaxy A36', price:349, old:399, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1567581935884-3349723552ca?w=600&q=80',
+    desc:'اقتصادي بشاشة AMOLED.', desc_en:'Budget phone with AMOLED.',
+    specs:{'الشاشة':'6.7" AMOLED','المعالج':'Snapdragon 6 Gen 3','الكاميرا':'50MP ×3','التخزين':'128GB/256GB'} },
+  // Infinix
+  { id:'ph10', cat:'phones', name:'Infinix Note 50 Pro', name_en:'Infinix Note 50 Pro', price:299, old:349, badge:'قيمة رائعة', badge_en:'GREAT VALUE', emoji:'📱',
     img:'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?w=600&q=80',
-    desc:'كاميرا Leica بأربع عدسات وأداء خارق.',
-    specs:{'الشاشة':'6.73" AMOLED 120Hz','المعالج':'Snapdragon 8 Gen 3','الكاميرا':'50MP Leica ×4','البطارية':'5300 mAh'} },
-  { id:'lp1', cat:'laptops', name:'MacBook Pro M3 Max', price:2499, old:2799, badge:'للمحترفين', emoji:'💻',
+    desc:'أداء قوي بسعر تنافسي مع شحن سريع.', desc_en:'Strong performance at competitive price.',
+    specs:{'الشاشة':'6.78" AMOLED 120Hz','المعالج':'Helio G100','الكاميرا':'108MP','البطارية':'5200 mAh','الشحن':'45W'} },
+  { id:'ph11', cat:'phones', name:'Infinix Note 50', name_en:'Infinix Note 50', price:229, old:279, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'بطارية ضخمة وشاشة كبيرة.', desc_en:'Massive battery and large display.',
+    specs:{'الشاشة':'6.78" AMOLED','المعالج':'Helio G100','الكاميرا':'50MP','البطارية':'5200 mAh'} },
+  { id:'ph12', cat:'phones', name:'Infinix Hot 50', name_en:'Infinix Hot 50', price:149, old:179, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'اقتصادي بمواصفات مفاجئة.', desc_en:'Budget phone with surprising specs.',
+    specs:{'الشاشة':'6.7" IPS 90Hz','المعالج':'Helio G81','الكاميرا':'50MP','البطارية':'5000 mAh'} },
+  // Tecno
+  { id:'ph13', cat:'phones', name:'Tecno Camon 40 Pro', name_en:'Tecno Camon 40 Pro', price:279, old:329, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?w=600&q=80',
+    desc:'كاميرا احترافية بسعر اقتصادي.', desc_en:'Pro camera at budget price.',
+    specs:{'الشاشة':'6.78" AMOLED','المعالج':'Dimensity 7300','الكاميرا':'50MP Sony','البطارية':'5200 mAh'} },
+  { id:'ph14', cat:'phones', name:'Tecno Spark 30', name_en:'Tecno Spark 30', price:129, old:149, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'أفضل قيمة في فئته.', desc_en:'Best value in its class.',
+    specs:{'الشاشة':'6.6" 90Hz','المعالج':'Helio G91','الكاميرا':'64MP','البطارية':'5000 mAh'} },
+  // Honor
+  { id:'ph15', cat:'phones', name:'Honor X9c', name_en:'Honor X9c', price:329, old:379, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?w=600&q=80',
+    desc:'مقاوم للسقوط وشاشة AMOLED.', desc_en:'Drop-resistant with AMOLED.',
+    specs:{'الشاشة':'6.78" AMOLED 120Hz','المعالج':'Snapdragon 6 Gen 1','الكاميرا':'108MP','البطارية':'6600 mAh'} },
+  { id:'ph16', cat:'phones', name:'Honor X7c', name_en:'Honor X7c', price:199, old:229, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'بطارية عملاقة وأداء ممتاز.', desc_en:'Giant battery and great performance.',
+    specs:{'الشاشة':'6.77" 120Hz','المعالج':'Snapdragon 685','الكاميرا':'108MP','البطارية':'6000 mAh'} },
+  // Redmi
+  { id:'ph17', cat:'phones', name:'Redmi Note 14 Pro+', name_en:'Redmi Note 14 Pro+', price:349, old:399, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?w=600&q=80',
+    desc:'أفضل متوسط بمواصفات راقية.', desc_en:'Best mid-range with premium specs.',
+    specs:{'الشاشة':'6.67" AMOLED 120Hz','المعالج':'Snapdragon 7s Gen 3','الكاميرا':'200MP','البطارية':'5110 mAh','الشحن':'120W'} },
+  { id:'ph18', cat:'phones', name:'Redmi Note 14', name_en:'Redmi Note 14', price:229, old:279, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'قيمة ممتازة مقابل السعر.', desc_en:'Excellent value for money.',
+    specs:{'الشاشة':'6.67" AMOLED','المعالج':'Helio G99 Ultra','الكاميرا':'108MP','البطارية':'5500 mAh'} },
+  { id:'ph19', cat:'phones', name:'Redmi 14C', name_en:'Redmi 14C', price:119, old:149, emoji:'📱',
+    img:'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80',
+    desc:'اقتصادي جداً بشاشة كبيرة.', desc_en:'Very affordable with large display.',
+    specs:{'الشاشة':'6.88" 120Hz','المعالج':'Helio G81','الكاميرا':'50MP','البطارية':'5160 mAh'} },
+  // LAPTOPS
+  { id:'lp1', cat:'laptops', name:'MacBook Pro M3 Max', name_en:'MacBook Pro M3 Max', price:2499, old:2799, badge:'للمحترفين', badge_en:'PRO', emoji:'💻',
     img:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80',
-    desc:'الخيار المطلق للمبرمجين والمونتاج.',
+    desc:'الخيار المطلق للمبرمجين والمونتاج.', desc_en:'Ultimate choice for pros.',
     specs:{'الشاشة':'14.2" Liquid Retina XDR','المعالج':'M3 Max','الذاكرة':'36GB','التخزين':'1TB SSD'} },
-  { id:'lp2', cat:'laptops', name:'Dell XPS 15', price:1699, old:1899, emoji:'💻',
+  { id:'lp2', cat:'laptops', name:'Dell XPS 15', name_en:'Dell XPS 15', price:1699, old:1899, emoji:'💻',
     img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
-    desc:'شاشة OLED مذهلة وأداء عالٍ.',
-    specs:{'الشاشة':'15.6" OLED 3.5K','المعالج':'Core i9-13900H','الذاكرة':'32GB DDR5','كرت':'RTX 4070'} },
-  { id:'lp3', cat:'laptops', name:'ASUS ROG Zephyrus G14', price:1449, old:1599, emoji:'💻',
+    desc:'شاشة OLED وأداء عالٍ.', desc_en:'OLED display and high performance.',
+    specs:{'الشاشة':'15.6" OLED 3.5K','المعالج':'Core i9','الذاكرة':'32GB','كرت':'RTX 4070'} },
+  { id:'lp3', cat:'laptops', name:'ASUS ROG Zephyrus G14', name_en:'ASUS ROG Zephyrus G14', price:1449, old:1599, emoji:'💻',
     img:'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600&q=80',
-    desc:'لابتوب ألعاب خفيف بأداء عنيف.',
+    desc:'لابتوب ألعاب خفيف بأداء عنيف.', desc_en:'Light gaming laptop, fierce performance.',
     specs:{'الشاشة':'14" QHD 165Hz','المعالج':'Ryzen 9','كرت':'RTX 4070','الوزن':'1.5 كجم'} },
-  { id:'lp4', cat:'laptops', name:'Lenovo IdeaPad Slim 5', price:649, old:749, emoji:'💻',
+  { id:'lp4', cat:'laptops', name:'Lenovo IdeaPad Slim 5', name_en:'Lenovo IdeaPad Slim 5', price:649, old:749, emoji:'💻',
     img:'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80',
-    desc:'لابتوب اقتصادي مثالي للطلاب.',
+    desc:'مثالي للطلاب والعمل.', desc_en:'Perfect for students and work.',
     specs:{'الشاشة':'15.6" FHD','المعالج':'Ryzen 7','الذاكرة':'16GB','التخزين':'512GB SSD'} },
-  { id:'pt1', cat:'parts', name:'شاشة iPhone 14 Pro أصلية', price:189, emoji:'🧩',
+  // PARTS
+  { id:'pt1', cat:'parts', name:'شاشة iPhone 14 Pro أصلية', name_en:'iPhone 14 Pro Screen', price:189, priceMerchant:145, emoji:'🧩',
     img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&q=80',
-    desc:'شاشة OLED أصلية بضمان.',
+    desc:'شاشة OLED أصلية بضمان.', desc_en:'Original OLED with warranty.',
     specs:{'التوافق':'iPhone 14 Pro','النوع':'OLED','الضمان':'6 أشهر'} },
-  { id:'pt2', cat:'parts', name:'بطارية Samsung S22 Ultra', price:59, emoji:'🔋',
+  { id:'pt2', cat:'parts', name:'بطارية Samsung S22 Ultra', name_en:'Samsung S22 Ultra Battery', price:59, priceMerchant:42, emoji:'🔋',
     img:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&q=80',
-    desc:'بطارية بسعة أصلية.',
-    specs:{'التوافق':'Galaxy S22 Ultra','السعة':'5000 mAh','الضمان':'6 أشهر'} },
-  { id:'pt3', cat:'parts', name:'منفذ شحن Type-C أصلي', price:29, emoji:'🔌',
+    desc:'بطارية أصلية بعمر طويل.', desc_en:'Original battery, long lifespan.',
+    specs:{'التوافق':'S22 Ultra','السعة':'5000 mAh','الضمان':'6 أشهر'} },
+  { id:'pt3', cat:'parts', name:'منفذ شحن Type-C أصلي', name_en:'Type-C Charging Port', price:29, priceMerchant:19, emoji:'🔌',
     img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
-    desc:'منفذ شحن أصلي متوافق.',
+    desc:'منفذ شحن أصلي متوافق.', desc_en:'Original compatible charging port.',
     specs:{'التوافق':'أندرويد/أيفون 15','النوع':'USB-C','الضمان':'3 أشهر'} },
-  { id:'ac1', cat:'accessories', name:'AirPods Pro الجيل الثاني', price:249, old:299, badge:'عرض خاص', emoji:'🎧',
+  { id:'pt4', cat:'parts', name:'شاشة Samsung A54', name_en:'Samsung A54 Screen', price:89, priceMerchant:65, emoji:'🧩',
+    img:'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=600&q=80',
+    desc:'شاشة أصلية بضمان 6 أشهر.', desc_en:'Original screen with warranty.',
+    specs:{'التوافق':'Galaxy A54','النوع':'AMOLED','الضمان':'6 أشهر'} },
+  { id:'pt5', cat:'parts', name:'بطارية iPhone 13', name_en:'iPhone 13 Battery', price:49, priceMerchant:35, emoji:'🔋',
+    img:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&q=80',
+    desc:'بطارية أصلية بسعة كاملة.', desc_en:'Original full capacity battery.',
+    specs:{'التوافق':'iPhone 13','السعة':'3240 mAh','الضمان':'6 أشهر'} },
+  // ACCESSORIES
+  { id:'ac1', cat:'accessories', name:'AirPods Pro الجيل الثاني', name_en:'AirPods Pro 2', price:249, old:299, badge:'عرض', badge_en:'SALE', emoji:'🎧',
     img:'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=600&q=80',
-    desc:'عزل ضجيج نشط وصوت مكاني.',
+    desc:'عزل ضجيج نشط وصوت مكاني.', desc_en:'Active noise cancellation, spatial audio.',
     specs:{'النوع':'ANC','البطارية':'30 ساعة','المقاومة':'IP54'} },
-  { id:'ac2', cat:'accessories', name:'Apple Watch Ultra 2', price:799, old:849, emoji:'⌚',
+  { id:'ac2', cat:'accessories', name:'Apple Watch Ultra 2', name_en:'Apple Watch Ultra 2', price:799, old:849, emoji:'⌚',
     img:'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&q=80',
-    desc:'ساعة رياضية احترافية.',
+    desc:'ساعة رياضية احترافية.', desc_en:'Professional sports watch.',
     specs:{'الشاشة':'49mm','المقاومة':'100m','البطارية':'72 ساعة'} },
-  { id:'ac3', cat:'accessories', name:'شاحن Anker 65W GaN', price:45, emoji:'⚡',
+  { id:'ac3', cat:'accessories', name:'Samsung Galaxy Buds3 Pro', name_en:'Galaxy Buds3 Pro', price:199, old:229, emoji:'🎧',
+    img:'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&q=80',
+    desc:'صوت نقي وعزل ذكي.', desc_en:'Pure sound, smart ANC.',
+    specs:{'النوع':'ANC','البطارية':'30 ساعة','مميز':'صوت Hi-Fi'} },
+  { id:'ac4', cat:'accessories', name:'شاحن Anker 65W GaN', name_en:'Anker 65W GaN Charger', price:45, emoji:'⚡',
     img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
-    desc:'شاحن سريع متعدد المنافذ.',
+    desc:'شاحن سريع متعدد المنافذ.', desc_en:'Fast multi-port charger.',
     specs:{'القوة':'65W','المنافذ':'2×USB-C + USB-A','التقنية':'GaN II'} },
-  { id:'ac4', cat:'accessories', name:'حافظة iPhone 15 شفافة', price:19, emoji:'🛡️',
+  { id:'ac5', cat:'accessories', name:'حافظة iPhone 15 شفافة', name_en:'iPhone 15 Clear Case', price:19, emoji:'🛡️',
     img:'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80',
-    desc:'حماية شفافة مضادة للصدمات.',
+    desc:'حماية شفافة مضادة للصدمات.', desc_en:'Shockproof clear protection.',
     specs:{'التوافق':'iPhone 15','المادة':'TPU','مميز':'مقاوم للاصفرار'} },
-  { id:'gc1', cat:'gift', name:'بطاقة Apple iTunes', price:25, emoji:'🎫',
+  { id:'ac6', cat:'accessories', name:'حافظة Samsung S25', name_en:'Samsung S25 Case', price:19, emoji:'🛡️',
+    img:'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80',
+    desc:'حماية أنيقة لجهازك.', desc_en:'Elegant protection.',
+    specs:{'التوافق':'Galaxy S25','المادة':'TPU','مميز':'مطفي'} },
+  { id:'ac7', cat:'accessories', name:'كابل USB-C سريع', name_en:'USB-C Fast Cable', price:12, emoji:'🔌',
+    img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
+    desc:'كابل شحن سريع ومتين.', desc_en:'Fast, durable charging cable.',
+    specs:{'الطول':'1.5m','القوة':'100W','النوع':'USB-C to USB-C'} },
+  { id:'ac8', cat:'accessories', name:'شاحن لاسلكي 15W', name_en:'Wireless Charger 15W', price:35, emoji:'🔋',
+    img:'https://images.unsplash.com/photo-1586816879360-004f5b0c51e3?w=600&q=80',
+    desc:'شحن لاسلكي سريع.', desc_en:'Fast wireless charging.',
+    specs:{'القوة':'15W','التوافق':'Qi','المميز':'مغناطيسي'} },
+  { id:'ac9', cat:'accessories', name:'حامل سيارة مغناطيسي', name_en:'Magnetic Car Holder', price:25, emoji:'🚗',
+    img:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=600&q=80',
+    desc:'حامل سيارة قوي وعملي.', desc_en:'Strong, practical car holder.',
+    specs:{'النوع':'مغناطيسي','التثبيت':'فتحة التهوية','مميز':'دوران 360°'} },
+  { id:'ac10', cat:'accessories', name:'بطارية متنقلة 20000mAh', name_en:'Power Bank 20000mAh', price:55, emoji:'🔋',
+    img:'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&q=80',
+    desc:'طاقة احتياطية تكفي أياماً.', desc_en:'Backup power for days.',
+    specs:{'السعة':'20000 mAh','المنافذ':'2×USB-A + USB-C','القوة':'22.5W'} },
+  { id:'ac11', cat:'accessories', name:'واقي شاشة زجاجي', name_en:'Glass Screen Protector', price:9, emoji:'🛡️',
+    img:'https://images.unsplash.com/photo-1601593346740-925612772716?w=600&q=80',
+    desc:'حماية فائقة لشاشة جهازك.', desc_en:'Ultimate screen protection.',
+    specs:{'النوع':'زجاج 9H','المميز':'مضاد للبصمات','التوافق':'جميع الأجهزة'} },
+  { id:'ac12', cat:'accessories', name:'مكبر صوت بلوتوث', name_en:'Bluetooth Speaker', price:79, old:99, emoji:'🔊',
+    img:'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
+    desc:'صوت نقي ومقاوم للماء.', desc_en:'Pure sound, waterproof.',
+    specs:{'المقاومة':'IPX7','البطارية':'20 ساعة','مميز':'Bass قوي'} },
+  // GIFT
+  { id:'gc1', cat:'gift', name:'بطاقة Apple iTunes', name_en:'Apple iTunes Card', price:25, emoji:'🎫',
     img:'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&q=80',
-    desc:'بطاقة Apple الرقمية.',
-    specs:{'القيمة':'25$','التسليم':'فوري','المنطقة':'US/Global'} },
-  { id:'gc2', cat:'gift', name:'بطاقة Xbox Game Pass', price:19, emoji:'🎮',
+    desc:'بطاقة Apple الرقمية.', desc_en:'Apple digital gift card.',
+    specs:{'القيمة':'25$','التسليم':'فوري','المنطقة':'US'} },
+  { id:'gc2', cat:'gift', name:'بطاقة Xbox Game Pass', name_en:'Xbox Game Pass', price:19, emoji:'🎮',
     img:'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?w=600&q=80',
-    desc:'اشتراك شهري لأكثر من 100 لعبة.',
+    desc:'اشتراك شهري لأكثر من 100 لعبة.', desc_en:'Monthly access to 100+ games.',
     specs:{'المدة':'شهر','الألعاب':'+100','التسليم':'فوري'} },
-  { id:'gc3', cat:'gift', name:'بطاقة PlayStation Plus', price:29, emoji:'🕹️',
+  { id:'gc3', cat:'gift', name:'بطاقة PlayStation Plus', name_en:'PlayStation Plus', price:29, emoji:'🕹️',
     img:'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=600&q=80',
-    desc:'اشتراك PS Plus Essential.',
+    desc:'اشتراك PS Plus Essential.', desc_en:'PS Plus Essential subscription.',
     specs:{'المدة':'3 أشهر','المستوى':'Essential','التسليم':'فوري'} },
-  { id:'gc4', cat:'gift', name:'بطاقة Google Play', price:20, emoji:'🎫',
+  { id:'gc4', cat:'gift', name:'بطاقة Google Play', name_en:'Google Play Card', price:20, emoji:'🎫',
     img:'https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=600&q=80',
-    desc:'رصيد Google Play.',
+    desc:'رصيد Google Play.', desc_en:'Google Play credit.',
     specs:{'القيمة':'20$','التسليم':'فوري','المنطقة':'US'} },
 ];
 
 /* ============================================================
-   🗄️ تحميل المنتجات (localStorage أو الافتراضية)
+   📢 الإعلانات وآراء العملاء
    ============================================================ */
-let PRODUCTS = (() => {
-  try {
-    const stored = JSON.parse(localStorage.getItem(STORAGE_PRODUCTS) || 'null');
-    if (Array.isArray(stored) && stored.length) return stored;
-  } catch(e) {}
-  return DEFAULT_PRODUCTS;
-})();
-
-function saveProducts(){
-  localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(PRODUCTS));
-}
+const ADS_IDS = ['ph1','ph6','ph3','ph17','ph10','ph15','ph7','ph13'];
+const REVIEWS = [
+  { name:'أحمد م.', name_en:'Ahmad M.', stars:5, color:'#f59e0b', text:'خدمة ممتازة وسريعة! وصل الهاتف في نفس اليوم، جهاز أصلي 100%.', text_en:'Excellent and fast service! Phone arrived same day, 100% authentic.' },
+  { name:'سارة ك.', name_en:'Sara K.', stars:5, color:'#ec4899', text:'أسعار منافسة جداً والمساعد الذكي ساعدني أختار الأنسب لميزانيتي.', text_en:'Very competitive prices, the AI assistant helped me choose.' },
+  { name:'محمد ح.', name_en:'Mohammad H.', stars:5, color:'#10b981', text:'شاشة أصلية وبضمان حقيقي. صار متجري المفضل للصيانة.', text_en:'Original screen with real warranty. My favorite repair shop.' },
+  { name:'ليلى ن.', name_en:'Layla N.', stars:5, color:'#8b5cf6', text:'خدمة العملاء ردت خلال دقائق! تجربة راقية جداً.', text_en:'Customer service replied in minutes! Very premium experience.' },
+  { name:'علي ر.', name_en:'Ali R.', stars:4, color:'#06b6d4', text:'الأسعار ممتازة والتوصيل سريع. أنصح به بشدة.', text_en:'Great prices and fast delivery. Highly recommend.' },
+  { name:'نور أ.', name_en:'Nour A.', stars:5, color:'#f43f5e', text:'Whish Money سهّل الدفع عليّ كثيراً. شكراً LORD CELL!', text_en:'Whish Money made payment super easy. Thanks LORD CELL!' },
+  { name:'خالد ب.', name_en:'Khaled B.', stars:5, color:'#facc15', text:'أفضل أسعار للتجار في المنطقة. تعامل محترف.', text_en:'Best merchant prices in the area. Professional dealing.' },
+  { name:'ريم س.', name_en:'Reem S.', stars:5, color:'#22c55e', text:'نظام النقاط رائع! حصلت على خصم كبير على طلبي الثاني.', text_en:'Great points system! Got a big discount on my second order.' },
+  { name:'يوسف م.', name_en:'Youssef M.', stars:5, color:'#a855f7', text:'الأجهزة أصلية والأسعار أفضل من السوق بكتير.', text_en:'Authentic devices at better prices than the market.' },
+  { name:'هبة ف.', name_en:'Hiba F.', stars:5, color:'#ef4444', text:'تجربة تسوق ممتازة من الألف إلى الياء. سأعود قريباً.', text_en:'Excellent shopping experience. Will come back soon.' },
+];
 
 /* ============================================================
-   🧠 الحالة العامة
+   💾 الحالة
    ============================================================ */
+let PRODUCTS = (() => {
+  try { const s = JSON.parse(localStorage.getItem(STORAGE_PRODUCTS) || 'null'); if(Array.isArray(s) && s.length) return s; } catch(e){}
+  return DEFAULT_PRODUCTS;
+})();
+function saveProducts(){ localStorage.setItem(STORAGE_PRODUCTS, JSON.stringify(PRODUCTS)); }
+
+let lang = localStorage.getItem(STORAGE_LANG) || 'ar';
 let state = {
   user: JSON.parse(localStorage.getItem('lc_user') || 'null'),
   cart: JSON.parse(localStorage.getItem('lc_cart') || '[]'),
@@ -531,9 +755,25 @@ function saveChat(){ localStorage.setItem(STORAGE_CHAT, JSON.stringify(chatHisto
 /* ============================================================
    🛠️ أدوات
    ============================================================ */
-function escapeHTML(str){
-  return String(str).replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]||t));
+function escapeHTML(str){ return String(str).replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]||t)); }
+function t(key){ return (I18N[lang] && I18N[lang][key]) || (I18N.ar[key]) || key; }
+function pName(p){ return lang === 'en' && p.name_en ? p.name_en : p.name; }
+function pDesc(p){ return lang === 'en' && p.desc_en ? p.desc_en : (p.desc || ''); }
+function pBadge(p){ return lang === 'en' && p.badge_en ? p.badge_en : (p.badge || ''); }
+
+function getProductImage(p){
+  if(p.img && p.img.trim()) return p.img;
+  const kw = (p.name_en || p.name || 'product').replace(/[^a-zA-Z0-9\s]/g,'').trim().split(/\s+/).slice(0,3).join(',');
+  return `https://loremflickr.com/600/600/${kw}/all`;
 }
+
+function imgTag(p, cls=''){
+  const src = getProductImage(p);
+  return `<img src="${src}" alt="${escapeHTML(pName(p))}" loading="lazy" class="${cls}"
+    onerror="this.onerror=null;this.src='https://picsum.photos/seed/${p.id}/600/600';this.onerror=function(){this.style.display='none';this.nextElementSibling.style.display='flex';}">
+    <div class="hidden w-full h-full items-center justify-center text-5xl bg-zinc-900/60">${p.emoji||'📦'}</div>`;
+}
+
 function toast(msg, type='success'){
   const el = document.getElementById('toast');
   const colors = { success:'border-emerald-500/50 text-emerald-300', error:'border-red-500/50 text-red-300', info:'border-amber-500/50 text-amber-300' };
@@ -543,10 +783,40 @@ function toast(msg, type='success'){
   clearTimeout(el._t);
   el._t = setTimeout(()=>el.classList.add('hidden'), 2800);
 }
-function imgTag(p, cls=''){
-  return `<img src="${p.img||''}" alt="${escapeHTML(p.name)}" loading="lazy" class="${cls}"
-    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-    <div class="hidden w-full h-full items-center justify-center text-5xl bg-zinc-900/60">${p.emoji||'📦'}</div>`;
+
+/* ============================================================
+   🌐 تبديل اللغة
+   ============================================================ */
+window.toggleLang = function(){
+  lang = lang === 'ar' ? 'en' : 'ar';
+  localStorage.setItem(STORAGE_LANG, lang);
+  applyLang();
+  renderHome(); renderShop(); renderGift(); renderAds(); renderReviews(); renderChatMessages(); updateCartUI();
+  toast(lang === 'en' ? 'Language: English' : 'اللغة: العربية', 'info');
+};
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('langLabel').textContent = lang === 'ar' ? 'EN' : 'ع';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if(val) el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    const val = t(key);
+    if(val) el.placeholder = val;
+  });
+}
+
+/* ============================================================
+   💰 السعر حسب الدور
+   ============================================================ */
+function getPriceForRole(p){
+  if(!p) return 0;
+  if(state.user?.role === 'merchant' && p.priceMerchant) return p.priceMerchant;
+  return p.price;
 }
 
 /* ============================================================
@@ -571,44 +841,91 @@ window.setCat = function(cat){
    ============================================================ */
 function productCard(p){
   const inCompare = state.compare.includes(p.id);
+  const badge = pBadge(p);
+  const price = getPriceForRole(p);
   return `
   <div class="glass-card rounded-3xl overflow-hidden card-hover flex flex-col">
     <div class="relative aspect-square bg-zinc-900/50 overflow-hidden">
       ${imgTag(p, 'w-full h-full object-cover')}
-      ${p.badge ? `<span class="absolute top-3 right-3 gold-btn text-[9px] font-black px-2.5 py-1 rounded-lg">${escapeHTML(p.badge)}</span>` : ''}
+      ${badge ? `<span class="absolute top-3 right-3 gold-btn text-[9px] font-black px-2.5 py-1 rounded-lg">${escapeHTML(badge)}</span>` : ''}
       ${p.old ? `<span class="absolute top-3 left-3 bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded-lg">-${Math.round((1-p.price/p.old)*100)}%</span>` : ''}
       <button onclick="toggleCompare('${p.id}')" class="absolute bottom-3 left-3 w-8 h-8 rounded-lg ${inCompare?'gold-btn':'bg-zinc-950/80 border border-zinc-700'} flex items-center justify-center text-xs">⚖️</button>
     </div>
     <div class="p-4 flex flex-col flex-1">
-      <h4 class="font-bold text-xs text-zinc-100 mb-1 line-clamp-2">${escapeHTML(p.name)}</h4>
-      <p class="text-zinc-500 text-[10px] leading-relaxed mb-3 line-clamp-2 flex-1">${escapeHTML(p.desc||'')}</p>
-      <div class="flex items-center gap-2 mb-3">
-        <span class="gold-text font-black text-sm price-tag">$${p.price}</span>
+      <h4 class="font-bold text-xs text-zinc-100 mb-1 line-clamp-2">${escapeHTML(pName(p))}</h4>
+      <p class="text-zinc-500 text-[10px] leading-relaxed mb-3 line-clamp-2 flex-1">${escapeHTML(pDesc(p))}</p>
+      <div class="flex items-center gap-2 mb-3 flex-wrap">
+        <span class="gold-text font-black text-sm price-tag">$${price}</span>
         ${p.old ? `<span class="text-zinc-600 text-[10px] line-through price-tag">$${p.old}</span>` : ''}
+        ${state.user?.role==='merchant' && p.priceMerchant ? `<span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">${t('merchant_price')}</span>`:''}
       </div>
-      <button onclick="addToCart('${p.id}')" class="w-full gold-btn py-2.5 rounded-xl text-[11px] font-black">أضف للسلة 🛒</button>
+      <button onclick="addToCart('${p.id}')" class="w-full gold-btn py-2.5 rounded-xl text-[11px] font-black">${t('add_to_cart')}</button>
     </div>
   </div>`;
 }
 
-/* بطاقة منتج مصغّرة داخل الشات */
 function chatProductCard(p){
+  const price = getPriceForRole(p);
   return `
     <div class="chat-product-card rounded-2xl p-2 mt-2 flex gap-2 items-center">
-      <div class="w-14 h-14 rounded-xl overflow-hidden bg-zinc-900 shrink-0">
-        ${imgTag(p,'w-full h-full object-cover')}
-      </div>
+      <div class="w-14 h-14 rounded-xl overflow-hidden bg-zinc-900 shrink-0">${imgTag(p,'w-full h-full object-cover')}</div>
       <div class="flex-1 min-w-0">
-        <div class="text-[11px] font-bold text-zinc-100 truncate">${escapeHTML(p.name)}</div>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <span class="gold-text text-xs font-black price-tag">$${p.price}</span>
+        <div class="text-[11px] font-bold text-zinc-100 truncate">${escapeHTML(pName(p))}</div>
+        <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
+          <span class="gold-text text-xs font-black price-tag">$${price}</span>
           ${p.old?`<span class="text-zinc-600 text-[9px] line-through">$${p.old}</span>`:''}
+          ${state.user?.role==='merchant' && p.priceMerchant ? `<span class="text-[8px] bg-emerald-500/20 text-emerald-400 px-1 rounded">${t('merchant_price')}</span>`:''}
         </div>
       </div>
-      <button onclick="addToCart('${p.id}')" class="shrink-0 gold-btn px-3 py-2 rounded-lg text-[10px] font-black">أضف 🛒</button>
+      <button onclick="addToCart('${p.id}')" class="shrink-0 gold-btn px-3 py-2 rounded-lg text-[10px] font-black">${t('add_to_cart').split(' ')[0]}</button>
     </div>`;
 }
 
+/* ============================================================
+   📢 الإعلانات + آراء العملاء
+   ============================================================ */
+function renderAds(){
+  const track = document.getElementById('adsTrack');
+  const ads = ADS_IDS.map(id => PRODUCTS.find(p=>p.id===id)).filter(Boolean);
+  if(!ads.length) return;
+  const html = ads.map(p => `
+    <div class="ad-card" onclick="openProductById('${p.id}')">
+      <img src="${getProductImage(p)}" alt="${escapeHTML(pName(p))}" onerror="this.style.display='none'">
+      <div>
+        <div class="ad-name">${escapeHTML(pName(p))}</div>
+        <div class="ad-price">$${p.price}</div>
+      </div>
+      ${pBadge(p) ? `<span class="ad-badge">${escapeHTML(pBadge(p))}</span>` : ''}
+    </div>`).join('');
+  track.innerHTML = html + html;
+}
+function renderReviews(){
+  const track = document.getElementById('reviewsTrack');
+  const html = REVIEWS.map(r => {
+    const name = lang === 'en' ? r.name_en : r.name;
+    const text = lang === 'en' ? r.text_en : r.text;
+    return `
+      <div class="review-card">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="review-avatar" style="background:${r.color}">${name[0]}</div>
+          <div class="review-name">${escapeHTML(name)}</div>
+        </div>
+        <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+        <div class="review-text">${escapeHTML(text)}</div>
+      </div>`;
+  }).join('');
+  track.innerHTML = html + html;
+}
+window.openProductById = function(id){
+  const p = PRODUCTS.find(x=>x.id===id);
+  if(!p) return;
+  const specs = Object.entries(p.specs||{}).map(([k,v])=>`• ${k}: ${v}`).join('\n');
+  alert(`${pName(p)}\n\n${pDesc(p)}\n\n${specs}\n\n$${getPriceForRole(p)}`);
+};
+
+/* ============================================================
+   🎨 عرض الشبكات
+   ============================================================ */
 function renderHome(){
   const featured = PRODUCTS.filter(p=>p.badge || p.old).slice(0,4);
   const el = document.getElementById('featured-grid');
@@ -620,7 +937,7 @@ function renderShop(){
   const q = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
   const sort = document.getElementById('sortSelect')?.value || 'pop';
   let list = PRODUCTS.filter(p => currentCat==='all' ? true : p.cat===currentCat);
-  if(q) list = list.filter(p => ((p.name||'')+(p.desc||'')).toLowerCase().includes(q));
+  if(q) list = list.filter(p => ((p.name||'')+(p.name_en||'')+(p.desc||'')+(p.desc_en||'')).toLowerCase().includes(q));
   if(sort==='low') list.sort((a,b)=>a.price-b.price);
   else if(sort==='high') list.sort((a,b)=>b.price-a.price);
   grid.innerHTML = list.map(productCard).join('');
@@ -637,12 +954,12 @@ function renderGift(){
    ============================================================ */
 window.addToCart = function(id){
   const p = PRODUCTS.find(x=>x.id===id);
-  if(!p) return toast('المنتج غير موجود','error');
+  if(!p) return toast('Error','error');
   const item = state.cart.find(i=>i.id===id);
   if(item) item.qty++;
   else state.cart.push({ id, qty:1 });
   saveState(); updateCartUI();
-  toast(`تمت إضافة ${p.name}`,'success');
+  toast(`${t('added_to_cart')}: ${pName(p)}`,'success');
 };
 window.changeQty = function(id, delta){
   const item = state.cart.find(i=>i.id===id);
@@ -651,22 +968,27 @@ window.changeQty = function(id, delta){
   if(item.qty<=0) state.cart = state.cart.filter(i=>i.id!==id);
   saveState(); updateCartUI();
 };
-window.removeItem = function(id){
-  state.cart = state.cart.filter(i=>i.id!==id);
-  saveState(); updateCartUI();
-};
+window.removeItem = function(id){ state.cart = state.cart.filter(i=>i.id!==id); saveState(); updateCartUI(); };
+
 function cartTotals(){
-  let subtotal = 0, itemCount = 0;
+  let subtotal = 0, itemCount = 0, subtotalRetail = 0;
   state.cart.forEach(i=>{
     const p = PRODUCTS.find(x=>x.id===i.id);
-    if(p){ subtotal += p.price*i.qty; itemCount += i.qty; }
+    if(p){
+      const up = getPriceForRole(p);
+      subtotal += up * i.qty;
+      subtotalRetail += p.price * i.qty;
+      itemCount += i.qty;
+    }
   });
-  let rate = itemCount===2?0.05 : itemCount===3?0.10 : itemCount>=4?0.15 : 0;
-  const discount = subtotal * rate;
-  const pointsValue = Math.min(state.points/100, (subtotal-discount)*0.5);
-  const total = subtotal - discount - pointsValue;
-  return { subtotal, itemCount, rate, discount, pointsUsed: Math.round(pointsValue*100), pointsValue, total: Math.max(0, total) };
+  const maxPointsUsable = Math.floor((subtotal * 0.5) / POINT_VALUE);
+  const pointsUsed = Math.min(state.points, maxPointsUsable);
+  const pointsValue = pointsUsed * POINT_VALUE;
+  const total = Math.max(0, subtotal - pointsValue);
+  const pointsEarned = Math.floor(total / 20);
+  return { subtotal, subtotalRetail, itemCount, savings: subtotalRetail - subtotal, pointsUsed, pointsValue, pointsEarned, total };
 }
+
 function updateCartUI(){
   const countEl = document.getElementById('cart-count');
   const totalQty = state.cart.reduce((s,i)=>s+i.qty,0);
@@ -674,54 +996,50 @@ function updateCartUI(){
   else countEl.classList.add('hidden');
   const itemsEl = document.getElementById('cartItems');
   if(state.cart.length===0){
-    itemsEl.innerHTML = `<div class="text-center py-20 text-zinc-500 text-xs">سلتك فارغة 🛒</div>`;
+    itemsEl.innerHTML = `<div class="text-center py-20 text-zinc-500 text-xs">${t('empty_cart')}</div>`;
   } else {
     itemsEl.innerHTML = state.cart.map(i=>{
       const p = PRODUCTS.find(x=>x.id===i.id);
       if(!p) return '';
+      const up = getPriceForRole(p);
       return `
       <div class="glass-card rounded-2xl p-3 flex gap-3 items-center">
         <div class="w-16 h-16 rounded-xl overflow-hidden bg-zinc-900 shrink-0">${imgTag(p,'w-full h-full object-cover')}</div>
         <div class="flex-1 min-w-0">
-          <div class="text-[11px] font-bold truncate">${escapeHTML(p.name)}</div>
-          <div class="text-[10px] gold-text font-black price-tag mt-0.5">$${p.price}</div>
+          <div class="text-[11px] font-bold truncate">${escapeHTML(pName(p))}</div>
+          <div class="text-[10px] gold-text font-black price-tag mt-0.5">$${up}</div>
+          ${state.user?.role==='merchant' && p.priceMerchant ? `<div class="text-[9px] text-emerald-400">${t('merchant_price')}</div>`:''}
           <div class="flex items-center gap-2 mt-2">
             <button onclick="changeQty('${p.id}',-1)" class="w-6 h-6 rounded-md bg-zinc-800 text-xs">−</button>
             <span class="text-xs font-bold w-6 text-center">${i.qty}</span>
             <button onclick="changeQty('${p.id}',1)" class="w-6 h-6 rounded-md bg-zinc-800 text-xs">+</button>
-            <button onclick="removeItem('${p.id}')" class="mr-auto text-red-400 text-[10px]">حذف</button>
+            <button onclick="removeItem('${p.id}')" class="mr-auto text-red-400 text-[10px]">✕</button>
           </div>
         </div>
       </div>`;
     }).join('');
   }
-  const t = cartTotals();
-  document.getElementById('cartSubtotal').textContent = `$${t.subtotal.toFixed(2)}`;
-  const dRow = document.getElementById('cartDiscountRow');
-  if(t.discount>0){ dRow.classList.remove('hidden'); document.getElementById('cartDiscount').textContent = `-$${t.discount.toFixed(2)}`; }
-  else dRow.classList.add('hidden');
+  const tot = cartTotals();
+  document.getElementById('cartSubtotal').textContent = `$${tot.subtotal.toFixed(2)}`;
   const pRow = document.getElementById('cartPointsRow');
-  if(t.pointsValue>0.01){ pRow.classList.remove('hidden'); document.getElementById('cartPoints').textContent = `-$${t.pointsValue.toFixed(2)}`; }
-  else pRow.classList.add('hidden');
-  document.getElementById('cartTotal').textContent = `$${t.total.toFixed(2)}`;
+  if(tot.pointsValue > 0.01){
+    pRow.classList.remove('hidden');
+    document.getElementById('cartPoints').textContent = `-$${tot.pointsValue.toFixed(2)} (${tot.pointsUsed})`;
+  } else pRow.classList.add('hidden');
+  document.getElementById('cartTotal').textContent = `$${tot.total.toFixed(2)}`;
   const note = document.getElementById('cartDiscountNote');
-  if(t.itemCount===1){ note.classList.remove('hidden'); note.textContent = '💡 أضف قطعة ثانية للحصول على خصم 5%!'; }
-  else if(t.itemCount===2){ note.classList.remove('hidden'); note.textContent = '💡 أضف قطعة ثالثة للحصول على خصم 10%!'; }
-  else if(t.itemCount===3){ note.classList.remove('hidden'); note.textContent = '💡 أضف قطعة رابعة للحصول على خصم 15%!'; }
-  else if(t.itemCount>=4){ note.classList.remove('hidden'); note.textContent = `🎉 حصلت على خصم 15%!`; }
-  else note.classList.add('hidden');
+  if(tot.pointsEarned > 0){
+    note.classList.remove('hidden');
+    note.textContent = `💎 ${t('points_earn')} ${tot.pointsEarned} ${t('points_value')} $${(tot.pointsEarned*POINT_VALUE).toFixed(2)}`;
+  } else if(tot.subtotal > 0){
+    note.classList.remove('hidden');
+    const needed = 20 - (tot.subtotal % 20);
+    note.textContent = `💡 +$${needed.toFixed(2)} = 1 ${lang==='ar'?'نقطة':'point'}`;
+  } else note.classList.add('hidden');
 }
-window.openCart = function(){
-  document.getElementById('cartOverlay').classList.remove('hidden');
-  document.getElementById('cartDrawer').classList.add('open');
-};
-window.closeCart = function(){
-  document.getElementById('cartOverlay').classList.add('hidden');
-  document.getElementById('cartDrawer').classList.remove('open');
-};
-window.clearCart = function(){
-  state.cart = []; saveState(); updateCartUI();
-};
+window.openCart = function(){ document.getElementById('cartOverlay').classList.remove('hidden'); document.getElementById('cartDrawer').classList.add('open'); };
+window.closeCart = function(){ document.getElementById('cartOverlay').classList.add('hidden'); document.getElementById('cartDrawer').classList.remove('open'); };
+window.clearCart = function(){ state.cart = []; saveState(); updateCartUI(); };
 
 /* ============================================================
    🪟 النوافذ
@@ -730,12 +1048,12 @@ window.openModal = id => document.getElementById(id).classList.add('open');
 window.closeModal = id => document.getElementById(id).classList.remove('open');
 
 /* ============================================================
-   👤 تسجيل الدخول
+   👤 دخول
    ============================================================ */
 window.handleUserClick = function(){
   if(state.user){
-    if(confirm(`مرحباً ${state.user.name}!\nنقاطك: ${state.points}\n\nتسجيل الخروج؟`)){
-      state.user = null; saveState(); updateUserUI(); toast('تم تسجيل الخروج','info');
+    if(confirm(`${t('welcome')} ${state.user.name}!\n${lang==='ar'?'نقاطك':'Points'}: ${state.points}\n\n${t('logout')}`)){
+      state.user = null; saveState(); updateUserUI(); renderHome(); renderShop(); renderGift(); toast('👋','info');
     }
   } else openModal('loginModal');
 };
@@ -743,64 +1061,57 @@ window.doLogin = function(){
   const name = document.getElementById('loginName').value.trim();
   const phone = document.getElementById('loginPhone').value.trim();
   const email = document.getElementById('loginEmail').value.trim();
-  if(!name || phone.length<6) return toast('يرجى إدخال اسم ورقم صحيح','error');
-  state.user = { name, phone, email };
+  const roleEl = document.querySelector('input[name="userRole"]:checked');
+  const role = roleEl ? roleEl.value : 'customer';
+  if(!name || phone.length<6) return toast(t('error_fields'),'error');
+  state.user = { name, phone, email, role };
   saveState(); updateUserUI();
   closeModal('loginModal');
-  toast(`مرحباً ${name}!`,'success');
+  renderHome(); renderShop(); renderGift(); updateCartUI();
+  toast(`${t('welcome')} ${name}!`, 'success');
 };
 function updateUserUI(){
   const lbl = document.getElementById('userLabel');
   if(state.user) lbl.textContent = state.user.name.split(' ')[0];
-  else lbl.textContent = 'دخول';
+  else lbl.textContent = t('guest');
 }
 
 /* ============================================================
-   🔐 لوحة المدير
+   🔐 المدير
    ============================================================ */
 let logoClicks = 0, logoTimer = null;
 document.getElementById('logoBtn').addEventListener('click', (e) => {
-  // نقر عادي: الانتقال للرئيسية
   if(!logoTimer) go('home');
   logoClicks++;
   clearTimeout(logoTimer);
   logoTimer = setTimeout(()=>{ logoClicks=0; logoTimer=null; }, 800);
   if(logoClicks >= 5){
     logoClicks = 0; logoTimer = null;
-    if(isAdmin) openAdminPanel();
-    else openModal('adminLoginModal');
+    if(isAdmin) openAdminPanel(); else openModal('adminLoginModal');
   }
 });
-
 window.doAdminLogin = function(){
   const pass = document.getElementById('adminPass').value;
   if(pass === ADMIN_PASSWORD){
-    isAdmin = true;
-    sessionStorage.setItem('lc_admin','true');
+    isAdmin = true; sessionStorage.setItem('lc_admin','true');
     document.getElementById('adminBtn').classList.remove('hidden');
     document.getElementById('adminPass').value = '';
     closeModal('adminLoginModal');
-    toast('تم الدخول كمدير ✅','success');
-    openAdminPanel();
-  } else {
-    toast('كلمة المرور خاطئة','error');
-  }
+    toast('Admin ✅','success'); openAdminPanel();
+  } else toast('❌','error');
 };
 window.openAdminPanel = function(){
   if(!isAdmin){ openModal('adminLoginModal'); return; }
-  adminTab('products');
-  openModal('adminPanel');
+  adminTab('products'); openModal('adminPanel');
 };
 window.adminTab = function(tab){
   document.querySelectorAll('.admin-tab').forEach(b=>{
-    b.classList.toggle('active', b.textContent.includes(
-      tab==='products'?'المنتجات':tab==='orders'?'الطلبات':tab==='complaints'?'الشكاوي':'بيانات'
-    ));
-    b.classList.toggle('bg-red-600', b.classList.contains('active'));
-    b.classList.toggle('text-white', b.classList.contains('active'));
-    b.classList.toggle('bg-zinc-900', !b.classList.contains('active'));
-    b.classList.toggle('border', !b.classList.contains('active'));
-    b.classList.toggle('border-zinc-800', !b.classList.contains('active'));
+    const isActive = b.onclick.toString().includes(`'${tab}'`);
+    b.classList.toggle('bg-red-600', isActive);
+    b.classList.toggle('text-white', isActive);
+    b.classList.toggle('bg-zinc-900', !isActive);
+    b.classList.toggle('border', !isActive);
+    b.classList.toggle('border-zinc-800', !isActive);
   });
   const c = document.getElementById('adminContent');
   if(tab==='products') c.innerHTML = adminProductsHTML();
@@ -811,8 +1122,8 @@ window.adminTab = function(tab){
 function adminProductsHTML(){
   return `
     <div class="flex justify-between items-center mb-4">
-      <div class="text-xs text-zinc-400">عدد المنتجات: <strong class="gold-text">${PRODUCTS.length}</strong></div>
-      <button onclick="addNewProduct()" class="gold-btn px-4 py-2 rounded-xl text-xs font-black">+ إضافة منتج</button>
+      <div class="text-xs text-zinc-400">${PRODUCTS.length} products</div>
+      <button onclick="addNewProduct()" class="gold-btn px-4 py-2 rounded-xl text-xs font-black">+ ${lang==='ar'?'إضافة':'Add'}</button>
     </div>
     <div class="space-y-2 max-h-96 overflow-y-auto scrollbar">
       ${PRODUCTS.map((p,i)=>`
@@ -829,33 +1140,26 @@ function adminProductsHTML(){
 }
 function adminOrdersHTML(){
   return `
-    <div class="mb-4 text-xs text-zinc-400">عدد الطلبات: <strong class="gold-text">${state.orders.length}</strong></div>
+    <div class="mb-4 text-xs text-zinc-400">${state.orders.length} orders</div>
     <div class="space-y-3 max-h-96 overflow-y-auto scrollbar">
-      ${state.orders.length===0?'<div class="text-center py-10 text-zinc-500 text-xs">لا توجد طلبات بعد.</div>':
+      ${state.orders.length===0?'<div class="text-center py-10 text-zinc-500 text-xs">—</div>':
         state.orders.slice().reverse().map(o=>`
           <div class="glass-card rounded-xl p-3 text-[11px] space-y-1">
-            <div class="flex justify-between">
-              <strong class="gold-text">${o.num}</strong>
-              <span class="text-zinc-500 text-[10px]">${o.date}</span>
-            </div>
+            <div class="flex justify-between"><strong class="gold-text">${o.num}</strong><span class="text-zinc-500 text-[10px]">${o.date}</span></div>
             <div>👤 ${escapeHTML(o.name)} — ${escapeHTML(o.phone)}</div>
             <div>📍 ${escapeHTML(o.city)} - ${escapeHTML(o.area)}</div>
             <div>💰 <strong class="gold-text">$${o.totals.total.toFixed(2)}</strong></div>
-            <button onclick="window.open('https://wa.me/961${o.phone.replace(/\\D/g,'')}?text=${encodeURIComponent('مرحباً '+o.name+'، بخصوص طلبك '+o.num)}','_blank')" class="wa-btn w-full py-1.5 rounded-lg text-[10px] font-bold mt-1">📱 تواصل</button>
           </div>`).join('')}
     </div>`;
 }
 function adminComplaintsHTML(){
   return `
-    <div class="mb-4 text-xs text-zinc-400">عدد الشكاوي: <strong class="gold-text">${state.complaints.length}</strong></div>
+    <div class="mb-4 text-xs text-zinc-400">${state.complaints.length} complaints</div>
     <div class="space-y-3 max-h-96 overflow-y-auto scrollbar">
-      ${state.complaints.length===0?'<div class="text-center py-10 text-zinc-500 text-xs">لا توجد شكاوي.</div>':
+      ${state.complaints.length===0?'<div class="text-center py-10 text-zinc-500 text-xs">—</div>':
         state.complaints.slice().reverse().map(c=>`
           <div class="glass-card rounded-xl p-3 text-[11px] space-y-1">
-            <div class="flex justify-between">
-              <span class="text-red-400 font-bold">${escapeHTML(c.type)}</span>
-              <span class="text-zinc-500 text-[10px]">${c.date}</span>
-            </div>
+            <div class="flex justify-between"><span class="text-red-400 font-bold">${escapeHTML(c.type)}</span><span class="text-zinc-500 text-[10px]">${c.date}</span></div>
             <div>👤 ${escapeHTML(c.name)} — ${escapeHTML(c.phone)}</div>
             <div class="text-zinc-300 mt-1">${escapeHTML(c.message)}</div>
           </div>`).join('')}
@@ -865,93 +1169,96 @@ function adminDataHTML(){
   return `
     <div class="space-y-3">
       <div class="glass-card rounded-xl p-4">
-        <div class="text-xs font-bold mb-2">📤 تصدير المنتجات</div>
-        <p class="text-[10px] text-zinc-500 mb-3">انسخ هذا الكود واحفظه في ملف HTML للجميع.</p>
-        <button onclick="exportProducts()" class="gold-btn w-full py-2 rounded-lg text-xs font-black">نسخ JSON</button>
+        <div class="text-xs font-bold mb-2">📤 Export</div>
+        <button onclick="exportProducts()" class="gold-btn w-full py-2 rounded-lg text-xs font-black">Copy JSON</button>
       </div>
       <div class="glass-card rounded-xl p-4">
-        <div class="text-xs font-bold mb-2">📥 استيراد المنتجات</div>
-        <textarea id="importJSON" rows="4" placeholder='الصق JSON هنا...' class="w-full bg-zinc-950 border border-zinc-800 px-3 py-2 rounded-lg text-[10px] focus:outline-none focus:border-amber-500"></textarea>
-        <button onclick="importProducts()" class="gold-btn w-full py-2 rounded-lg text-xs font-black mt-2">استيراد</button>
+        <div class="text-xs font-bold mb-2">📥 Import</div>
+        <textarea id="importJSON" rows="4" class="w-full bg-zinc-950 border border-zinc-800 px-3 py-2 rounded-lg text-[10px]"></textarea>
+        <button onclick="importProducts()" class="gold-btn w-full py-2 rounded-lg text-xs font-black mt-2">Import</button>
       </div>
       <div class="glass-card rounded-xl p-4 border-red-500/30">
-        <div class="text-xs font-bold text-red-400 mb-2">⚠️ منطقة الخطر</div>
-        <button onclick="resetProducts()" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-black">إعادة المنتجات الافتراضية</button>
+        <button onclick="resetProducts()" class="w-full bg-red-600 text-white py-2 rounded-lg text-xs font-black">Reset</button>
       </div>
     </div>`;
 }
 window.addNewProduct = function(){
-  const name = prompt('اسم المنتج:'); if(!name) return;
-  const price = parseFloat(prompt('السعر (USD):')); if(!price) return;
-  const cat = prompt('القسم (phones/laptops/parts/accessories/gift):','phones') || 'phones';
-  const desc = prompt('الوصف:','') || '';
-  const img = prompt('رابط الصورة:','') || '';
-  const emoji = prompt('إيموجي بديل:','📦') || '📦';
+  const name = prompt(lang==='ar'?'اسم المنتج:':'Product name:'); if(!name) return;
+  const price = parseFloat(prompt(lang==='ar'?'السعر (USD):':'Price (USD):')); if(!price) return;
+  const cat = prompt('Category (phones/laptops/parts/accessories/gift):','phones') || 'phones';
+  const desc = prompt(lang==='ar'?'الوصف:':'Description:','') || '';
+  const img = prompt(lang==='ar'?'رابط الصورة (اتركه فارغاً للجلب التلقائي):':'Image URL (leave empty to auto-fetch):','') || '';
+  const emoji = prompt('Emoji:','📦') || '📦';
+  const priceMerchant = parseFloat(prompt(lang==='ar'?'سعر التاجر (اختياري):':'Merchant price (optional):','0')) || 0;
   const id = 'p' + Date.now();
-  PRODUCTS.push({ id, name, price, cat, desc, img, emoji, specs:{} });
-  saveProducts(); renderHome(); renderShop(); renderGift();
+  const prod = { id, name, name_en:name, price, cat, desc, desc_en:desc, img, emoji, specs:{} };
+  if(priceMerchant > 0) prod.priceMerchant = priceMerchant;
+  PRODUCTS.push(prod);
+  saveProducts(); renderHome(); renderShop(); renderGift(); renderAds();
   adminTab('products');
-  toast('تمت إضافة المنتج ✅','success');
+  toast('✅','success');
 };
 window.editProduct = function(i){
   const p = PRODUCTS[i];
-  const name = prompt('الاسم:', p.name); if(!name) return;
-  const price = parseFloat(prompt('السعر:', p.price)); if(!price) return;
-  const desc = prompt('الوصف:', p.desc||'') || '';
-  const img = prompt('رابط الصورة:', p.img||'') || '';
-  PRODUCTS[i] = { ...p, name, price, desc, img };
-  saveProducts(); renderHome(); renderShop(); renderGift();
+  const name = prompt('Name:', p.name); if(!name) return;
+  const price = parseFloat(prompt('Price:', p.price)); if(!price) return;
+  const desc = prompt('Desc:', p.desc||'') || '';
+  const img = prompt('Image URL:', p.img||'') || '';
+  const priceMerchant = parseFloat(prompt('Merchant price:', p.priceMerchant||'0')) || 0;
+  PRODUCTS[i] = { ...p, name, name_en:name, price, desc, desc_en:desc, img };
+  if(priceMerchant > 0) PRODUCTS[i].priceMerchant = priceMerchant;
+  else delete PRODUCTS[i].priceMerchant;
+  saveProducts(); renderHome(); renderShop(); renderGift(); renderAds();
   adminTab('products');
-  toast('تم التعديل ✅','success');
+  toast('✅','success');
 };
 window.deleteProduct = function(i){
-  if(!confirm('حذف المنتج؟')) return;
+  if(!confirm('?')) return;
   PRODUCTS.splice(i,1);
-  saveProducts(); renderHome(); renderShop(); renderGift();
+  saveProducts(); renderHome(); renderShop(); renderGift(); renderAds();
   adminTab('products');
-  toast('تم الحذف','info');
+  toast('🗑️','info');
 };
 window.exportProducts = function(){
   const json = JSON.stringify(PRODUCTS, null, 2);
-  navigator.clipboard.writeText(json).then(()=>toast('تم نسخ JSON','success')).catch(()=>{
-    prompt('انسخ يدوياً:', json);
-  });
+  navigator.clipboard.writeText(json).then(()=>toast('✅ Copied','success')).catch(()=>prompt('Copy:', json));
 };
 window.importProducts = function(){
   try {
     const json = JSON.parse(document.getElementById('importJSON').value);
     if(!Array.isArray(json)) throw new Error();
     PRODUCTS = json;
-    saveProducts(); renderHome(); renderShop(); renderGift();
+    saveProducts(); renderHome(); renderShop(); renderGift(); renderAds();
     adminTab('products');
-    toast('تم الاستيراد ✅','success');
-  } catch(e){ toast('JSON غير صالح','error'); }
+    toast('✅','success');
+  } catch(e){ toast('Invalid JSON','error'); }
 };
 window.resetProducts = function(){
-  if(!confirm('سيتم حذف كل تعديلاتك. متأكد؟')) return;
+  if(!confirm('?')) return;
   PRODUCTS = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-  saveProducts(); renderHome(); renderShop(); renderGift();
+  saveProducts(); renderHome(); renderShop(); renderGift(); renderAds();
   adminTab('products');
-  toast('تمت إعادة التعيين','info');
+  toast('✅','info');
 };
 
 /* ============================================================
-   🚚 الطلب + واتساب
+   🚚 الطلب + واتساب + Whish
    ============================================================ */
 window.openCheckout = function(){
-  if(state.cart.length===0) return toast('سلتك فارغة','error');
-  if(!state.user) { closeCart(); openModal('loginModal'); return toast('سجل دخولك أولاً','info'); }
+  if(state.cart.length===0) return toast(t('empty_cart'),'error');
+  if(!state.user){ closeCart(); openModal('loginModal'); return toast(t('login_first'),'info'); }
   document.getElementById('co-name').value = state.user.name;
   document.getElementById('co-phone').value = state.user.phone;
   document.getElementById('co-email').value = state.user.email || '';
-  const t = cartTotals();
+  const tot = cartTotals();
+  const roleLabel = state.user.role === 'merchant' ? t('role_merchant') : t('role_customer');
   document.getElementById('co-summary').innerHTML = `
-    <div class="text-amber-400 font-black mb-2">📦 ملخص الطلب</div>
-    <div class="flex justify-between"><span class="text-zinc-400">عدد القطع</span><span>${t.itemCount}</span></div>
-    <div class="flex justify-between"><span class="text-zinc-400">المجموع الفرعي</span><span>$${t.subtotal.toFixed(2)}</span></div>
-    ${t.discount>0?`<div class="flex justify-between text-emerald-400"><span>خصم (${Math.round(t.rate*100)}%)</span><span>-$${t.discount.toFixed(2)}</span></div>`:''}
-    ${t.pointsValue>0.01?`<div class="flex justify-between text-amber-400"><span>نقاط</span><span>-$${t.pointsValue.toFixed(2)}</span></div>`:''}
-    <div class="flex justify-between font-black pt-2 mt-2 border-t border-zinc-800"><span>الإجمالي</span><span class="gold-text">$${t.total.toFixed(2)}</span></div>`;
+    <div class="text-amber-400 font-black mb-2">📦 ${roleLabel}</div>
+    <div class="flex justify-between"><span class="text-zinc-400">${t('cart_subtotal')}</span><span>$${tot.subtotal.toFixed(2)}</span></div>
+    ${tot.savings>0?`<div class="flex justify-between text-emerald-400"><span>${t('price_saved')}</span><span>-$${tot.savings.toFixed(2)}</span></div>`:''}
+    ${tot.pointsValue>0.01?`<div class="flex justify-between text-amber-400"><span>${t('cart_points')} (${tot.pointsUsed})</span><span>-$${tot.pointsValue.toFixed(2)}</span></div>`:''}
+    <div class="flex justify-between font-black pt-2 mt-2 border-t border-zinc-800"><span>${t('cart_total')}</span><span class="gold-text">$${tot.total.toFixed(2)}</span></div>
+    <div class="text-[10px] text-emerald-400 mt-2">💎 ${t('points_earn')} ${tot.pointsEarned} ($${(tot.pointsEarned*POINT_VALUE).toFixed(2)})</div>`;
   closeCart();
   openModal('checkoutModal');
 };
@@ -965,36 +1272,45 @@ window.confirmOrder = function(){
   const address = document.getElementById('co-address').value.trim();
   const pay = document.getElementById('co-pay').value;
   const notes = document.getElementById('co-notes').value.trim();
-
-  if(!name||!phone||!city||!area||!address) return toast('يرجى تعبئة جميع الحقول المطلوبة','error');
-
-  const t = cartTotals();
+  if(!name||!phone||!city||!area||!address) return toast(t('error_fields'),'error');
+  const tot = cartTotals();
   const orderNum = 'LC-' + Date.now().toString().slice(-6);
-  const date = new Date().toLocaleString('ar-EG');
-
+  const date = new Date().toLocaleString(lang==='ar'?'ar-EG':'en-US');
   const order = {
     num: orderNum, date, name, phone, email, city, area, address, pay, notes,
-    items: state.cart.map(i=>({ ...PRODUCTS.find(x=>x.id===i.id), qty:i.qty })),
-    totals: t
+    items: state.cart.map(i=>{
+      const p = PRODUCTS.find(x=>x.id===i.id);
+      return { ...p, qty: i.qty, unitPrice: getPriceForRole(p) };
+    }),
+    totals: tot, role: state.user?.role || 'customer'
   };
-
-  const earned = Math.floor(t.total);
-  state.points = state.points - t.pointsUsed + earned;
+  state.points = state.points - tot.pointsUsed + tot.pointsEarned;
   state.orders.push(order);
   saveState();
-  updateUserUI();
-
-  showInvoice(order, earned);
-
-  // ✅ إرسال الفاتورة إلى واتساب
-  const lines = order.items.map(i=>`• ${i.name} × ${i.qty} = $${(i.price*i.qty).toFixed(2)}`).join('\n');
-  const waMsg = `🛒 *طلب جديد - LORD CELL*\n\n🔖 *رقم الفاتورة:* ${orderNum}\n📅 ${date}\n\n👤 *الاسم:* ${name}\n📱 *الهاتف:* ${phone}${email?`\n📧 *البريد:* ${email}`:''}\n📍 *العنوان:* ${city} - ${area}\n${address}\n\n📦 *الطلب:*\n${lines}\n\n💰 *المجموع الفرعي:* $${t.subtotal.toFixed(2)}${t.discount>0?`\n✅ *خصم:* -$${t.discount.toFixed(2)}`:''}${t.pointsValue>0.01?`\n🎁 *نقاط:* -$${t.pointsValue.toFixed(2)}`:''}\n\n💵 *الإجمالي:* $${t.total.toFixed(2)}\n\n💳 *الدفع:* ${pay}${notes?`\n📝 *ملاحظات:* ${notes}`:''}`;
-
-  setTimeout(()=>{
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank');
-  }, 800);
-
+  updateUserUI(); updateCartUI();
+  showInvoice(order, tot.pointsEarned);
   closeModal('checkoutModal');
+
+  // فتح واتساب + Whish
+  if(pay === 'whish'){
+    const waMsg = `💜 *Whish Money Payment*\n\n🔖 ${orderNum}\n👤 ${name}\n📱 ${phone}\n💰 *Total: $${tot.total.toFixed(2)}*\n\n📍 ${city} - ${area}\n${address}\n\n📦 *Order:*\n${order.items.map(i=>`• ${i.name} × ${i.qty} = $${(i.unitPrice*i.qty).toFixed(2)}`).join('\n')}\n\n✅ سأقوم بالتحويل عبر تطبيق Whish Money إلى الرقم: ${WHISH_NUMBER}`;
+    setTimeout(()=>window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank'), 500);
+    setTimeout(()=>{
+      if(confirm('هل تريد فتح تطبيق Whish Money الآن لتحويل المبلغ؟')){
+        window.location.href = 'whish://';
+      }
+    }, 1500);
+  } else {
+    const waMsg = `🛒 *${lang==='ar'?'طلب جديد':'New Order'} - LORD CELL*\n\n🔖 ${orderNum}\n📅 ${date}\n🏷️ ${order.role === 'merchant' ? '🏪 Merchant' : '👤 Customer'}\n\n👤 ${name}\n📱 ${phone}${email?`\n📧 ${email}`:''}\n📍 ${city} - ${area}\n${address}\n\n📦 *Items:*\n${order.items.map(i=>`• ${i.name} × ${i.qty} = $${(i.unitPrice*i.qty).toFixed(2)}`).join('\n')}\n\n💰 Subtotal: $${tot.subtotal.toFixed(2)}${tot.pointsValue>0.01?`\n🎁 Points: -$${tot.pointsValue.toFixed(2)} (${tot.pointsUsed})`:''}\n\n💵 *Total: $${tot.total.toFixed(2)}*\n\n💳 ${pay}\n💎 +${tot.pointsEarned} pts\n${notes?`📝 ${notes}`:''}`;
+    setTimeout(()=>window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank'), 800);
+  }
+};
+
+window.payViaWhish = function(){
+  const tot = cartTotals();
+  const msg = `💜 Whish Money\n\nالمبلغ المطلوب: $${tot.total.toFixed(2)}\nرقم Whish: ${WHISH_NUMBER}`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  setTimeout(()=>{ if(confirm('فتح تطبيق Whish Money؟')) window.location.href = 'whish://'; }, 1000);
 };
 
 function showInvoice(order, earned){
@@ -1002,58 +1318,58 @@ function showInvoice(order, earned){
     <tr>
       <td style="padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;">${escapeHTML(i.name)}</td>
       <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:12px;">${i.qty}</td>
-      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${i.price}</td>
-      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${(i.price*i.qty).toFixed(2)}</td>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${i.unitPrice}</td>
+      <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:12px;">$${(i.unitPrice*i.qty).toFixed(2)}</td>
     </tr>`).join('');
-  const t = order.totals;
+  const tot = order.totals;
   document.getElementById('invoiceBody').innerHTML = `
     <div style="background:linear-gradient(135deg,#09090b,#1f1f24);color:#fff;padding:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <div>
           <div style="font-size:22px;font-weight:900;color:#fbbf24;">LORD CELL</div>
-          <div style="font-size:10px;color:#a1a1aa;letter-spacing:2px;margin-top:2px;">DIGITAL STORE</div>
+          <div style="font-size:10px;color:#a1a1aa;letter-spacing:2px;">DIGITAL STORE</div>
         </div>
         <div style="text-align:left;font-size:11px;color:#d4d4d8;">
-          <div>فاتورة: <strong style="color:#fbbf24;">${order.num}</strong></div>
-          <div>${order.date}</div>
+          <div>#${order.num}</div><div>${order.date}</div>
         </div>
       </div>
     </div>
     <div style="padding:20px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
         <div style="background:#f9fafb;padding:12px;border-radius:12px;">
-          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">العميل</div>
+          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">${lang==='ar'?'العميل':'Customer'}</div>
           <div style="font-size:12px;font-weight:700;">${escapeHTML(order.name)}</div>
           <div style="font-size:11px;color:#52525b;">${escapeHTML(order.phone)}</div>
         </div>
         <div style="background:#f9fafb;padding:12px;border-radius:12px;">
-          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">العنوان</div>
+          <div style="font-size:10px;color:#71717a;font-weight:800;margin-bottom:4px;">${lang==='ar'?'العنوان':'Address'}</div>
           <div style="font-size:11px;font-weight:700;">${escapeHTML(order.city)} - ${escapeHTML(order.area)}</div>
           <div style="font-size:10px;color:#52525b;">${escapeHTML(order.address)}</div>
         </div>
       </div>
       <table style="width:100%;border-collapse:collapse;">
         <thead><tr style="background:#09090b;color:#fbbf24;">
-          <th style="padding:10px;font-size:11px;text-align:right;">المنتج</th>
-          <th style="padding:10px;font-size:11px;text-align:center;">الكمية</th>
-          <th style="padding:10px;font-size:11px;text-align:left;">السعر</th>
-          <th style="padding:10px;font-size:11px;text-align:left;">الإجمالي</th>
+          <th style="padding:10px;font-size:11px;text-align:right;">${lang==='ar'?'المنتج':'Item'}</th>
+          <th style="padding:10px;font-size:11px;text-align:center;">${lang==='ar'?'الكمية':'Qty'}</th>
+          <th style="padding:10px;font-size:11px;text-align:left;">${lang==='ar'?'السعر':'Price'}</th>
+          <th style="padding:10px;font-size:11px;text-align:left;">${lang==='ar'?'الإجمالي':'Total'}</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
       <div style="margin-top:16px;padding:12px;background:#f9fafb;border-radius:12px;font-size:12px;">
-        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#52525b;">المجموع</span><span>$${t.subtotal.toFixed(2)}</span></div>
-        ${t.discount>0?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#059669;"><span>خصم</span><span>-$${t.discount.toFixed(2)}</span></div>`:''}
-        ${t.pointsValue>0.01?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#d97706;"><span>نقاط</span><span>-$${t.pointsValue.toFixed(2)}</span></div>`:''}
-        <div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:6px;border-top:2px solid #09090b;font-weight:900;font-size:15px;"><span>الإجمالي</span><span style="color:#d97706;">$${t.total.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;"><span style="color:#52525b;">${t('cart_subtotal')}</span><span>$${tot.subtotal.toFixed(2)}</span></div>
+        ${tot.savings>0?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#059669;"><span>${t('price_saved')}</span><span>-$${tot.savings.toFixed(2)}</span></div>`:''}
+        ${tot.pointsValue>0.01?`<div style="display:flex;justify-content:space-between;padding:3px 0;color:#d97706;"><span>${t('cart_points')}</span><span>-$${tot.pointsValue.toFixed(2)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;padding:8px 0;margin-top:6px;border-top:2px solid #09090b;font-weight:900;font-size:15px;"><span>${t('cart_total')}</span><span style="color:#d97706;">$${tot.total.toFixed(2)}</span></div>
       </div>
       <div style="margin-top:14px;padding:12px;background:#fffbeb;border:1px dashed #f59e0b;border-radius:12px;font-size:11px;color:#78350f;">
         💳 ${escapeHTML(order.pay)}<br>
-        🎁 +${earned} نقطة — رصيدك: ${state.points}<br>
-        🚚 التوصيل خلال 24-72 ساعة.
+        💎 +${earned} ${lang==='ar'?'نقطة':'pts'} ($${(earned*POINT_VALUE).toFixed(2)})<br>
+        🏷️ ${order.role === 'merchant' ? t('role_merchant') : t('role_customer')}<br>
+        🚚 ${lang==='ar'?'التوصيل خلال 24-72 ساعة.':'Delivery within 24-72h.'}
         ${order.notes ? `<br>📝 ${escapeHTML(order.notes)}` : ''}
       </div>
-      <div style="text-align:center;margin-top:16px;font-size:10px;color:#71717a;">شكراً لثقتك بـ LORD CELL 💛</div>
+      <div style="text-align:center;margin-top:16px;font-size:10px;color:#71717a;">${lang==='ar'?'شكراً لثقتك 💛':'Thanks for your trust 💛'}</div>
     </div>`;
   openModal('invoiceModal');
 }
@@ -1064,7 +1380,7 @@ function showInvoice(order, earned){
 window.toggleCompare = function(id){
   const idx = state.compare.indexOf(id);
   if(idx>-1) state.compare.splice(idx,1);
-  else { if(state.compare.length>=3) return toast('الحد الأقصى 3','error'); state.compare.push(id); }
+  else { if(state.compare.length>=3) return toast('Max 3','error'); state.compare.push(id); }
   updateCompareBar(); renderShop(); renderGift();
 };
 function updateCompareBar(){
@@ -1074,75 +1390,64 @@ function updateCompareBar(){
 }
 window.clearCompare = function(){ state.compare = []; updateCompareBar(); renderShop(); renderGift(); };
 window.openCompare = function(){
-  if(state.compare.length<2) return toast('اختر منتجين على الأقل','error');
+  if(state.compare.length<2) return toast('Min 2','error');
   const items = state.compare.map(id=>PRODUCTS.find(p=>p.id===id)).filter(Boolean);
   const allKeys = [...new Set(items.flatMap(p=>Object.keys(p.specs||{})))];
-  const header = `<tr><th class="p-2 text-right text-[11px] text-zinc-400">المواصفة</th>${items.map(p=>`<th class="p-2 text-center"><div class="w-16 h-16 mx-auto rounded-xl overflow-hidden bg-zinc-900">${imgTag(p,'w-full h-full object-cover')}</div><div class="text-[10px] font-bold mt-1">${escapeHTML(p.name)}</div></th>`).join('')}</tr>`;
-  const priceRow = `<tr><td class="p-2 text-[11px] text-zinc-400">السعر</td>${items.map(p=>`<td class="p-2 text-center gold-text font-black text-sm">$${p.price}</td>`).join('')}</tr>`;
+  const header = `<tr><th class="p-2 text-right text-[11px] text-zinc-400">Spec</th>${items.map(p=>`<th class="p-2 text-center"><div class="w-16 h-16 mx-auto rounded-xl overflow-hidden bg-zinc-900">${imgTag(p,'w-full h-full object-cover')}</div><div class="text-[10px] font-bold mt-1">${escapeHTML(pName(p))}</div></th>`).join('')}</tr>`;
+  const priceRow = `<tr><td class="p-2 text-[11px] text-zinc-400">Price</td>${items.map(p=>`<td class="p-2 text-center gold-text font-black text-sm">$${getPriceForRole(p)}</td>`).join('')}</tr>`;
   const specRows = allKeys.map(k=>`<tr><td class="p-2 text-[11px] text-zinc-400">${escapeHTML(k)}</td>${items.map(p=>`<td class="p-2 text-center text-[11px]">${escapeHTML(p.specs?.[k]||'—')}</td>`).join('')}</tr>`).join('');
   document.getElementById('compareContent').innerHTML = `<div class="overflow-x-auto"><table class="w-full border-collapse">${header}${priceRow}${specRows}</table></div>`;
   openModal('compareModal');
 };
 
 /* ============================================================
-   📩 الشكاوي
+   📩 / 🔎 / 🛠️ نماذج واتساب
    ============================================================ */
 window.submitComplaint = function(){
   const name = document.getElementById('cp-name').value.trim();
   const phone = document.getElementById('cp-phone').value.trim();
   const type = document.getElementById('cp-type').value;
   const message = document.getElementById('cp-message').value.trim();
-  if(!name||!phone||!message) return toast('املأ جميع الحقول','error');
-
-  state.complaints.push({ name, phone, type, message, date: new Date().toLocaleString('ar-EG') });
+  if(!name||!phone||!message) return toast(t('error_fields'),'error');
+  state.complaints.push({ name, phone, type, message, date: new Date().toLocaleString(lang==='ar'?'ar-EG':'en-US') });
   saveState();
-
-  const waMsg = `📩 *${type} جديدة - LORD CELL*\n\n👤 ${name}\n📱 ${phone}\n📅 ${new Date().toLocaleString('ar-EG')}\n\n💬 ${message}`;
+  const waMsg = `📩 *${type}*\n\n👤 ${name}\n📱 ${phone}\n\n💬 ${message}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank');
-
   ['cp-name','cp-phone','cp-message'].forEach(i=>document.getElementById(i).value='');
-  toast('تم إرسال شكواك بنجاح ✅','success');
+  toast(t('sent_ok'),'success');
 };
-
-/* ============================================================
-   🔎 طلب منتج
-   ============================================================ */
 window.submitFindRequest = function(){
   const name = document.getElementById('fp-name').value.trim();
   const budget = document.getElementById('fp-budget').value.trim();
   const phone = document.getElementById('fp-phone').value.trim();
   const notes = document.getElementById('fp-notes').value.trim();
-  if(!name||!budget||!phone) return toast('املأ الحقول','error');
-  const waMsg = `🔎 *طلب منتج خاص*\n\n📦 المنتج: ${name}\n💰 الميزانية: $${budget}\n📱 الهاتف: ${phone}${notes?`\n📝 ${notes}`:''}`;
+  if(!name||!budget||!phone) return toast(t('error_fields'),'error');
+  const waMsg = `🔎 *Product Request*\n\n📦 ${name}\n💰 $${budget}\n📱 ${phone}${notes?`\n📝 ${notes}`:''}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank');
-  toast('تم إرسال طلبك ✅','success');
+  toast(t('sent_ok'),'success');
   ['fp-name','fp-budget','fp-phone','fp-notes'].forEach(i=>document.getElementById(i).value='');
 };
-
-/* ============================================================
-   🛠️ الصيانة
-   ============================================================ */
 window.submitSupport = function(){
   const name = document.getElementById('sp-name').value.trim();
   const phone = document.getElementById('sp-phone').value.trim();
   const device = document.getElementById('sp-device').value.trim();
   const issue = document.getElementById('sp-issue').value.trim();
-  if(!name||!phone||!device||!issue) return toast('املأ جميع الحقول','error');
-  const waMsg = `🔧 *طلب صيانة*\n\n👤 ${name}\n📱 ${phone}\n📱 الجهاز: ${device}\n\n💬 ${issue}`;
+  if(!name||!phone||!device||!issue) return toast(t('error_fields'),'error');
+  const waMsg = `🔧 *Repair Request*\n\n👤 ${name}\n📱 ${phone}\n🔧 ${device}\n\n💬 ${issue}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank');
-  toast('تم إرسال الطلب ✅','success');
+  toast(t('sent_ok'),'success');
   ['sp-name','sp-phone','sp-device','sp-issue'].forEach(i=>document.getElementById(i).value='');
 };
 
 /* ============================================================
-   🤖 الشات الذكي
+   🤖 الشات
    ============================================================ */
 window.openAI = function(){ document.getElementById('aiPanel').classList.remove('hidden'); };
 window.closeAI = function(){ document.getElementById('aiPanel').classList.add('hidden'); };
 window.handleKeyPress = e => { if(e.key==='Enter') sendChatMessage(); };
 window.quickAsk = function(text){ document.getElementById('chat-input').value = text; sendChatMessage(); };
 window.clearChat = function(){
-  if(!confirm('بدء محادثة جديدة؟')) return;
+  if(!confirm(t('new_chat'))) return;
   chatHistory = []; saveChat(); renderChatMessages();
 };
 
@@ -1153,7 +1458,7 @@ function renderChatMessages(){
     box.innerHTML = `
       <div class="flex items-start gap-2 max-w-[88%]">
         <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
-        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">أهلاً بك في LORD CELL! أنا هنا لمساعدتك في اختيار الأجهزة المناسبة لميزانيتك. كيف يمكنني خدمتك؟</div>
+        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">${t('chat_welcome')}</div>
       </div>`;
     return;
   }
@@ -1165,27 +1470,23 @@ function renderChatMessages(){
           <div class="msg-user font-medium p-3 rounded-2xl rounded-tl-none text-[11px] leading-relaxed">${escapeHTML(m.text)}</div>
         </div>`;
     } else {
-      const html = renderAIMessage(m.text);
       box.innerHTML += `
         <div class="flex items-start gap-2 max-w-[88%]">
           <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
-          <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">${html}</div>
+          <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">${renderAIMessage(m.text)}</div>
         </div>`;
     }
   });
   box.scrollTop = box.scrollHeight;
 }
 
-/* تحويل [[id]] إلى بطاقات منتج */
 function renderAIMessage(text){
   let html = escapeHTML(text);
-  // استبدال [[id]] ببطاقة
   html = html.replace(/\[\[([a-zA-Z0-9_]+)\]\]/g, (match, id) => {
     const p = PRODUCTS.find(x=>x.id===id);
     if(!p) return '';
     return `\n__CARD_${id}__\n`;
   });
-  // معالجة الأسطر
   const parts = html.split('\n');
   let result = '';
   parts.forEach(line => {
@@ -1205,8 +1506,6 @@ window.sendChatMessage = async function(){
   const box = document.getElementById('chat-messages');
   const text = input.value.trim();
   if(!text) return;
-
-  // المستخدم
   chatHistory.push({ role:'user', text });
   saveChat();
   box.innerHTML += `
@@ -1216,8 +1515,6 @@ window.sendChatMessage = async function(){
     </div>`;
   input.value = '';
   box.scrollTop = box.scrollHeight;
-
-  // مؤشر الكتابة
   const lid = 'ld-'+Date.now();
   box.innerHTML += `
     <div id="${lid}" class="flex items-start gap-2 max-w-[88%]">
@@ -1229,59 +1526,46 @@ window.sendChatMessage = async function(){
   box.scrollTop = box.scrollHeight;
 
   try {
-    const catalog = PRODUCTS.map(p =>
-      `[[${p.id}]] ${p.name} | القسم: ${p.cat} | السعر: $${p.price}${p.old?` (كان $${p.old})`:''} | ${p.desc||''}`
-    ).join('\n');
-
-    const systemPrompt = `أنت "خبير المبيعات الذكي" في متجر LORD CELL. تتحدث العربية فقط.
-مهمتك مساعدة الزبون في اختيار المنتج الأنسب حسب ميزانيته.
-
-الخدمات: توصيل سريع، صيانة، بحث عن منتج، بطاقات شحن، مقارنة.
-
-📦 الكتالوج (هذا هو المتوفر فقط):
+    const catalog = PRODUCTS.map(p => {
+      const price = getPriceForRole(p);
+      return `[[${p.id}]] ${p.name} | ${p.cat} | $${price}${p.old?` (was $${p.old})`:''} | ${p.desc||''}`;
+    }).join('\n');
+    const roleNote = state.user?.role === 'merchant'
+      ? `\n👤 Current customer is a MERCHANT — prices shown are his wholesale prices.`
+      : `\n👤 Current customer is a REGULAR CUSTOMER.`;
+    const systemPrompt = `You are the "AI Sales Expert" at LORD CELL store. Reply in ${lang==='ar'?'Arabic':'English'} only.
+Help the customer choose the right product for their budget.
+Services: fast delivery, repair, find product, gift cards, compare, Whish Money payment.
+📦 Catalog (only these are available):
 ${catalog}
-
-🚨 قواعد صارمة:
-1. اقترح فقط المنتجات المذكورة أعلاه. لا تخترع منتجات أو أسعاراً.
-2. عند ذكر منتج، ضع رمزه بين قوسين مزدوجين هكذا: [[ph1]] — ثم اسمه وسعره.
-   مثال: "أنصحك بـ [[ph1]] iPhone 15 Pro Max بسعر $1199"
-3. إذا لم يوجد شيء بميزانية الزبون، اقترح الأقرب.
-4. اذكر دائماً اسم المنتج والسعر.
-5. كن مختصراً، ودوداً، مهنياً.
-6. إذا سأل عن منتج غير موجود، اقترح خدمة "ابحث عن منتج" من الموقع.
-7. لا تكرر ترحيبات محفوظة.`;
-
-    const reply = await puter.ai.chat(
-      `${systemPrompt}\n\n👤 سؤال الزبون: ${text}`,
-      { model: 'gpt-5-nano' }
-    );
-
-    const replyText =
-      typeof reply === 'string' ? reply :
-      reply?.message?.content ||
-      reply?.text ||
-      (reply?.toString && reply.toString()) ||
-      'عذراً، لم أفهم سؤالك.';
-
+${roleNote}
+🚨 Rules:
+1. Only suggest products from the catalog. Never invent.
+2. When mentioning a product, use its code in double brackets: [[ph1]] — then name and price.
+   Example: "I recommend [[ph1]] iPhone 17 Pro Max at $1499"
+3. If nothing fits budget, suggest closest.
+4. Always mention name and price.
+5. Be concise, friendly, professional.
+6. If asked about unavailable product, suggest the "Find Product" service.
+7. Don't repeat canned greetings.`;
+    const reply = await puter.ai.chat(`${systemPrompt}\n\n👤 Question: ${text}`, { model: 'gpt-5-nano' });
+    const replyText = typeof reply === 'string' ? reply : reply?.message?.content || reply?.text || (reply?.toString && reply.toString()) || '...';
     document.getElementById(lid)?.remove();
     chatHistory.push({ role:'assistant', text: replyText });
     saveChat();
-
-    const html = renderAIMessage(replyText);
     box.innerHTML += `
       <div class="flex items-start gap-2 max-w-[88%]">
         <div class="w-7 h-7 rounded-lg gold-btn flex items-center justify-center text-[11px] shrink-0">🤖</div>
-        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">${html}</div>
+        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] leading-relaxed text-zinc-200">${renderAIMessage(replyText)}</div>
       </div>`;
     box.scrollTop = box.scrollHeight;
-
-  } catch(err) {
-    console.error('AI Error:', err);
+  } catch(err){
+    console.error(err);
     document.getElementById(lid)?.remove();
     box.innerHTML += `
       <div class="flex items-start gap-2 max-w-[88%]">
         <div class="w-7 h-7 rounded-lg bg-red-500 text-white flex items-center justify-center text-[11px] shrink-0">⚠️</div>
-        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] text-red-300">تعذر الاتصال. حاول مرة أخرى بعد لحظات.</div>
+        <div class="msg-bot p-3 rounded-2xl rounded-tr-none text-[11px] text-red-300">${t('chat_error')}</div>
       </div>`;
     box.scrollTop = box.scrollHeight;
   }
@@ -1292,9 +1576,12 @@ ${catalog}
    ============================================================ */
 document.getElementById('year').textContent = new Date().getFullYear();
 if(isAdmin) document.getElementById('adminBtn').classList.remove('hidden');
+applyLang();
 renderHome();
 renderShop();
 renderGift();
+renderAds();
+renderReviews();
 updateCartUI();
 updateUserUI();
 renderChatMessages();
